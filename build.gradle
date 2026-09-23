@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'org.example'
+version = '0.0.0'
+
+ext {
+    gdxVersion = '1.13.1'
+}
+
+repositories {
+    mavenCentral()
+
+    maven { url "https://sonatype.org" }
+}
+
+sourceSets {
+    src {
+        java.srcDirs = ['main']
+        resources.srcDirs = ['assets']
+    }
+}
+
+dependencies {
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
+    testImplementation platform('org.junit:junit-bom:6.0.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+application {
+    mainClass = "org.example.client.Main"
+
+    applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
+}
+
+run {
+    workingDir = rootProject.projectDir
+}
+
+test {
+    useJUnitPlatform()
+}
+
+import org.gradle.internal.os.OperatingSystem
+
+if (OperatingSystem.current().isMacOsX()) {
+    tasks.withType(JavaExec).configureEach {
+        jvmArgs += "-XstartOnFirstThread"
+    }
+}
