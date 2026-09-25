@@ -1,31 +1,28 @@
 package org.example.client.gui.widgets;
 
+import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.raylib.Colors;
+import com.raylib.Raylib;
 
 public class TextWidget extends AbstractWidget {
     private final String text;
 
     public TextWidget(String text, int x, int y) {
-        GlyphLayout layout = new GlyphLayout();
-        BitmapFont font = new BitmapFont();
-        layout.setText(font, text);
-
-        super(x, y, (int) layout.width, (int) layout.height);
+        super(x, y, getTextWidth(text), getTextHeight(text));
 
         this.text = text;
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY) {
-        int color;
+        Raylib.Color color;
 
         if (this.isHovered()) {
-            color = -32513;
+            color = Colors.BLUE;
         } else {
-            color = -1;
+            color = Colors.WHITE;
         }
 
         graphics.text(
@@ -34,5 +31,13 @@ public class TextWidget extends AbstractWidget {
                 this.getY(),
                 color
         );
+    }
+
+    private static int getTextWidth(String text) {
+        return (int) Raylib.MeasureTextEx(Client.getInstance().font, text, 24, 2).x();
+    }
+
+    private static int getTextHeight(String text) {
+        return (int) Raylib.MeasureTextEx(Client.getInstance().font, text, 24, 2).y();
     }
 }

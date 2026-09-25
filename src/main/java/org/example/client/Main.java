@@ -1,16 +1,18 @@
 package org.example.client;
 
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.raylib.Raylib;
 
 public class Main {
+
+
     static void main(String[] args) {
-        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        Raylib.InitWindow(850, 500, "Hero of the Draw");
+        Raylib.SetTargetFPS(60);
 
-        config.setForegroundFPS(60);
-        config.setTitle("Hero of the Draws");
-        config.setWindowedMode(850, 500);
+        new Client();
 
-        new Lwjgl3Application(new Client(), config);
+        while (!Raylib.WindowShouldClose()) {
+            Client.getInstance().run();
+        }
     }
 }

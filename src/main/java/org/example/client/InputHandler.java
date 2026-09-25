@@ -2,24 +2,31 @@ package org.example.client;
 
 import org.example.client.gui.screen.Screen;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
+import com.raylib.Raylib;
 
-public class InputHandler extends InputAdapter {
+public class InputHandler {
     int mouseX = 0;
     int mouseY = 0;
 
     public void handleInput() {
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            this.mouseClicked(this.mouseX, this.mouseY);
+        int code = Raylib.GetKeyPressed();
+
+        while (code != 0) {
+            this.keyDown(code);
+
+            code = Raylib.GetKeyPressed();
         }
 
-        this.mouseX = Gdx.input.getX();
-        this.mouseY = Gdx.input.getY();
+        Raylib.Vector2 mousePos = Raylib.GetMousePosition();
+
+        this.mouseX = (int) mousePos.x();
+        this.mouseY = (int) mousePos.y();
+
+        if (Raylib.IsMouseButtonPressed(0)) {
+            this.mouseClicked(this.mouseX, this.mouseY);
+        }
     }
 
-    @Override
     public boolean keyDown(int keycode) {
         Screen screen = Client.getInstance().gui.screen;
 
@@ -29,7 +36,7 @@ public class InputHandler extends InputAdapter {
             return true;
         }
 
-        return super.keyDown(keycode);
+        return false;
     }
 
     public void mouseClicked(int mouseX, int mouseY) {

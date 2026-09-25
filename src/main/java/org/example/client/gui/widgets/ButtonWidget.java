@@ -2,6 +2,9 @@ package org.example.client.gui.widgets;
 
 import org.example.client.gui.GuiGraphics;
 
+import com.raylib.Colors;
+import com.raylib.Raylib;
+
 public class ButtonWidget extends AbstractWidget{
     private final Runnable action;
     private final String text;
@@ -15,12 +18,12 @@ public class ButtonWidget extends AbstractWidget{
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY) {
-        int color;
+        Raylib.Color color;
 
         if (this.isHovered()) {
-            color = -32513;
+            color = Colors.BLUE;
         } else {
-            color = -1;
+            color = Colors.WHITE;
         }
 
         graphics.text(

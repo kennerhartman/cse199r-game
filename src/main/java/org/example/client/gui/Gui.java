@@ -4,8 +4,8 @@ import org.example.client.Client;
 import org.example.client.gui.screen.Screen;
 import org.jetbrains.annotations.Nullable;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.raylib.Colors;
+import com.raylib.Raylib;
 
 public class Gui {
     public Client client;
@@ -18,11 +18,14 @@ public class Gui {
     }
 
     public void render(GuiGraphics graphics, int mouseX, int mouseY) {
-        ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1.0f);
+        Raylib.BeginDrawing();
+        Raylib.ClearBackground(Colors.BLACK);
 
         if (this.screen != null) {
             this.screen.render(graphics, mouseX, mouseY);
         }
+
+        Raylib.EndDrawing();
     }
 
     public void setScreen(@Nullable Screen screen) {
@@ -34,10 +37,10 @@ public class Gui {
     }
 
     public int getScreenWidth() {
-        return Gdx.graphics.getWidth();
+        return Raylib.GetScreenWidth();
     }
 
     public int getScreenHeight() {
-        return Gdx.graphics.getHeight();
+        return Raylib.GetScreenHeight();
     }
 }
