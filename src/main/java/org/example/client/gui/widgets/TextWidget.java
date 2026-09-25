@@ -17,19 +17,11 @@ public class TextWidget extends AbstractWidget {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY) {
-        Raylib.Color color;
-
-        if (this.isHovered()) {
-            color = Colors.BLUE;
-        } else {
-            color = Colors.WHITE;
-        }
-
         graphics.text(
                 this.text,
                 this.getX(),
                 this.getY(),
-                color
+                Colors.WHITE
         );
     }
 

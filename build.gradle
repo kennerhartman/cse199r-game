@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.gradleup.shadow' version '8.3.5'
 }
 
 group = 'org.example'
@@ -37,6 +38,13 @@ application {
     mainClass = "org.example.client.Main"
 
     applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
+}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': "org.example.client.Main"
+        )
+    }
 }
 
 run {
