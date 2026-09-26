@@ -21,7 +21,7 @@ public class Client {
     public Client() {
         Client.client = this;
 
-        this.guiTextures = new TextureAtlas(Identifier.ofDefault("gui"));
+        this.guiTextures = new TextureAtlas(Identifier.ofDefault("gui/widget"));
         this.guiTextures.prepare();
         this.font = Raylib.GetFontDefault();
         this.gui = new Gui(this);

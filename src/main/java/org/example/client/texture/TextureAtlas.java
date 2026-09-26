@@ -29,6 +29,9 @@ public class TextureAtlas {
     }
 
     public Raylib.Texture getTexture(Identifier textureId) {
-        return this.textures.get(textureId);
+        String namespace = textureId.namespace;
+        String path = textureId.path;
+
+        return this.textures.get(Identifier.of(namespace, this.location.path + "/" + path));
     }
 }

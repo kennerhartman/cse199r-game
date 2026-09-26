@@ -19,8 +19,8 @@ public class TextWidget extends AbstractWidget {
     public void render(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.text(
                 this.text,
-                this.getX(),
-                this.getY(),
+                this.getX() - getTextWidth(this.text) / 2,
+                this.getY() - getTextHeight(this.text) / 2,
                 Colors.WHITE
         );
     }

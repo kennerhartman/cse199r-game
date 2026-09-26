@@ -47,6 +47,10 @@ public abstract class Screen {
         this.renderElements(graphics, mouseX, mouseY);
     }
 
+    public void clearElements() {
+        this.elements.clear();
+    }
+
     public void onClose() {
     }
 

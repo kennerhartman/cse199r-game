@@ -9,7 +9,7 @@ import com.raylib.Raylib;
 public class GuiGraphics {
     Client client;
 
-    private final Raylib.Texture texture = Client.getInstance().guiTextures.getTexture(Identifier.ofDefault("gui/button.png"));
+    private final Raylib.Texture texture = Client.getInstance().guiTextures.getTexture(Identifier.ofDefault("button.png"));
 
     public GuiGraphics(Client client) {
         this.client = client;
