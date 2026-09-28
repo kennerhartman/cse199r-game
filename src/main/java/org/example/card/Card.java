@@ -38,6 +38,11 @@ public abstract class Card {
      */
     int drawCardsAmount;
 
+    /**
+     * Detects if card should be destroyed after being played
+     * */
+    boolean destroyOnPlay = false;
+
     public Card(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount) {
         this.name = name;
         this.type = type;
@@ -48,6 +53,8 @@ public abstract class Card {
     }
 
     abstract void applyDrawEffect();
+
+    abstract void destroyCard();
 
     public enum CardType {
         ABILITY,

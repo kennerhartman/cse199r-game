@@ -16,6 +16,7 @@ public class ActionCard extends Card {
         // TODO: Roll Bonus, player targeting and stat setting logic
     }
 
+    @Override
     // Only use when sold
     public void destroyCard() {
         // TODO: destroy card logic to remove from the card from the deck

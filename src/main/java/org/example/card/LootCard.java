@@ -16,6 +16,7 @@ public class LootCard extends Card {
         super(name, type, description, stat, bonus, drawCardsAmount);
 
         this.price = price;
+        this.destroyOnPlay = true;
     }
 
     @Override
@@ -28,6 +29,7 @@ public class LootCard extends Card {
         // After actions, revert stat change and destroy card
     }
 
+    @Override
     // To be used when sold or played
     public void destroyCard() {
         // TODO: add destroy self logic to remove from deck

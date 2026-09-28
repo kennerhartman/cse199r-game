@@ -22,7 +22,15 @@ public class AbilityCard extends Card {
         // TODO: Logic to apply effect to player target target.setStat(stat, value);
     }
 
+    // Shouldn't really be used
+    @Override
+    public void destroyCard() {
+        // TODO: destroy card logic to remove from the card from the deck
+    }
+
     public void instantEffect() {
         // TODO: logic to set player stat permanently
     }
+
+
 }
