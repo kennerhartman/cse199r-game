@@ -12,10 +12,10 @@ public class Main {
         Raylib.SetWindowState(FLAG_WINDOW_RESIZABLE);
         Raylib.SetTargetFPS(60);
 
-        new Client();
+        Client client = new Client();
 
         while (!Raylib.WindowShouldClose()) {
-            Client.getInstance().run();
+            client.run();
         }
     }
 }

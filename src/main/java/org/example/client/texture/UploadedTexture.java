@@ -1,19 +1,24 @@
 package org.example.client.texture;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.raylib.Raylib;
 
-// TODO: IMPLEMENT
 public class UploadedTexture {
-    Raylib.Texture texture;
-    TextureType type;
+    public Raylib.Texture texture;
+    public TextureType type;
+    public @Nullable TextureMetadata metadata;
 
-    public static class TextureMetaData {
-
+    public UploadedTexture(Raylib.Texture texture, TextureType type, @Nullable TextureMetadata metadata) {
+        this.texture = texture;
+        this.type = type;
+        this.metadata = metadata;
     }
 
-    enum TextureTypes {
+    public enum TextureType {
+        NONE,
         NINE_SLICE
     }
 
-    record TextureType(TextureTypes type, int width, int height, int cornerSize) {}
+    public record TextureMetadata(TextureType type, int width, int height, int scale, int cornerSize) {}
 }

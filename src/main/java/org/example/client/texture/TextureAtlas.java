@@ -1,15 +1,13 @@
 package org.example.client.texture;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.example.util.Identifier;
-
-import com.raylib.Raylib;
+import org.jetbrains.annotations.Nullable;
 
 public class TextureAtlas {
-    public Map<Identifier, Raylib.Texture> textures = new HashMap<>();
+    public Map<Identifier, UploadedTexture> textures = new HashMap<>();
 
     private final Identifier location;
 
@@ -18,17 +16,17 @@ public class TextureAtlas {
     }
 
     public void prepare() {
-        List<Identifier> textureLocations = TextureLoader.prepare(this.location);
+        Map<Identifier, UploadedTexture.@Nullable TextureMetadata> textureLocations = TextureLoader.prepare(this.location);
 
         this.upload(textureLocations);
     }
 
-    public void upload(List<Identifier> textureLocations) {
-        Map<Identifier, Raylib.Texture> textures = TextureLoader.upload(textureLocations);
+    public void upload(Map<Identifier, UploadedTexture.@Nullable TextureMetadata> textureLocations) {
+        Map<Identifier, UploadedTexture> textures = TextureLoader.upload(textureLocations);
         this.textures.putAll(textures);
     }
 
-    public Raylib.Texture getTexture(Identifier textureId) {
+    public UploadedTexture getTexture(Identifier textureId) {
         String namespace = textureId.namespace;
         String path = textureId.path;
 
