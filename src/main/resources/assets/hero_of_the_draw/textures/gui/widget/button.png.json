@@ -1,0 +1,9 @@
+{
+    "gui":{
+        "type": "nine_slice",
+        "width": 32,
+        "height": 16,
+        "scale": 3,
+        "corner": 5
+    }
+}

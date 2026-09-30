@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.gradleup.shadow' version '8.3.5'
 }
 
 group = 'org.example'
@@ -25,6 +26,7 @@ sourceSets {
 
 dependencies {
     implementation 'uk.co.electronstudio.jaylib:jaylib:6.0.1-0'
+    implementation 'com.google.code.gson:gson:2.14.0'
 
     compileOnly 'org.jetbrains:annotations:24.1.0'
 
@@ -37,6 +39,13 @@ application {
     mainClass = "org.example.client.Main"
 
     applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
+}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': "org.example.client.Main"
+        )
+    }
 }
 
 run {

@@ -32,6 +32,7 @@ public class Gui {
         this.screen = screen;
 
         if (screen != null) {
+            screen.clearElements();
             this.screen.init(this.getScreenWidth(), this.getScreenHeight());
         }
     }

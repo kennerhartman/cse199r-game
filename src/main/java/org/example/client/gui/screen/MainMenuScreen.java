@@ -1,8 +1,8 @@
 package org.example.client.gui.screen;
 
 import org.example.client.Client;
+import org.example.client.gui.widgets.BorderWidget;
 import org.example.client.gui.widgets.ButtonWidget;
-import org.example.client.gui.widgets.TextWidget;
 
 public class MainMenuScreen extends Screen {
     public MainMenuScreen(Client client) {
@@ -11,12 +11,40 @@ public class MainMenuScreen extends Screen {
 
     @Override
     public void init() {
+        int borderWidgetWidth = 150;
+        int borderWidgetHeight = 250;
+        int borderX = this.width / 2 - borderWidgetWidth / 2;
+        int borderY = this.height / 2 - borderWidgetHeight / 2;
+
         this.elements.add(
-                new TextWidget("Main Menu Screen", 50, 50)
+                new BorderWidget(
+                        borderX,
+                        borderY,
+                        borderWidgetWidth,
+                        borderWidgetHeight
+                )
         );
 
         this.elements.add(
-                new ButtonWidget("Click me!", 50, 75, 50, 50, () -> Client.getInstance().gui.setScreen(new CharacterCreationScreen(this.client, this)))
+                new ButtonWidget(
+                        "New",
+                        borderX + 125/8,
+                        borderY + 25,
+                        125,
+                        45,
+                        () -> Client.getInstance().gui.setScreen(new CharacterCreationScreen(this.client, this))
+                )
+        );
+
+        this.elements.add(
+                new ButtonWidget(
+                        "Load",
+                        borderX + 125/8,
+                        borderY + 95,
+                        125,
+                        45,
+                        () -> {}
+                )
         );
     }
 }

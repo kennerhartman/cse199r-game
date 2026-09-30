@@ -18,18 +18,16 @@ public class ButtonWidget extends AbstractWidget{
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY) {
-        Raylib.Color color;
+        graphics.blitNineSliced(this.x, this.y, this.width, this.height, 32, 16);
+        Raylib.Color color = this.isHovered() ? Colors.BLUE : Colors.WHITE;
 
-        if (this.isHovered()) {
-            color = Colors.BLUE;
-        } else {
-            color = Colors.WHITE;
-        }
+        int x = this.getX() + (this.width / 2) - (Raylib.MeasureText(this.text, 24) / 2);
+        int y = this.getY() + (this.height / 2) - (24 / 2);
 
         graphics.text(
                 this.text,
-                this.getX(),
-                this.getY(),
+                x,
+                y,
                 color
         );
     }

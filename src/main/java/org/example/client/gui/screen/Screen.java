@@ -27,6 +27,11 @@ public abstract class Screen {
 
     public abstract void init();
 
+    public void resize() {
+        this.elements.clear();
+        this.init(this.client.gui.getScreenWidth(), this.client.gui.getScreenHeight());
+    }
+
     public void renderBackground(GuiGraphics graphics) {
 
     }
@@ -40,6 +45,10 @@ public abstract class Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY) {
         this.renderBackground(graphics);
         this.renderElements(graphics, mouseX, mouseY);
+    }
+
+    public void clearElements() {
+        this.elements.clear();
     }
 
     public void onClose() {
