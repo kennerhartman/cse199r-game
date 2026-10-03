@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.gradleup.shadow' version '8.3.5'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.4.1'
 }
 
 group = 'org.example'
@@ -35,15 +36,38 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+idea {
+    project {
+        settings {
+            runConfigurations {
+                "Main"(org.jetbrains.gradle.ext.Application) {
+                    mainClass = "org.example.Main"
+                    moduleName = "${project.name}.main"
+                    workingDirectory = rootProject.projectDir.absolutePath
+                    jvmArgs = "-XstartOnFirstThread"
+                }
+
+                "Client"(org.jetbrains.gradle.ext.Application) {
+                    mainClass = "org.example.client.Main"
+                    moduleName = "${project.name}.main"
+                    workingDirectory = rootProject.projectDir.absolutePath
+                    jvmArgs = "-XstartOnFirstThread"
+                }
+            }
+        }
+    }
+}
+
 application {
-    mainClass = "org.example.client.Main"
+    mainClass = "org.example.Main"
 
     applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
 }
+
 jar {
     manifest {
         attributes(
-                'Main-Class': "org.example.client.Main"
+                'Main-Class': "org.example.Main"
         )
     }
 }

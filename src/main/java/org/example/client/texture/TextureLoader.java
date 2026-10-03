@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
@@ -17,11 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.example.serializer.JsonOps;
 import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import com.raylib.Raylib;
 
 public class TextureLoader {
@@ -73,10 +73,15 @@ public class TextureLoader {
                             if (textureLocation.startsWith(location.path + "/")) {
                                 UploadedTexture.TextureMetadata metadata = null;
 
-                                if (hasMetadata(path)) {
+                                if (assetHasMetadata(path)) {
                                     File encodedMetadata = Paths.get(path + ".json").toFile();
 
-                                    metadata = decodeMetadata(encodedMetadata);
+                                    try (FileReader reader = new FileReader(encodedMetadata.toString())) {
+                                        JsonElement element = GSON.fromJson(reader, JsonElement.class);
+                                        metadata = UploadedTexture.CODEC.decode(JsonOps.INSTANCE, element);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 }
 
                                 textures.put(Identifier.of(namespace, textureLocation), metadata);
@@ -122,7 +127,7 @@ public class TextureLoader {
         return textures;
     }
 
-    private static boolean hasMetadata(Path path) {
+    private static boolean assetHasMetadata(Path path) {
         int index = path.toString().lastIndexOf(".");
         String extension = path.toString().substring(index + 1);
 
@@ -131,33 +136,5 @@ public class TextureLoader {
         }
 
         return false;
-    }
-
-    /**
-     * A helper static method to load an image's .json metadata.  For now, this only decodes a json file
-     * that is a gui/widget nine_slice texture, but can be abstracted and expanded on in the feature.
-     *
-     * @return
-     */
-    private static UploadedTexture.TextureMetadata decodeMetadata(File metadata) {
-        try (Reader reader = new FileReader(metadata)) {
-            JsonObject object = GSON.fromJson(reader, JsonObject.class);
-
-            if (object.has("gui")) {
-                JsonObject gui = object.getAsJsonObject("gui");
-
-                UploadedTexture.TextureType type = UploadedTexture.TextureType.valueOf(gui.get("type").getAsString().toUpperCase());
-                int width = gui.get("width").getAsInt();
-                int height = gui.get("height").getAsInt();
-                int scale = gui.get("scale").getAsInt();
-                int corner = gui.get("corner").getAsInt();
-
-                return new UploadedTexture.TextureMetadata(type, width, height, scale, corner);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return null;
     }
 }
