@@ -1,0 +1,82 @@
+[
+        {
+          "name": "Ironclad Heart",
+          "type": "ABILITY",
+          "description": "Increases base health to 20. When played, you regain 5 health.",
+          "stat": "HEALTH",
+          "bonus": "5",
+          "drawCardsAmount": "0",
+          "destroyOnPlay": "False",
+          "base": "20"
+        },
+        {
+          "name": "Vitality Infusion",
+          "type": "ABILITY",
+          "description": "Increases base health to 15. When played, you regain 10 health.",
+          "stat": "HEALTH",
+          "bonus": "10",
+          "drawCardsAmount": "0",
+          "destroyOnPlay": "False",
+          "base": "15"
+        },
+        {
+          "name": "Quick Reflexes",
+          "type": "ABILITY",
+          "description": "Increases base number of cards played per turn to 5. When played, play 1 extra card.",
+          "stat": "SPEED",
+          "bonus": "1",
+          "drawCardsAmount": "0",
+          "destroyOnPlay": "False",
+          "base": "5"
+        },
+        {
+          "name": "Adrenaline Rush",
+          "type": "ABILITY",
+          "description": "Increases base number of cards played per turn to 4. When played, play 2 extra cards.",
+          "stat": "SPEED",
+          "bonus": "2",
+          "drawCardsAmount": "0",
+          "destroyOnPlay": "False",
+          "base": "4"
+        },
+        {
+          "name": "Bottomless Pockets",
+          "type": "ABILITY",
+          "description": "Increases base hand size to 7. When played, draw 1 card.",
+          "stat": "STRENGTH",
+          "bonus": "0",
+          "drawCardsAmount": "1",
+          "destroyOnPlay": "False",
+          "base": "7"
+        },
+        {
+          "name": "Tactical Reserve",
+          "type": "ABILITY",
+          "description": "Increases base hand size to 6. When played, draw 2 extra cards.",
+          "stat": "STRENGTH",
+          "bonus": "0",
+          "drawCardsAmount": "2",
+          "destroyOnPlay": "False",
+          "base": "6"
+        },
+        {
+          "name": "Brawny Strike",
+          "type": "ABILITY",
+          "description": "Increases base attack to 7. When played, deal 2 extra damage.",
+          "stat": "ATTACK",
+          "bonus": "2",
+          "drawCardsAmount": "0",
+          "destroyOnPlay": "False",
+          "base": "7"
+        },
+        {
+          "name": "Sharpened Edge",
+          "type": "ABILITY",
+          "description": "Increases base attack to 6. When played, deal 4 extra damage.",
+          "stat": "ATTACK",
+          "bonus": "4",
+          "drawCardsAmount": "0",
+          "destroyOnPlay": "False",
+          "base": "6"
+        }
+]

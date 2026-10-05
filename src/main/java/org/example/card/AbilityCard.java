@@ -20,16 +20,19 @@ public class AbilityCard extends Card {
     // Add 'Player target' to the inputs
     public void applyDrawEffect() {
         // TODO: Logic to apply effect to player target target.setStat(stat, value);
+        System.out.println("Applied Draw Effect");
     }
 
     // Shouldn't really be used
     @Override
     public void destroyCard() {
         // TODO: destroy card logic to remove from the card from the deck
+        System.out.println("Card Destroyed");
     }
 
     public void instantEffect() {
         // TODO: logic to set player stat permanently
+        System.out.println(this.stat + " changed to "+base);
     }
 
 

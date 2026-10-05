@@ -16,7 +16,7 @@ public class CharacterCreationScreen extends Screen {
     @Override
     public void init() {
         this.elements.add(
-                new TextWidget("Character Creation Screen", this.width / 2, this.height / 2)
+                new TextWidget("PlayerCharacter Creation Screen", this.width / 2, this.height / 2)
         );
 
         this.elements.add(

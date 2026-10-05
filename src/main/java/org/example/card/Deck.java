@@ -1,14 +1,20 @@
 package org.example.card;
 
+import org.example.Character.PlayerCharacter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Deck {
-    public ArrayList<Card> drawPile;
-    public ArrayList<Card> discard;
-    public ArrayList<Card> hand;
+    public ArrayList<Card> drawPile = new ArrayList<Card>();
+    public ArrayList<Card> discard = new ArrayList<Card>();
+    public ArrayList<Card> hand = new ArrayList<Card>();
 //    TODO: implement character class
-//    public Character owner;
+    public PlayerCharacter owner;
+
+    public Deck(PlayerCharacter owner){
+        this.owner = owner;
+    }
 
 //    Handles pulling a card from the draw pile and putting it into your hand
     public void draw(){

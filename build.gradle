@@ -27,6 +27,7 @@ sourceSets {
 dependencies {
     implementation 'uk.co.electronstudio.jaylib:jaylib:6.0.1-0'
     implementation 'com.google.code.gson:gson:2.14.0'
+    implementation 'org.danilopianini:gson-extras:3.3.0'
 
     compileOnly 'org.jetbrains:annotations:24.1.0'
 

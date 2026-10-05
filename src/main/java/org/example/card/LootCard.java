@@ -27,11 +27,13 @@ public class LootCard extends Card {
         // target.setStat(stat, value);
         // Then wait for perform action
         // After actions, revert stat change and destroy card
+        System.out.println("Applied Draw Effect");
     }
 
     @Override
     // To be used when sold or played
     public void destroyCard() {
         // TODO: add destroy self logic to remove from deck
+        System.out.println("Card Destroyed");
     }
 }
