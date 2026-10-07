@@ -1,0 +1,9 @@
+{
+    "name": "Ironclad Heart",
+    "type": "abiliety",
+    "description": "Increases base health to 20. When played, you regain 5 health.",
+    "stat": "HEALTH",
+    "bonus": 5,
+    "draw_cards_amount": 0,
+    "destroy_on_play": false
+}

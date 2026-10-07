@@ -1,5 +1,8 @@
 package org.example.card;
 
+import org.example.serializer.Codec;
+import org.example.serializer.RecordCodecBuilder;
+
 public abstract class Card {
     /**
      * The card's name or title.
@@ -43,18 +46,55 @@ public abstract class Card {
      * */
     boolean destroyOnPlay = false;
 
-    public Card(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount) {
+    public Card(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount, boolean destroyOnPlay) {
         this.name = name;
         this.type = type;
         this.description = description;
         this.stat = stat;
         this.bonus = bonus;
         this.drawCardsAmount = drawCardsAmount;
+        this.destroyOnPlay = destroyOnPlay;
+    }
+
+    public Card(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount) {
+        this(name, type, description, stat, bonus, drawCardsAmount, false);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public CardType getType() {
+        return this.type;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public CardStat getStat() {
+        return this.stat;
+    }
+
+    public int getBonus() {
+        return this.bonus;
+    }
+
+    public int getDrawCardsAmount() {
+        return this.drawCardsAmount;
+    }
+
+    public boolean isDestroyedOnPlay() {
+        return this.destroyOnPlay;
     }
 
     abstract void applyDrawEffect();
 
     abstract void destroyCard();
+
+    public static Codec<? extends Card> getCodec() {
+        return AbilityCard.CODEC;
+    }
 
     public enum CardType {
         ABILITY,
