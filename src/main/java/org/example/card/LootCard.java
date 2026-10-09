@@ -1,5 +1,7 @@
 package org.example.card;
 
+import org.example.Character.PlayerCharacter;
+
 /**
  * Loot cards should affect any cards played on this turn after the loot card is played then be destroyed on turn end.
  */
@@ -12,8 +14,8 @@ public class LootCard extends Card {
 
     int price;
 
-    public LootCard(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount, int price) {
-        super(name, type, description, stat, bonus, drawCardsAmount);
+    public LootCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount, int price) {
+        super(name, description, stat, bonus, drawCardsAmount);
 
         this.price = price;
         this.destroyOnPlay = true;
@@ -21,7 +23,7 @@ public class LootCard extends Card {
 
     @Override
     // Add 'Player target' to the inputs
-    public void applyDrawEffect() {
+    public void applyDrawEffect(PlayerCharacter character) {
         // TODO: Logic to apply effect to player target
 
         // target.setStat(stat, value);
@@ -31,9 +33,21 @@ public class LootCard extends Card {
     }
 
     @Override
+    // Reverses bonus
+    public void applyDiscardEffect(PlayerCharacter character){
+        character.statBonus(this.stat.toString(), 0-this.bonus);
+        System.out.println("Applied Discard Effect");
+    }
+
+    @Override
     // To be used when sold or played
     public void destroyCard() {
         // TODO: add destroy self logic to remove from deck
         System.out.println("Card Destroyed");
+    }
+
+    @Override
+    public CardType getType(){
+        return CardType.LOOT;
     }
 }

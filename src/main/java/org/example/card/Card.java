@@ -1,18 +1,13 @@
 package org.example.card;
 
+import com.google.gson.annotations.SerializedName;
+import org.example.Character.PlayerCharacter;
+
 public abstract class Card {
     /**
      * The card's name or title.
      */
     String name;
-
-    /**
-     * All cards have a type, which can be:
-     * <li>Ability (permanent bonus from character creation)</li>
-     * <li>Loot (one time use found in fights or occasionally the store)</li>
-     * <li>Action (last the duration of the run, bought from store)</li>
-     */
-    CardType type;
 
     /**
      * All cards have a short instructional message that describes the function.
@@ -43,18 +38,19 @@ public abstract class Card {
      * */
     boolean destroyOnPlay = false;
 
-    public Card(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount) {
+    public Card(String name, String description, CardStat stat, int bonus, int drawCardsAmount) {
         this.name = name;
-        this.type = type;
         this.description = description;
         this.stat = stat;
         this.bonus = bonus;
         this.drawCardsAmount = drawCardsAmount;
     }
 
-    abstract void applyDrawEffect();
+    abstract void applyDrawEffect(PlayerCharacter character);
+    abstract void applyDiscardEffect(PlayerCharacter character);
 
     abstract void destroyCard();
+    abstract CardType getType();
 
     public enum CardType {
         ABILITY,

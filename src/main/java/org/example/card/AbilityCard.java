@@ -1,5 +1,7 @@
 package org.example.card;
 
+import org.example.Character.PlayerCharacter;
+
 /**
  Ability cards are gained during character creation and last the duration of the character playthrough.
  <p>
@@ -12,15 +14,23 @@ public class AbilityCard extends Card {
      */
     int base;
 
-    public AbilityCard(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount) {
-        super(name, type, description, stat, bonus, drawCardsAmount);
+    public AbilityCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount) {
+        super(name, description, stat, bonus, drawCardsAmount);
     }
 
     @Override
     // Add 'Player target' to the inputs
-    public void applyDrawEffect() {
-        // TODO: Logic to apply effect to player target target.setStat(stat, value);
+    public void applyDrawEffect(PlayerCharacter character) {
+        // TODO: TEST Logic to apply effect to player target target.setStat(stat, value);
+        character.statBonus(this.stat.toString(), this.bonus);
         System.out.println("Applied Draw Effect");
+    }
+
+    @Override
+    // Reverses bonus
+    public void applyDiscardEffect(PlayerCharacter character){
+        character.statBonus(this.stat.toString(), 0-this.bonus);
+        System.out.println("Applied Discard Effect");
     }
 
     // Shouldn't really be used
@@ -30,9 +40,15 @@ public class AbilityCard extends Card {
         System.out.println("Card Destroyed");
     }
 
-    public void instantEffect() {
-        // TODO: logic to set player stat permanently
-        System.out.println(this.stat + " changed to "+base);
+    @Override
+    public CardType getType(){
+        return CardType.ABILITY;
+    }
+
+    // Sets a playercharacter's stat to the base value of the ability card
+    public void instantEffect(PlayerCharacter character) {
+        character.permaChangeStat(this.stat.toString(), this.base);
+        System.out.println(character.name + "'s " + this.stat + " has been changed to "+ character.getStat(this.stat.toString()));
     }
 
 

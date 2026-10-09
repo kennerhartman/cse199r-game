@@ -21,6 +21,8 @@ public class CardStorage implements TypeAdapterFactory{
     // Tracks what subclass should be created based on the "type" value in the JSON file
     RuntimeTypeAdapterFactory<Card> cardAdapter = RuntimeTypeAdapterFactory
             .of(Card.class, "type")
+//            ADDED FOR A TEST TO SEE IF type FIELD BECOMES !NULL
+            .recognizeSubtypes()
             .registerSubtype(AbilityCard.class, "ABILITY")
             .registerSubtype(LootCard.class, "LOOT")
             .registerSubtype(ActionCard.class, "ACTION");
@@ -50,7 +52,7 @@ public class CardStorage implements TypeAdapterFactory{
     }
 
     // Used for the shop or character creation
-    public void draw(){
+    private void draw(){
 //      Draw a new card, add it to the hand
         Card newCard = AllCards.getFirst();
         AllCards.removeFirst();
@@ -58,11 +60,43 @@ public class CardStorage implements TypeAdapterFactory{
         StoreCards.add(newCard);
     }
 
+//    Overloaded draw that takes a type
+    private void draw(Card.CardType type ){
+    //      Draw a new card, add it to the hand
+        boolean cardloop = true;
+        int numChecked = 0;
+        while (cardloop & numChecked < AllCards.size()){
+            Card newCard = AllCards.getFirst();
+            AllCards.removeFirst();
+            AllCards.add(newCard);
+            if(newCard.getType() == type){
+                StoreCards.add(newCard);
+                break;
+            }
+//            TODO: Replace with actual error logging
+            System.out.println(newCard.name + " type in list: " + newCard.getType() + " | Target type: " + type);
+            numChecked ++;
+        }
+    }
+
     // Creates and displays the store
     public void loadStore(int numberOfCards){
         Collections.shuffle(AllCards);
         for(int i = 0; i<numberOfCards; i++){
             draw();
+        }
+        System.out.println("Store:");
+        for(int i = 0; i<numberOfCards; i++) {
+            System.out.println(i + ". " + this.StoreCards.get(i).name);
+        }
+    }
+
+//    Overloaded loadStore that selects by type so that you can display a loot card after a battle or get
+//    just ability cards for character creation
+    public void loadStore(int numberOfCards, Card.CardType type){
+        Collections.shuffle(AllCards);
+        for(int i = 0; i<numberOfCards; i++){
+            draw(type);
         }
         System.out.println("Store:");
         for(int i = 0; i<numberOfCards; i++) {

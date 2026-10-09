@@ -15,17 +15,25 @@ public class Player {
     int HighestLevelReached;
     int TotalPlaythroughs;
 
-    public void CreateNewCharacter(String name){
+    public Player(String user, String pwrd){
+        this.username = user;
+        this.password = pwrd;
+        this.PlayerLevel = 1;
+        this.HighestLevelReached = 0;
+        this.TotalPlaythroughs = 0;
+    }
+
+    public void createNewCharacter(String name){
         this.character = new PlayerCharacter(this, name);
         AllPlayerCharacters.add(this.character);
     }
 
-    public void CreateCustomCharacter(String name, int level, int health, int strength, int speed, int attack){
+    public void createCustomCharacter(String name, int level, int health, int strength, int speed, int attack){
         this.character = new PlayerCharacter(this, name, level, health, strength, speed, attack);
         AllPlayerCharacters.add(this.character);
     }
 
-    public void LoadPrevCharacter(String name, int level){
+    public void loadPrevCharacter(String name, int level){
         for(PlayerCharacter character : AllPlayerCharacters){
             if(Objects.equals(character.name, name) & character.level == level){
                 this.character = character;
