@@ -4,6 +4,17 @@ import org.example.serializer.Codec;
 import org.example.serializer.RecordCodecBuilder;
 
 public abstract class Card {
+    public static final Codec<Card> CODEC = Codec.dispatch(
+            "type",
+            CardType.class,
+            Card::getType,
+            type -> switch (type) {
+                case ABILITY -> AbilityCard.CODEC;
+                case LOOT -> LootCard.CODEC;
+                case ACTION -> ActionCard.CODEC;
+            }
+    );
+
     /**
      * The card's name or title.
      */

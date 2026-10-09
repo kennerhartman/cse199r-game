@@ -1,7 +1,5 @@
 package org.example.registry.loader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -14,15 +12,12 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.stream.Stream;
 
-import org.example.card.AbilityCard;
 import org.example.client.texture.TextureLoader;
-import org.example.registry.DynamicRegistry;
-import org.example.registry.Registry;
+import org.example.registry.DataRegistry;
 import org.example.serializer.JsonOps;
 import org.example.util.Identifier;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class JsonDataLoader {
@@ -46,7 +41,7 @@ public class JsonDataLoader {
         }
     }
 
-    public <T> void populate(Identifier name, DynamicRegistry<T> registry) {
+    public <T> void populate(Identifier name, DataRegistry<T> registry) {
         String namespace = name.namespace;
         String path = name.path;
 
@@ -54,7 +49,7 @@ public class JsonDataLoader {
 
         Path cards = data.resolve(namespace + "/" + path);
 
-        try (Stream<Path> files = Files.walk(cards)) {
+        try (Stream<Path> files = Files.list(cards)) {
             files
                     .filter(Files::isRegularFile)
                     .forEach(file -> {
@@ -63,7 +58,13 @@ public class JsonDataLoader {
 
                             T value = registry.getCodec().decode(JsonOps.INSTANCE, json);
 
-                            System.out.println(value);
+                            int lastSlash = file.toString().lastIndexOf("/");
+
+                            String substring = file.toString().substring(lastSlash + 1);
+                            int lastPeriod = substring.lastIndexOf(".");
+                            substring = substring.substring(0, lastPeriod);
+
+                            registry.register(Identifier.of(namespace, substring), value);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }

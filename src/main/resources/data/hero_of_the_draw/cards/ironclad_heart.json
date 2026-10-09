@@ -1,6 +1,6 @@
 {
     "name": "Ironclad Heart",
-    "type": "abiliety",
+    "type": "ability",
     "description": "Increases base health to 20. When played, you regain 5 health.",
     "stat": "HEALTH",
     "bonus": 5,

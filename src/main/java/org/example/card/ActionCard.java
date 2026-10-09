@@ -1,7 +1,20 @@
 package org.example.card;
 
+import org.example.serializer.Codec;
+import org.example.serializer.RecordCodecBuilder;
+
 // Action cards should be resolved immediately when played
 public class ActionCard extends Card {
+    public static final Codec<ActionCard> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    Codec.STRING.fieldOf("name").forGetter(Card::getName),
+                    Codec.ofEnum(CardType.class).fieldOf("type").forGetter(Card::getType),
+                    Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
+                    Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
+                    Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
+                    Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount)
+            ).apply(ActionCard::new)
+    );
 
     String stat;
     int bonus;

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 // Lightweight implementation of codecs derived from Mojang's
 // DFU Library: https://github.com/Mojang/DataFixerUpper
@@ -192,6 +193,74 @@ public interface Codec<T> {
                 }
 
                 return decodedMap;
+            }
+        };
+    }
+
+    static <T, E extends Enum<E>> Codec<T> dispatch(
+            String field,
+            Class<E> enumClass,
+            Function<T, E> enumGetter,
+            Function<E, Codec<? extends T>> codecMapper
+    ) {
+        return new Codec<>() {
+            @Override
+            public Object encode(T object) {
+                E enumKey = enumGetter.apply(object);
+                String stringKey = enumKey.name().toLowerCase();
+
+                @SuppressWarnings("unchecked")
+                Codec<T> targetCodec = (Codec<T>) codecMapper.apply(enumKey);
+                Object encoded = targetCodec.encode(object);
+
+                if (encoded instanceof Map<?, ?> rawMap) {
+                    @SuppressWarnings("unchecked")
+                    Map<Object, Object> map = (Map<Object, Object>) rawMap;
+
+                    map.put(field, stringKey);
+                } else if (encoded instanceof JsonObject json) {
+                    json.addProperty(field, stringKey);
+                }
+
+                return encoded;
+            }
+
+            @Override
+            public T decode(Object object) {
+                String stringKey = null;
+
+                if (object instanceof Map<?, ?> map) {
+                    Object value = map.get(field);
+
+                    if (value != null) {
+                        stringKey = value.toString();
+                    }
+                } else if (object instanceof JsonObject json) {
+                    if (json.has(field)) {
+                        stringKey = json.get(field).getAsString();
+                    }
+                }
+
+                if (stringKey == null) {
+                    throw new IllegalStateException("Missing dispatch field '" + field + "'!");
+                }
+
+                E enumKey;
+
+                try {
+                    enumKey = Enum.valueOf(enumClass, stringKey.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalStateException("Unknown enum value '" + stringKey + "' for field '" + field + "'!");
+                }
+
+                @SuppressWarnings("unchecked")
+                Codec<T> targetCodec = (Codec<T>) codecMapper.apply(enumKey);
+
+                if (targetCodec == null) {
+                    throw new IllegalStateException("No codec registered for enum key: " + enumKey);
+                }
+
+                return targetCodec.decode(object);
             }
         };
     }

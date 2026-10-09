@@ -1,9 +1,24 @@
 package org.example.card;
 
+import org.example.serializer.Codec;
+import org.example.serializer.RecordCodecBuilder;
+
 /**
  * Loot cards should affect any cards played on this turn after the loot card is played then be destroyed on turn end.
  */
 public class LootCard extends Card {
+    public static final Codec<LootCard> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    Codec.STRING.fieldOf("name").forGetter(Card::getName),
+                    Codec.ofEnum(CardType.class).fieldOf("type").forGetter(Card::getType),
+                    Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
+                    Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
+                    Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
+                    Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount),
+                    Codec.INT.fieldOf("price").forGetter(LootCard::getPrice)
+            ).apply(LootCard::new)
+    );
+
     // Stat can be:
     // Health (number of health points)
     // Strength (number of cards in hand)
@@ -33,5 +48,9 @@ public class LootCard extends Card {
     // To be used when sold or played
     public void destroyCard() {
         // TODO: add destroy self logic to remove from deck
+    }
+
+    public int getPrice() {
+        return this.price;
     }
 }

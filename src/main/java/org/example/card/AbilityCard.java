@@ -10,7 +10,7 @@ import org.example.serializer.RecordCodecBuilder;
  which is used during combat.
  */
 public class AbilityCard extends Card {
-    public static final Codec<Card> CODEC = RecordCodecBuilder.create(instance ->
+    public static final Codec<AbilityCard> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.STRING.fieldOf("name").forGetter(Card::getName),
                     Codec.ofEnum(CardType.class).fieldOf("type").forGetter(Card::getType),
@@ -45,6 +45,4 @@ public class AbilityCard extends Card {
     public void instantEffect() {
         // TODO: logic to set player stat permanently
     }
-
-
 }

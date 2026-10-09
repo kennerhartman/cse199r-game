@@ -1,0 +1,10 @@
+{
+    "name": "Bag of Holding",
+    "type": "LOOT",
+    "description": "Allows player to draw three extra cards.",
+    "stat": "STRENGTH",
+    "bonus": 0,
+    "draw_cards_amount": 3,
+    "destroy_on_play": true,
+    "price": 5
+}
