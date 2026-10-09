@@ -1,4 +1,4 @@
-package org.example.registry.loader;
+package org.example.core.registry.loader;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.stream.Stream;
 
 import org.example.client.texture.TextureLoader;
-import org.example.registry.DataRegistry;
-import org.example.serializer.JsonOps;
+import org.example.core.registry.DataRegistry;
+import org.example.core.serializer.JsonOps;
 import org.example.util.Identifier;
 
 import com.google.gson.Gson;
@@ -60,11 +60,11 @@ public class JsonDataLoader {
 
                             int lastSlash = file.toString().lastIndexOf("/");
 
-                            String substring = file.toString().substring(lastSlash + 1);
-                            int lastPeriod = substring.lastIndexOf(".");
-                            substring = substring.substring(0, lastPeriod);
+                            String valueId = file.toString().substring(lastSlash + 1);
+                            int lastPeriod = valueId.lastIndexOf(".");
+                            valueId = valueId.substring(0, lastPeriod);
 
-                            registry.register(Identifier.of(namespace, substring), value);
+                            registry.register(Identifier.of(namespace, valueId), value);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }

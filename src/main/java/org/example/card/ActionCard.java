@@ -1,7 +1,7 @@
 package org.example.card;
 
-import org.example.serializer.Codec;
-import org.example.serializer.RecordCodecBuilder;
+import org.example.core.serializer.Codec;
+import org.example.core.serializer.RecordCodecBuilder;
 
 // Action cards should be resolved immediately when played
 public class ActionCard extends Card {

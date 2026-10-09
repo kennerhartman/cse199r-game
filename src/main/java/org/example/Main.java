@@ -3,7 +3,7 @@ package org.example;
 import java.util.Map;
 
 import org.example.card.Card;
-import org.example.registry.Registries;
+import org.example.core.registries.Registries;
 import org.example.util.Identifier;
 
 public class Main {

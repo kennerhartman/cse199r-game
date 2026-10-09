@@ -1,17 +1,20 @@
-package org.example.registry;
+package org.example.core.registries;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
 
 import org.example.card.Card;
-import org.example.registry.loader.JsonDataLoader;
-import org.example.serializer.Codec;
+import org.example.core.registry.DataRegistry;
+import org.example.core.registry.Registry;
+import org.example.core.registry.RegistryKeys;
+import org.example.core.registry.loader.JsonDataLoader;
+import org.example.core.serializer.Codec;
 import org.example.util.Identifier;
 
 public class Registries {
     private static final HashMap<Identifier, Registry<?>> LOADERS = new HashMap<>();
 
-    public static Registry<Card> CARDS = createDataRegistry(RegistryKey.CARDS, Card.CODEC);
+    public static Registry<Card> CARDS = createDataRegistry(RegistryKeys.CARDS, Card.CODEC);
 
     /**
      * Creates a registry that is populated dynamically from data.

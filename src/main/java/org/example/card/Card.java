@@ -1,7 +1,6 @@
 package org.example.card;
 
-import org.example.serializer.Codec;
-import org.example.serializer.RecordCodecBuilder;
+import org.example.core.serializer.Codec;
 
 public abstract class Card {
     public static final Codec<Card> CODEC = Codec.dispatch(

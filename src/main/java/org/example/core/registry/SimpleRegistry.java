@@ -1,4 +1,4 @@
-package org.example.registry;
+package org.example.core.registry;
 
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -17,10 +17,6 @@ public class SimpleRegistry<T> implements Registry<T> {
         this.registerId = registerId;
     }
 
-    private Identifier getRegisterId() {
-        return this.registerId;
-    }
-
     private final Map<Identifier, T> entryMap = new LinkedHashMap<>();
     private final Map<T, Identifier> inverseMap = new IdentityHashMap<>();
 
@@ -36,6 +32,10 @@ public class SimpleRegistry<T> implements Registry<T> {
         this.inverseMap.put(entry, key);
 
         return entry;
+    }
+
+    public Identifier getRegisterId() {
+        return this.registerId;
     }
 
     @Override

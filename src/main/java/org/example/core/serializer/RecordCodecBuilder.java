@@ -1,4 +1,4 @@
-package org.example.serializer;
+package org.example.core.serializer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,6 +70,11 @@ public class RecordCodecBuilder<O, F> {
         R apply(A a, B b, C c, D d, E e, F f, G g);
     }
 
+    @FunctionalInterface
+    public interface OctoFunction<A, B, C, D, E, F, G, H, R> {
+        R apply(A a, B b, C c, D d, E e, F f, G g, H h);
+    }
+
     public static class Instance<O> {
         public <A> Group<O, A> group(RecordCodecBuilder<O, A> a) {
             return new Group<>(a);
@@ -102,6 +107,12 @@ public class RecordCodecBuilder<O, F> {
                                                                     RecordCodecBuilder<O, D> d, RecordCodecBuilder<O, E> e, RecordCodecBuilder<O, F> f,
                                                                     RecordCodecBuilder<O, G> g) {
             return new Group7<>(a, b, c, d, e, f, g);
+        }
+
+        public <A, B, C, D, E, F, G, H> Group8<O, A, B, C, D, E, F, G, H> group(RecordCodecBuilder<O, A> a, RecordCodecBuilder<O, B> b, RecordCodecBuilder<O, C> c,
+                                                                          RecordCodecBuilder<O, D> d, RecordCodecBuilder<O, E> e, RecordCodecBuilder<O, F> f,
+                                                                          RecordCodecBuilder<O, G> g, RecordCodecBuilder<O, H> h) {
+            return new Group8<>(a, b, c, d, e, f, g, h);
         }
     }
 
@@ -208,10 +219,10 @@ public class RecordCodecBuilder<O, F> {
         }
     }
 
-    public record Group7<O, A, B, C, D, E, F, H>(RecordCodecBuilder<O, A> a, RecordCodecBuilder<O, B> b, RecordCodecBuilder<O, C> c,
+    public record Group7<O, A, B, C, D, E, F, G>(RecordCodecBuilder<O, A> a, RecordCodecBuilder<O, B> b, RecordCodecBuilder<O, C> c,
                                               RecordCodecBuilder<O, D> d, RecordCodecBuilder<O, E> e, RecordCodecBuilder<O, F> f,
-                                              RecordCodecBuilder<O, H> h) {
-        public RecordCodecBuilder<O, O> apply(HeptaFunction<A, B, C, D, E, F, H, O> constructor) {
+                                              RecordCodecBuilder<O, G> g) {
+        public RecordCodecBuilder<O, O> apply(HeptaFunction<A, B, C, D, E, F, G, O> constructor) {
             return new RecordCodecBuilder<>(
                     map -> constructor.apply(
                             a.decoder.apply(map),
@@ -220,6 +231,35 @@ public class RecordCodecBuilder<O, F> {
                             d.decoder.apply(map),
                             e.decoder.apply(map),
                             f.decoder.apply(map),
+                            g.decoder.apply(map)
+                    ),
+                    (o, map) -> {
+                        a.encoder.apply(o, map);
+                        b.encoder.apply(o, map);
+                        c.encoder.apply(o, map);
+                        d.encoder.apply(o, map);
+                        e.encoder.apply(o, map);
+                        f.encoder.apply(o, map);
+                        g.encoder.apply(o, map);
+                        return map;
+                    }
+            );
+        }
+    }
+
+    public record Group8<O, A, B, C, D, E, F, G, H>(RecordCodecBuilder<O, A> a, RecordCodecBuilder<O, B> b, RecordCodecBuilder<O, C> c,
+                                                 RecordCodecBuilder<O, D> d, RecordCodecBuilder<O, E> e, RecordCodecBuilder<O, F> f,
+                                                RecordCodecBuilder<O, G> g, RecordCodecBuilder<O, H> h) {
+        public RecordCodecBuilder<O, O> apply(OctoFunction<A, B, C, D, E, F, G, H, O> constructor) {
+            return new RecordCodecBuilder<>(
+                    map -> constructor.apply(
+                            a.decoder.apply(map),
+                            b.decoder.apply(map),
+                            c.decoder.apply(map),
+                            d.decoder.apply(map),
+                            e.decoder.apply(map),
+                            f.decoder.apply(map),
+                            g.decoder.apply(map),
                             h.decoder.apply(map)
                     ),
                     (o, map) -> {
@@ -229,6 +269,7 @@ public class RecordCodecBuilder<O, F> {
                         d.encoder.apply(o, map);
                         e.encoder.apply(o, map);
                         f.encoder.apply(o, map);
+                        g.encoder.apply(o, map);
                         h.encoder.apply(o, map);
                         return map;
                     }

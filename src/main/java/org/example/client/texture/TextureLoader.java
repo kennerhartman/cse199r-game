@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.example.serializer.JsonOps;
+import org.example.core.serializer.JsonOps;
 import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 

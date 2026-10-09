@@ -1,6 +1,6 @@
-package org.example.registry;
+package org.example.core.registry;
 
-import org.example.serializer.Codec;
+import org.example.core.serializer.Codec;
 import org.example.util.Identifier;
 
 public class DataRegistry<T> extends SimpleRegistry<T> {

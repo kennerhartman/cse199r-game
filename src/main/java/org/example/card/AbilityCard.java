@@ -1,7 +1,7 @@
 package org.example.card;
 
-import org.example.serializer.Codec;
-import org.example.serializer.RecordCodecBuilder;
+import org.example.core.serializer.Codec;
+import org.example.core.serializer.RecordCodecBuilder;
 
 /**
  Ability cards are gained during character creation and last the duration of the character playthrough.

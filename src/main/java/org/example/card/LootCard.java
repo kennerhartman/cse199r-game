@@ -1,7 +1,7 @@
 package org.example.card;
 
-import org.example.serializer.Codec;
-import org.example.serializer.RecordCodecBuilder;
+import org.example.core.serializer.Codec;
+import org.example.core.serializer.RecordCodecBuilder;
 
 /**
  * Loot cards should affect any cards played on this turn after the loot card is played then be destroyed on turn end.

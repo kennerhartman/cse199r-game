@@ -1,4 +1,4 @@
-package org.example.serializer;
+package org.example.core.serializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;

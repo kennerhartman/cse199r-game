@@ -1,8 +1,8 @@
 package org.example.tests;
 
-import org.example.serializer.Codec;
-import org.example.serializer.JsonOps;
-import org.example.serializer.RecordCodecBuilder;
+import org.example.core.serializer.Codec;
+import org.example.core.serializer.JsonOps;
+import org.example.core.serializer.RecordCodecBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

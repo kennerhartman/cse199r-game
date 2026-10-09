@@ -1,4 +1,4 @@
-package org.example.registry;
+package org.example.core.registry;
 
 import java.util.ArrayList;
 import java.util.Collections;

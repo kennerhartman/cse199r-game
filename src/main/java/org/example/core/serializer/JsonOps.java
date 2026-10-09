@@ -1,4 +1,4 @@
-package org.example.serializer;
+package org.example.core.serializer;
 
 import java.io.Reader;
 import java.util.ArrayList;
