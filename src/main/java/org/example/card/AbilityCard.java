@@ -1,5 +1,7 @@
 package org.example.card;
 
+import org.example.Character.PlayerCharacter;
+
 import org.example.core.serializer.Codec;
 import org.example.core.serializer.RecordCodecBuilder;
 
@@ -13,7 +15,6 @@ public class AbilityCard extends Card {
     public static final Codec<AbilityCard> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.STRING.fieldOf("name").forGetter(Card::getName),
-                    Codec.ofEnum(CardType.class).fieldOf("type").forGetter(Card::getType),
                     Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
                     Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
                     Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
@@ -26,15 +27,23 @@ public class AbilityCard extends Card {
      */
     int base;
 
-    public AbilityCard(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount) {
-        super(name, type, description, stat, bonus, drawCardsAmount);
+    public AbilityCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount) {
+        super(name, description, stat, bonus, drawCardsAmount);
     }
 
     @Override
     // Add 'Player target' to the inputs
-    public void applyDrawEffect() {
-        // TODO: Logic to apply effect to player target target.setStat(stat, value);
+    public void applyDrawEffect(PlayerCharacter character) {
+        // TODO: TEST Logic to apply effect to player target target.setStat(stat, value);
+        character.statBonus(this.stat.toString(), this.bonus);
         System.out.println("Applied Draw Effect");
+    }
+
+    @Override
+    // Reverses bonus
+    public void applyDiscardEffect(PlayerCharacter character){
+        character.statBonus(this.stat.toString(), 0-this.bonus);
+        System.out.println("Applied Discard Effect");
     }
 
     // Shouldn't really be used
@@ -44,8 +53,14 @@ public class AbilityCard extends Card {
         System.out.println("Card Destroyed");
     }
 
-    public void instantEffect() {
-        // TODO: logic to set player stat permanently
-        System.out.println(this.stat + " changed to "+base);
+    @Override
+    public CardType getType(){
+        return CardType.ABILITY;
+    }
+
+    // Sets a playercharacter's stat to the base value of the ability card
+    public void instantEffect(PlayerCharacter character) {
+        character.permaChangeStat(this.stat.toString(), this.base);
+        System.out.println(character.name + "'s " + this.stat + " has been changed to "+ character.getStat(this.stat.toString()));
     }
 }

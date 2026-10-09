@@ -9,8 +9,8 @@ public class PlayerCharacter {
 
     Deck deck;
     public String name;
-
     public int level;
+
     int Health;
     int Strength;
     int Speed;
@@ -36,5 +36,68 @@ public class PlayerCharacter {
         this.Strength = strength;
         this.Speed = speed;
         this.Attack = attack;
+    }
+
+    public void permaChangeStat(String statName, int value){
+        int stat = 4;
+        switch(stat){
+            case 1:
+                statName = "HEALTH";
+                this.Health = value;
+                break;
+            case 2:
+                statName = "STRENGTH";
+                this.Strength = value;
+                break;
+            case 3:
+                statName = "SPEED";
+                this.Speed = value;
+                break;
+            case 4:
+                statName = "ATTACK";
+                this.Attack = value;
+                break;
+        }
+    }
+
+    public void statBonus(String statName, int value){
+        int stat = 4;
+        switch(stat){
+            case 1:
+                statName = "HEALTH";
+                this.Health = value;
+                break;
+            case 2:
+                statName = "STRENGTH";
+                this.Strength = value;
+                break;
+            case 3:
+                statName = "SPEED";
+                this.Speed = value;
+                break;
+            case 4:
+                statName = "ATTACK";
+                this.Attack = value;
+                break;
+        }
+    }
+
+    public int getStat(String statName){
+        int stat = 4;
+        switch(stat){
+            case 1:
+                statName = "HEALTH";
+                return this.Health;
+            case 2:
+                statName = "STRENGTH";
+                return this.Strength;
+            case 3:
+                statName = "SPEED";
+                return this.Speed;
+            case 4:
+                statName = "ATTACK";
+                return this.Attack;
+        }
+        return 0;
     }
 }
