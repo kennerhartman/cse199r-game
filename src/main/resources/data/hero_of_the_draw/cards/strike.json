@@ -1,0 +1,10 @@
+{
+    "name": "Strike",
+    "type": "ACTION",
+    "description": "Deals moderate damage to the enemy.",
+    "stat": "ATTACK",
+    "bonus": 8,
+    "draw_cards_amount": 0,
+    "destroy_on_play": false,
+    "price": 5
+}

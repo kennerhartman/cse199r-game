@@ -1,5 +1,8 @@
 package org.example.card;
 
+import org.example.core.serializer.Codec;
+import org.example.core.serializer.RecordCodecBuilder;
+
 /**
  Ability cards are gained during character creation and last the duration of the character playthrough.
  <p>
@@ -7,6 +10,17 @@ package org.example.card;
  which is used during combat.
  */
 public class AbilityCard extends Card {
+    public static final Codec<AbilityCard> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    Codec.STRING.fieldOf("name").forGetter(Card::getName),
+                    Codec.ofEnum(CardType.class).fieldOf("type").forGetter(Card::getType),
+                    Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
+                    Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
+                    Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
+                    Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount)
+            ).apply(AbilityCard::new)
+    );
+
     /**
      * The base value is Ability card specific, and is used to set the default stat value of a character on creation.
      */
@@ -34,6 +48,4 @@ public class AbilityCard extends Card {
         // TODO: logic to set player stat permanently
         System.out.println(this.stat + " changed to "+base);
     }
-
-
 }

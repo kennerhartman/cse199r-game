@@ -23,14 +23,14 @@ public class GuiGraphics {
     public void blitNineSliced(int x, int y, int width, int height, int textureWidth, int textureHeight) {
         int srcW, srcH, cLeft, cTop, cRight, cBottom, textureScale;
 
-        if (this.texture.metadata != null) {
-            srcW = this.texture.metadata.width();
-            srcH = this.texture.metadata.height();
-            cLeft = this.texture.metadata.cornerSize();
-            cTop = this.texture.metadata.cornerSize();
-            cRight = this.texture.metadata.cornerSize();
-            cBottom = this.texture.metadata.cornerSize();
-            textureScale = this.texture.metadata.scale();
+        if (this.texture.metadata() != null) {
+            srcW = this.texture.metadata().width();
+            srcH = this.texture.metadata().height();
+            cLeft = this.texture.metadata().corner();
+            cTop = this.texture.metadata().corner();
+            cRight = this.texture.metadata().corner();
+            cBottom = this.texture.metadata().corner();
+            textureScale = this.texture.metadata().scale();
         } else {
             srcW = textureWidth;
             srcH = textureHeight;
@@ -69,7 +69,7 @@ public class GuiGraphics {
                         .height(dstY[row + 1] - dstY[row]);
 
                 if (srcRec.width() > 0 && srcRec.height() > 0 && dstRec.width() > 0 && dstRec.height() > 0) {
-                    Raylib.DrawTexturePro(this.texture.texture, srcRec, dstRec, origin, 0.0f, Colors.WHITE);
+                    Raylib.DrawTexturePro(this.texture.texture(), srcRec, dstRec, origin, 0.0f, Colors.WHITE);
                 }
             }
         }
