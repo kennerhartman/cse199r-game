@@ -28,7 +28,7 @@ public class MainMenuScreen extends Screen {
         this.elements.add(
                 new ButtonWidget(
                         "New",
-                        borderX + 125/8,
+                        borderX + 125 / 8,
                         borderY + 25,
                         125,
                         45,

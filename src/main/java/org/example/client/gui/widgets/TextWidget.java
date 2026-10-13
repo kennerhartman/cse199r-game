@@ -25,7 +25,8 @@ public class TextWidget extends AbstractWidget {
         );
     }
 
-    private static int getTextWidth(String text) {
+    // TODO: KEEP PRIVATE
+    public static int getTextWidth(String text) {
         return (int) Raylib.MeasureTextEx(Client.getInstance().font, text, 24, 2).x();
     }
 

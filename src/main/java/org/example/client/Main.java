@@ -7,6 +7,8 @@ import com.raylib.Raylib;
 import org.example.card.AbilityCard;
 import org.example.card.Card;
 import org.example.card.CardStorage;
+import org.example.core.registries.Registries;
+
 import java.util.Scanner;
 
 public class Main {
@@ -17,11 +19,14 @@ public class Main {
         Raylib.SetWindowState(FLAG_WINDOW_RESIZABLE);
         Raylib.SetTargetFPS(60);
 
+        Registries.load();
+
         Client client = new Client();
 
         while (!Raylib.WindowShouldClose()) {
             client.run();
         }
+
 //        Add Text based Game loop Here!
 //        Fake character stats
         int HEALTH;

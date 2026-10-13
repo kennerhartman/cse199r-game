@@ -1,5 +1,6 @@
 package org.example.client;
 
+import org.example.client.gui.Gui;
 import org.example.client.gui.screen.Screen;
 
 import com.raylib.Raylib;
@@ -21,9 +22,8 @@ public class InputHandler {
 
         this.mouseX = (int) mousePos.x();
         this.mouseY = (int) mousePos.y();
-
         if (Raylib.IsMouseButtonPressed(0)) {
-            this.mouseClicked(this.mouseX, this.mouseY);
+            this.mouseClicked(this.getVirtualMouseX(), this.getVirtualMouseY());
         }
     }
 
@@ -45,6 +45,24 @@ public class InputHandler {
         if (screen != null) {
             screen.mouseClicked(mouseX, mouseY);
         }
+    }
+
+    public int getVirtualMouseX() {
+        float scale = Client.getInstance().gui.getScale();
+        float screenWidth = (float) Client.getInstance().gui.getScreenWidth();
+        int destWidth = (int) (Gui.VIRTUAL_WIDTH * scale);
+        int destX = (int) ((screenWidth - destWidth) / 2);
+
+        return (int) ((this.mouseX - destX) / scale);
+    }
+
+    public int getVirtualMouseY() {
+        float scale = Client.getInstance().gui.getScale();
+        float screenHeight = (float) Client.getInstance().gui.getScreenHeight();
+        int destHeight = (int) (Gui.VIRTUAL_HEIGHT * scale);
+        int destY = (int) ((screenHeight - destHeight) / 2);
+
+        return (int) ((this.mouseY - destY) / scale);
     }
 
     public int getMouseX() {

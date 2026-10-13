@@ -29,7 +29,7 @@ public abstract class Screen {
 
     public void resize() {
         this.elements.clear();
-        this.init(this.client.gui.getScreenWidth(), this.client.gui.getScreenHeight());
+        this.init(850, 500);
     }
 
     public void renderBackground(GuiGraphics graphics) {
@@ -55,7 +55,7 @@ public abstract class Screen {
     }
 
     public void mouseClicked(int mouseX, int mouseY) {
-        for (Element element : this.elements) {
+        for (Element element : new ArrayList<>(this.elements)) {
             if (element instanceof GuiElementEvent event) {
                 event.mouseClicked(mouseX, mouseY);
             }

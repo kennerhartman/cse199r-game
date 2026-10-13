@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.example.util.Identifier;
 import org.jetbrains.annotations.NotNull;

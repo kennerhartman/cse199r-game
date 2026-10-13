@@ -34,4 +34,8 @@ public class Player {
             }
         }
     }
+
+    public PlayerCharacter getCharacter() {
+        return this.character;
+    }
 }
