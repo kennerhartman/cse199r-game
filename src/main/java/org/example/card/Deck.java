@@ -9,6 +9,7 @@ public class Deck {
     public ArrayList<Card> drawPile = new ArrayList<Card>();
     public ArrayList<Card> discard = new ArrayList<Card>();
     public ArrayList<Card> hand = new ArrayList<Card>();
+//    public ArrayList<Card> allCards = new ArrayList<Card>();
 //    TODO: implement character class
     public PlayerCharacter owner;
 

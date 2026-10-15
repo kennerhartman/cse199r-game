@@ -7,7 +7,7 @@ public abstract class Card {
     /**
      * The card's name or title.
      */
-    String name;
+    public String name;
 
     /**
      * All cards have a short instructional message that describes the function.
