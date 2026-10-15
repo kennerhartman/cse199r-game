@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class Player {
 //    TODO: Finish Player implementation
-    String username;
+    public String username;
     String password;
     PlayerCharacter character;
     public ArrayList<PlayerCharacter> AllPlayerCharacters = new ArrayList<PlayerCharacter>();
@@ -28,8 +28,8 @@ public class Player {
         AllPlayerCharacters.add(this.character);
     }
 
-    public void createCustomCharacter(String name, int level, int health, int strength, int speed, int attack){
-        this.character = new PlayerCharacter(this, name, level, health, strength, speed, attack);
+    public void createCustomCharacter(String name, int level, int health, int strength, int speed, int attack, int currency){
+        this.character = new PlayerCharacter(this, name, level, health, strength, speed, attack, currency);
         AllPlayerCharacters.add(this.character);
     }
 

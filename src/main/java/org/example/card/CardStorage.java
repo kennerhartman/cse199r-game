@@ -60,7 +60,7 @@ public class CardStorage implements TypeAdapterFactory{
         StoreCards.add(newCard);
     }
 
-//    Overloaded draw that takes a type
+//    Overloaded draw that takes a typeb
     private void draw(Card.CardType type ){
     //      Draw a new card, add it to the hand
         boolean cardloop = true;
@@ -102,6 +102,21 @@ public class CardStorage implements TypeAdapterFactory{
         for(int i = 0; i<numberOfCards; i++) {
             System.out.println(i + ". " + this.StoreCards.get(i).name);
         }
+    }
+
+    public Card findCard(String cardName){
+        int numChecked = 0;
+        while(numChecked < AllCards.size()){
+            Card newCard = AllCards.getFirst();
+            if(newCard.name.equals(cardName)){
+                return newCard;
+            }
+            AllCards.removeFirst();
+            AllCards.add(newCard);
+            numChecked++;
+        }
+        System.out.println("Error: No card "+ cardName + " found; Adding null card");
+        return new AbilityCard("Card_Not_Found", "Card_Not_Found: This card is missing from your Card Storage!\nHelp: Check cardData.json;", Card.CardStat.HEALTH, 0, 0);
     }
 
     @Override

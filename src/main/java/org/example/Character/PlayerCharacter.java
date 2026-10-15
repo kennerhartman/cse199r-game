@@ -7,7 +7,7 @@ public class PlayerCharacter {
 //    TODO: Finish PlayerCharacter implementation
     Player owner;
 
-    Deck deck;
+    public Deck deck;
     public String name;
     public int level;
 
@@ -15,6 +15,7 @@ public class PlayerCharacter {
     int Strength;
     int Speed;
     int Attack;
+    int currency;
 
     public PlayerCharacter(Player owner, String name){
         this.owner = owner;
@@ -25,9 +26,10 @@ public class PlayerCharacter {
         this.Strength = 5;
         this.Speed = 3;
         this.Attack = 5;
+        this.currency = 0;
     }
 
-    public PlayerCharacter(Player owner, String name, int level, int health, int strength, int speed, int attack){
+    public PlayerCharacter(Player owner, String name, int level, int health, int strength, int speed, int attack, int currency){
         this.owner = owner;
         this.name = name;
         this.deck = new Deck(this);
@@ -36,7 +38,9 @@ public class PlayerCharacter {
         this.Strength = strength;
         this.Speed = speed;
         this.Attack = attack;
+        this.currency = currency;
     }
+
 
     public void permaChangeStat(String statName, int value){
         int stat = 4;
