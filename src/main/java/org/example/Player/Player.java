@@ -1,6 +1,7 @@
 package org.example.Player;
 
 import org.example.Character.PlayerCharacter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -9,7 +10,7 @@ public class Player {
 //    TODO: Finish Player implementation
     String username;
     String password;
-    PlayerCharacter character;
+    @Nullable PlayerCharacter character;
     public ArrayList<PlayerCharacter> AllPlayerCharacters = new ArrayList<PlayerCharacter>();
     int PlayerLevel;
     int HighestLevelReached;
@@ -35,7 +36,7 @@ public class Player {
         }
     }
 
-    public PlayerCharacter getCharacter() {
+    public @Nullable PlayerCharacter getCharacter() {
         return this.character;
     }
 }

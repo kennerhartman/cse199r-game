@@ -1,5 +1,6 @@
 package org.example.client;
 
+import org.example.Player.Player;
 import org.example.client.gui.Gui;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.MainMenuScreen;
@@ -13,10 +14,11 @@ public class Client {
     private static Client client;
 
     public final TextureAtlas guiTextures;
-    GuiGraphics graphics;
-    public Raylib.Font font;
-    public Gui gui;
-    public InputHandler input;
+    final GuiGraphics graphics;
+    public final Raylib.Font font;
+    public final Gui gui;
+    public final InputHandler input;
+    public final Player player;
 
     public Client() {
         Client.client = this;
@@ -28,6 +30,8 @@ public class Client {
         this.graphics = new GuiGraphics(this);
         this.input = new InputHandler();
         this.gui.setScreen(new MainMenuScreen(Client.getInstance()));
+
+        this.player = new Player();
     }
 
     protected void run() {

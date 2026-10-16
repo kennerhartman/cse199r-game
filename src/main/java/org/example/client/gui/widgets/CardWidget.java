@@ -6,7 +6,7 @@ import org.example.client.gui.GuiGraphics;
 import com.raylib.Colors;
 import com.raylib.Raylib;
 
-public class CardWidget extends AbstractWidget{
+public class CardWidget extends AbstractWidget {
     private final Runnable action;
     private final String text;
 

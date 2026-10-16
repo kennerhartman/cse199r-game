@@ -50,6 +50,11 @@ public class SimpleRegistry<T> implements Registry<T> {
     }
 
     @Override
+    public Stream<T> stream() {
+        return this.entryMap.values().stream();
+    }
+
+    @Override
     public @NotNull Iterator<Map.Entry<Identifier, T>> iterator() {
         return Collections.unmodifiableSet(this.entryMap.entrySet()).iterator();
     }

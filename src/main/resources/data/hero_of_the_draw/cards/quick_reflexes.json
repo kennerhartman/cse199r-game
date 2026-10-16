@@ -1,0 +1,10 @@
+{
+    "name": "Quick Reflexes",
+    "type": "ABILITY",
+    "description": "Increases base number of cards played per turn to 5. When played, play 1 extra card.",
+    "stat": "SPEED",
+    "bonus": 1,
+    "draw_cards_amount": 0,
+    "destroy_on_play": false,
+    "base": 5
+}

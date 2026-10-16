@@ -61,4 +61,20 @@ public abstract class Screen {
             }
         }
     }
+
+    public void keyPressed(int keyCode) {
+        for (Element element : new ArrayList<>(this.elements)) {
+            if (element instanceof GuiElementEvent event) {
+                event.keyPressed(keyCode);
+            }
+        }
+    }
+
+    public void keyDown(int keyCode) {
+        for (Element element : new ArrayList<>(this.elements)) {
+            if (element instanceof GuiElementEvent event) {
+                event.keyDown(keyCode);
+            }
+        }
+    }
 }

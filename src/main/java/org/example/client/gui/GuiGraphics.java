@@ -119,4 +119,8 @@ public class GuiGraphics {
                 Colors.WHITE
         );
     }
+
+    public void rectangle(int x, int y, int width, int height, Raylib.Color color) {
+        Raylib.DrawRectangle(x, y, width, height, color);
+    }
 }

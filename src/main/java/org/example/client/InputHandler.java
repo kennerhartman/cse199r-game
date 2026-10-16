@@ -9,29 +9,85 @@ public class InputHandler {
     int mouseX = 0;
     int mouseY = 0;
 
+    int trackedKey = 0;
+    boolean isNewPressThisFrame = false;
+    boolean isHeldDownThisFrame = false;
+
+    boolean startedTime = false;
+    long startTime = 0L;
+
     public void handleInput() {
         int code = Raylib.GetKeyPressed();
 
-        while (code != 0) {
-            this.keyDown(code);
+        if (code != 0) {
+            this.trackedKey = code;
+            this.isNewPressThisFrame = true;
+            this.keyPressed(code);
+        } else {
+            this.isNewPressThisFrame = false;
+        }
 
-            code = Raylib.GetKeyPressed();
+        if (this.trackedKey != 0) {
+            if (Raylib.IsKeyDown(this.trackedKey)) {
+                this.isHeldDownThisFrame = true;
+
+                this.keyDown(this.trackedKey);
+            } else {
+                this.isHeldDownThisFrame = false;
+                this.trackedKey = 0;
+            }
+        } else {
+            this.isHeldDownThisFrame = false;
+        }
+
+        if (this.isHeldDownThisFrame) {
+            if (!this.startedTime) {
+                this.startTime = System.nanoTime() + 500_000_000L;
+
+                this.startedTime = true;
+            } else {
+                if (this.startTime != 0L) {
+                    long now = System.nanoTime();
+
+                    if (now > this.startTime) {
+                        this.keyPressed(this.trackedKey);
+
+                        this.startTime = now + 50_000_000L;
+                    }
+                }
+            }
+        } else {
+            this.startedTime = false;
+            this.startTime = 0L;
         }
 
         Raylib.Vector2 mousePos = Raylib.GetMousePosition();
 
         this.mouseX = (int) mousePos.x();
         this.mouseY = (int) mousePos.y();
+
         if (Raylib.IsMouseButtonPressed(0)) {
             this.mouseClicked(this.getVirtualMouseX(), this.getVirtualMouseY());
         }
+    }
+
+    public boolean keyPressed(int keycode) {
+        Screen screen = Client.getInstance().gui.screen;
+
+        if (screen != null) {
+            screen.keyPressed(keycode);
+
+            return true;
+        }
+
+        return false;
     }
 
     public boolean keyDown(int keycode) {
         Screen screen = Client.getInstance().gui.screen;
 
         if (screen != null) {
-            // TODO: IMPLEMENT
+            screen.keyDown(keycode);
 
             return true;
         }
