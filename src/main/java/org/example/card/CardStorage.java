@@ -79,6 +79,24 @@ public class CardStorage implements TypeAdapterFactory{
         }
     }
 
+    private void draw(Card.CardType type, Card.CardStat stat ){
+        //      Draw a new card, add it to the hand
+        boolean cardloop = true;
+        int numChecked = 0;
+        while (cardloop & numChecked < AllCards.size()){
+            Card newCard = AllCards.getFirst();
+            AllCards.removeFirst();
+            AllCards.add(newCard);
+            if(newCard.getType() == type && newCard.getStat() == stat){
+                StoreCards.add(newCard);
+                break;
+            }
+//            TODO: Replace with actual error logging
+            System.out.println(newCard.name + " type in list: " + newCard.getType() + " | Target type: " + type);
+            numChecked ++;
+        }
+    }
+
     // Creates and displays the store
     public void loadStore(int numberOfCards){
         Collections.shuffle(AllCards);
@@ -100,6 +118,18 @@ public class CardStorage implements TypeAdapterFactory{
         }
         System.out.println("Store:");
         for(int i = 0; i<numberOfCards; i++) {
+            System.out.println(i + ". " + this.StoreCards.get(i).name);
+        }
+    }
+
+//      This method is mostly for character creation, in order to display two cards of a certain type and stat at once
+    public void characterCreatorStore(Card.CardType type, Card.CardStat stat){
+        Collections.shuffle(AllCards);
+        for(int i = 0; i<2; i++){
+            draw(type, stat);
+        }
+        System.out.println("Store:");
+        for(int i = 0; i<2; i++) {
             System.out.println(i + ". " + this.StoreCards.get(i).name);
         }
     }
