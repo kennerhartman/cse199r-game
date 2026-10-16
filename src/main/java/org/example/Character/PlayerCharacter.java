@@ -15,6 +15,7 @@ public class PlayerCharacter {
     int Strength;
     int Speed;
     int Attack;
+
     int currency;
 
     public PlayerCharacter(Player owner, String name){

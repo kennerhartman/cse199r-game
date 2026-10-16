@@ -51,6 +51,9 @@ public abstract class Card {
 
     abstract void destroyCard();
     abstract CardType getType();
+    CardStat getStat(){
+        return this.stat;
+    }
 
     public enum CardType {
         ABILITY,
