@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.example.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +47,11 @@ public class SimpleRegistry<T> implements Registry<T> {
     @Override
     public T getValue(Identifier id) {
         return this.entryMap.get(id);
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return this.entryMap.values().stream();
     }
 
     @Override
