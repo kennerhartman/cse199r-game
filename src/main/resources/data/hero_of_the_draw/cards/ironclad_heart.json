@@ -5,5 +5,6 @@
     "stat": "HEALTH",
     "bonus": 5,
     "draw_cards_amount": 0,
-    "destroy_on_play": false
+    "destroy_on_play": false,
+    "base": 20
 }

@@ -1,0 +1,10 @@
+{
+    "name": "Tactical Reserve",
+    "type": "ABILITY",
+    "description": "Increases base hand size to 6. When played, draw 2 extra cards.",
+    "stat": "STRENGTH",
+    "bonus": 0,
+    "draw_cards_amount": 2,
+    "destroy_on_play": false,
+    "base": 6
+}

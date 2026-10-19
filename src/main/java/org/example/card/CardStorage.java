@@ -1,68 +1,40 @@
 package org.example.card;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import org.example.core.registries.Registries;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class CardStorage implements TypeAdapterFactory{
     public ArrayList<Card> AllCards = new ArrayList<Card>();
     public ArrayList<Card> StoreCards = new ArrayList<Card>();
 
-    // Tracks what subclass should be created based on the "type" value in the JSON file
-    RuntimeTypeAdapterFactory<Card> cardAdapter = RuntimeTypeAdapterFactory
-            .of(Card.class, "type")
-//            ADDED FOR A TEST TO SEE IF type FIELD BECOMES !NULL
-            .recognizeSubtypes()
-            .registerSubtype(AbilityCard.class, "ABILITY")
-            .registerSubtype(LootCard.class, "LOOT")
-            .registerSubtype(ActionCard.class, "ACTION");
-
-    // Creates a GsonBuilder with the type adapter factory to differentiate subclasses
-    public final Gson gson = new GsonBuilder()
-            .registerTypeAdapterFactory(cardAdapter)
-            .create();
-
     // handles the reading and creation of the deck
-    public void loadDeck(String filename){
-        // Creates new file reader for card file
-        try(FileReader reader = new FileReader(filename)){
-            // Stores the type needed for creating the array list
-            Type cardListType = new TypeToken<ArrayList<Card>>(){}.getType();
-            // Deserializes JSON directly into an array list
-            this.AllCards = gson.fromJson(reader, cardListType);
-        }
-        // Catches file not found and IOException
-        // TODO: replace these errors with an actual error logger, and probably fix any loop breaking here
-        catch(FileNotFoundException e) {
-            System.out.println("File missing: \n" + e);
-        }
-        catch (IOException e){
-            System.out.println("Failed to read configuration file due to an I/O error: \n" + e);
-        }
+    public void loadDeck(){
+//        Uses Codec to populate AllCards
+        List<Card> cards = Registries.CARDS.stream().toList();
+        this.AllCards = new ArrayList<Card>(cards);
     }
+
 
     // Used for the shop or character creation
     private void draw(){
-//      Draw a new card, add it to the hand
+//      Draw a new card, add it to the store
         Card newCard = AllCards.getFirst();
         AllCards.removeFirst();
         AllCards.add(newCard);
         StoreCards.add(newCard);
     }
 
-//    Overloaded draw that takes a typeb
+//    Overloaded draw that takes a type
     private void draw(Card.CardType type ){
-    //      Draw a new card, add it to the hand
+    //      Draw a new card, add it to the store
         boolean cardloop = true;
         int numChecked = 0;
         while (cardloop & numChecked < AllCards.size()){
@@ -80,7 +52,7 @@ public class CardStorage implements TypeAdapterFactory{
     }
 
     private void draw(Card.CardType type, Card.CardStat stat ){
-        //      Draw a new card, add it to the hand
+        //      Draw a new card, add it to the store
         boolean cardloop = true;
         int numChecked = 0;
         while (cardloop & numChecked < AllCards.size()){
@@ -146,7 +118,7 @@ public class CardStorage implements TypeAdapterFactory{
             numChecked++;
         }
         System.out.println("Error: No card "+ cardName + " found; Adding null card");
-        return new AbilityCard("Card_Not_Found", "Card_Not_Found: This card is missing from your Card Storage!\nHelp: Check cardData.json;", Card.CardStat.HEALTH, 0, 0);
+        return new AbilityCard("Card_Not_Found", "Card_Not_Found: This card is missing from your Card Storage!\nHelp: Check cardData.json;", Card.CardStat.HEALTH, 0, 0, 0);
     }
 
     @Override

@@ -18,17 +18,19 @@ public class AbilityCard extends Card {
                     Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
                     Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
                     Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
-                    Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount)
+                    Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount),
+                    Codec.INT.fieldOf("base").forGetter(AbilityCard::getBase)
             ).apply(AbilityCard::new)
     );
 
     /**
      * The base value is Ability card specific, and is used to set the default stat value of a character on creation.
      */
-    int base;
+    int base = 0;
 
-    public AbilityCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount) {
+    public AbilityCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount, int base) {
         super(name, description, stat, bonus, drawCardsAmount);
+        this.base = base;
     }
 
     @Override
@@ -57,6 +59,8 @@ public class AbilityCard extends Card {
     public CardType getType(){
         return CardType.ABILITY;
     }
+
+    public int getBase() { return this.base; }
 
     // Sets a playercharacter's stat to the base value of the ability card
     public void instantEffect(PlayerCharacter character) {

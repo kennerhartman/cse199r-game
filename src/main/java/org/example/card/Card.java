@@ -79,6 +79,8 @@ public abstract class Card {
         return this.drawCardsAmount;
     }
 
+//    public int getBase() { return this.base }
+
     public boolean isDestroyedOnPlay() {
         return this.destroyOnPlay;
     }

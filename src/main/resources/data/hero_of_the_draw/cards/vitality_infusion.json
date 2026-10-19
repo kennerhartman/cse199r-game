@@ -1,0 +1,10 @@
+{
+    "name": "Vitality Infusion",
+    "type": "ABILITY",
+    "description": "Increases base health to 15. When played, you regain 10 health.",
+    "stat": "HEALTH",
+    "bonus": 10,
+    "draw_cards_amount": 0,
+    "destroy_on_play": false,
+    "base": 15
+}

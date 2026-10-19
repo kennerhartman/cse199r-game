@@ -1,0 +1,10 @@
+{
+    "name": "Brawny Strike",
+    "type": "ABILITY",
+    "description": "Increases base attack to 7. When played, deal 2 extra damage.",
+    "stat": "ATTACK",
+    "bonus": 2,
+    "draw_cards_amount": 0,
+    "destroy_on_play": false,
+    "base": 7
+}
