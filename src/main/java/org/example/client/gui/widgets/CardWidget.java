@@ -25,8 +25,6 @@ public class CardWidget extends AbstractWidget {
         int x = this.getX() + (this.width / 2) - (Raylib.MeasureText(this.text, 24) / 2);
         int y = this.getY() + (this.height / 2) - (24 / 2);
 
-        graphics.border(this.x, this.y, this.width, this.height);
-
         graphics.text(
                 this.text,
                 x,

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.example.card.Card;
+import org.example.card.Cards;
 import org.example.client.Client;
 import org.example.client.gui.widgets.ButtonWidget;
 import org.example.client.gui.widgets.CardWidget;
@@ -13,24 +14,24 @@ import org.example.client.gui.widgets.TextWidget;
 import org.example.core.registries.Registries;
 
 public class CharacterCreationScreen extends Screen {
-    Screen parent;
-    List<Card> cards;
-
-    Random random = new Random();
-
-    ScreenCard card1;
-    ScreenCard card2;
+    private final Screen parent;
+    private TextInputWidget characterNameInputWidget;
 
     public CharacterCreationScreen(Client client, Screen parent) {
         super(client);
 
         this.parent = parent;
-        this.cards = Registries.CARDS.stream().toList();
-        this.addCards();
     }
 
     @Override
     public void init() {
+        this.characterNameInputWidget = new TextInputWidget(
+                this.width / 2 - 150,
+                250,
+                300,
+                50
+        );
+
         this.elements.add(
                 new ButtonWidget("X", 15, 15, 50, 50, this::onClose)
         );
@@ -43,14 +44,7 @@ public class CharacterCreationScreen extends Screen {
                 )
         );
 
-        this.elements.add(
-            new TextInputWidget(
-                    this.width / 2 - 150,
-                    250,
-                    300,
-                    50
-            )
-        );
+        this.elements.add(this.characterNameInputWidget);
 
         this.elements.add(
                 new ButtonWidget(
@@ -62,14 +56,6 @@ public class CharacterCreationScreen extends Screen {
                         this::createCharacter
                 )
         );
-
-        // this.elements.add(
-        //         this.buildCardWidget(this.card1)
-        // );
-        //
-        // this.elements.add(
-        //         this.buildCardWidget(this.card2)
-        // );
     }
 
     @Override
@@ -79,54 +65,125 @@ public class CharacterCreationScreen extends Screen {
     }
 
     private void createCharacter() {
+        String name = this.characterNameInputWidget.getText();
 
-    }
-
-    private void addCards() {
-        this.card1 = new ScreenCard(0, this.cards.get(this.random.nextInt(this.cards.size())));
-        this.card2 = new ScreenCard(1, this.cards.get(this.random.nextInt(this.cards.size())));
-    }
-
-    private void addCardToDeckAndRefresh(ScreenCard card) {
-        ArrayList<Card> cards = this.client.player.getCharacter().getHand();
-
-        cards.add(card.card);
-
-        if (card.index == 0) {
-            this.card1 = new ScreenCard(0, this.cards.get(this.random.nextInt(this.cards.size())));
-        } else {
-            this.card2 = new ScreenCard(1, this.cards.get(this.random.nextInt(this.cards.size())));
+        if (name.isEmpty()) {
+            return;
         }
 
-        this.rebuild();
+        this.client.player.CreateNewCharacter(name);
+
+        this.client.gui.setScreen(new DeckBuilderScreen(this.client, this.parent));
     }
 
-    private CardWidget buildCardWidget(ScreenCard card) {
-        final int cardWidth = 250;
-        final int cardHeight = 350;
-        final int spacing = 16;
+    static class DeckBuilderScreen extends Screen {
+        private final Screen parent;
 
-        int totalGroupWidth = (2 * cardWidth) + spacing;
-        int startX = (this.width / 2) - (totalGroupWidth / 2);
-
-        int cardWidgetX = startX + (card.index * (cardWidth + spacing));
-        int cardWidgetY = (this.height / 2) - (cardHeight / 2);
-
-        return new CardWidget(
-                card.card,
-                cardWidgetX,
-                cardWidgetY,
-                cardWidth,
-                cardHeight,
-                () -> this.addCardToDeckAndRefresh(card)
+        private final List<Card.CardStat> stats = List.of(
+                Card.CardStat.HEALTH,
+                Card.CardStat.SPEED,
+                Card.CardStat.STRENGTH,
+                Card.CardStat.ATTACK
         );
-    }
 
-    private void rebuild() {
-        this.elements.clear();
-        this.init();
-    }
+        private Card.CardStat currentStat = this.stats.getFirst();
 
-    private record ScreenCard(int index, Card card) {}
+        private ScreenCard card1;
+        private ScreenCard card2;
+
+        private final Random random = new Random();
+
+        public DeckBuilderScreen(Client client, Screen parent) {
+            super(client);
+
+            this.parent = parent;
+            this.addCards();
+        }
+
+        @Override
+        public void init() {
+            this.elements.add(
+                    new ButtonWidget("X", 15, 15, 50, 50, this::onClose)
+            );
+
+            CardWidget widget1 = this.buildCardWidget(this.card1);
+
+            CardWidget widget2 = this.buildCardWidget(this.card2);
+
+            this.elements.add(widget1);
+            this.elements.add(widget2);
+        }
+
+        @Override
+        public void onClose() {
+            super.onClose();
+
+            this.client.gui.setScreen(this.parent);
+        }
+
+        private void addCards() {
+            List<Card> cards = Cards.getCardsByStat(this.currentStat);
+
+            this.card1 = new ScreenCard(
+                    0,
+                    cards.get(this.random.nextInt(cards.size()))
+            );
+
+            this.card2 = new ScreenCard(
+                    1,
+                    cards.get(this.random.nextInt(cards.size()))
+            );
+        }
+
+        private void addCardToDeckAndRefresh(ScreenCard card) {
+            ArrayList<Card> playersHand = this.client.player.getCharacter().getHand();
+
+            playersHand.add(card.card);
+
+            int currentStatIndex = this.stats.indexOf(this.currentStat);
+
+            if (currentStatIndex + 1 < this.stats.size()) {
+                this.currentStat = this.stats.get(currentStatIndex + 1);
+
+                this.addCards();
+
+                this.rebuildScreen();
+            } else {
+                // SAVE CHARACTER
+
+                // CLOSE SCREEN
+
+                // START GAME
+            }
+        }
+
+        private CardWidget buildCardWidget(ScreenCard card) {
+            final int cardWidth = 250;
+            final int cardHeight = 350;
+            final int spacing = 16;
+
+            int totalGroupWidth = (2 * cardWidth) + spacing;
+            int startX = (this.width / 2) - (totalGroupWidth / 2);
+
+            int cardWidgetX = startX + (card.index * (cardWidth + spacing));
+            int cardWidgetY = (this.height / 2) - (cardHeight / 2);
+
+            return new CardWidget(
+                    card.card,
+                    cardWidgetX,
+                    cardWidgetY,
+                    cardWidth,
+                    cardHeight,
+                    () -> this.addCardToDeckAndRefresh(card)
+            );
+        }
+
+        private void rebuildScreen() {
+            this.elements.clear();
+            this.init();
+        }
+
+        private record ScreenCard(int index, Card card) {}
+    }
 }
 

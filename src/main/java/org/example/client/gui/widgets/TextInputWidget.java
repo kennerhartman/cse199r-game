@@ -46,23 +46,6 @@ public class TextInputWidget extends AbstractWidget {
         this.setFocused(true);
     }
 
-    private boolean hasSelection() {
-        return this.cursorPosition != this.selectionAnchor;
-    }
-
-    private void deleteSelection() {
-        if (!hasSelection()) {
-            return;
-        }
-
-        int start = Math.min(this.cursorPosition, this.selectionAnchor);
-        int end = Math.max(this.cursorPosition, this.selectionAnchor);
-
-        this.text = this.text.substring(0, start) + this.text.substring(end);
-        this.cursorPosition = start;
-        this.selectionAnchor = start;
-    }
-
     @Override
     public void onKeyPressed(int code) {
         if (!this.isFocused() || this.isInvalidKey(code)) {
@@ -181,6 +164,27 @@ public class TextInputWidget extends AbstractWidget {
         }
 
         this.updateVisibleText();
+    }
+
+    public String getText() {
+        return this.text;
+    }
+
+    private boolean hasSelection() {
+        return this.cursorPosition != this.selectionAnchor;
+    }
+
+    private void deleteSelection() {
+        if (!hasSelection()) {
+            return;
+        }
+
+        int start = Math.min(this.cursorPosition, this.selectionAnchor);
+        int end = Math.max(this.cursorPosition, this.selectionAnchor);
+
+        this.text = this.text.substring(0, start) + this.text.substring(end);
+        this.cursorPosition = start;
+        this.selectionAnchor = start;
     }
 
     private void updateVisibleText() {
