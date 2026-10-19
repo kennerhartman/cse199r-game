@@ -9,6 +9,7 @@ public class Deck {
     public ArrayList<Card> drawPile = new ArrayList<Card>();
     public ArrayList<Card> discard = new ArrayList<Card>();
     public ArrayList<Card> hand = new ArrayList<Card>();
+//    public ArrayList<Card> allCards = new ArrayList<Card>();
 //    TODO: implement character class
     public PlayerCharacter owner;
 
@@ -29,11 +30,11 @@ public class Deck {
     }
 
 //    Handles playing a card from your hand
-    public void play(){
+    public void play(PlayerCharacter target){
 //        TODO: Change this selector to detect player input and select a card based on that instead
         Card currentCard = hand.getFirst();
         hand.removeFirst();
-        currentCard.applyDrawEffect();
+        currentCard.applyDrawEffect(target);
         discard(currentCard);
     }
 

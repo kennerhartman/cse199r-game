@@ -21,6 +21,8 @@ public class CardStorage implements TypeAdapterFactory{
     // Tracks what subclass should be created based on the "type" value in the JSON file
     RuntimeTypeAdapterFactory<Card> cardAdapter = RuntimeTypeAdapterFactory
             .of(Card.class, "type")
+//            ADDED FOR A TEST TO SEE IF type FIELD BECOMES !NULL
+            .recognizeSubtypes()
             .registerSubtype(AbilityCard.class, "ABILITY")
             .registerSubtype(LootCard.class, "LOOT")
             .registerSubtype(ActionCard.class, "ACTION");
@@ -50,12 +52,49 @@ public class CardStorage implements TypeAdapterFactory{
     }
 
     // Used for the shop or character creation
-    public void draw(){
+    private void draw(){
 //      Draw a new card, add it to the hand
         Card newCard = AllCards.getFirst();
         AllCards.removeFirst();
         AllCards.add(newCard);
         StoreCards.add(newCard);
+    }
+
+//    Overloaded draw that takes a typeb
+    private void draw(Card.CardType type ){
+    //      Draw a new card, add it to the hand
+        boolean cardloop = true;
+        int numChecked = 0;
+        while (cardloop & numChecked < AllCards.size()){
+            Card newCard = AllCards.getFirst();
+            AllCards.removeFirst();
+            AllCards.add(newCard);
+            if(newCard.getType() == type){
+                StoreCards.add(newCard);
+                break;
+            }
+//            TODO: Replace with actual error logging
+            System.out.println(newCard.name + " type in list: " + newCard.getType() + " | Target type: " + type);
+            numChecked ++;
+        }
+    }
+
+    private void draw(Card.CardType type, Card.CardStat stat ){
+        //      Draw a new card, add it to the hand
+        boolean cardloop = true;
+        int numChecked = 0;
+        while (cardloop & numChecked < AllCards.size()){
+            Card newCard = AllCards.getFirst();
+            AllCards.removeFirst();
+            AllCards.add(newCard);
+            if(newCard.getType() == type && newCard.getStat() == stat){
+                StoreCards.add(newCard);
+                break;
+            }
+//            TODO: Replace with actual error logging
+            System.out.println(newCard.name + " type in list: " + newCard.getType() + " | Target type: " + type);
+            numChecked ++;
+        }
     }
 
     // Creates and displays the store
@@ -68,6 +107,46 @@ public class CardStorage implements TypeAdapterFactory{
         for(int i = 0; i<numberOfCards; i++) {
             System.out.println(i + ". " + this.StoreCards.get(i).name);
         }
+    }
+
+//    Overloaded loadStore that selects by type so that you can display a loot card after a battle or get
+//    just ability cards for character creation
+    public void loadStore(int numberOfCards, Card.CardType type){
+        Collections.shuffle(AllCards);
+        for(int i = 0; i<numberOfCards; i++){
+            draw(type);
+        }
+        System.out.println("Store:");
+        for(int i = 0; i<numberOfCards; i++) {
+            System.out.println(i + ". " + this.StoreCards.get(i).name);
+        }
+    }
+
+//      This method is mostly for character creation, in order to display two cards of a certain type and stat at once
+    public void characterCreatorStore(Card.CardType type, Card.CardStat stat){
+        Collections.shuffle(AllCards);
+        for(int i = 0; i<2; i++){
+            draw(type, stat);
+        }
+        System.out.println("Store:");
+        for(int i = 0; i<2; i++) {
+            System.out.println(i + ". " + this.StoreCards.get(i).name);
+        }
+    }
+
+    public Card findCard(String cardName){
+        int numChecked = 0;
+        while(numChecked < AllCards.size()){
+            Card newCard = AllCards.getFirst();
+            if(newCard.name.equals(cardName)){
+                return newCard;
+            }
+            AllCards.removeFirst();
+            AllCards.add(newCard);
+            numChecked++;
+        }
+        System.out.println("Error: No card "+ cardName + " found; Adding null card");
+        return new AbilityCard("Card_Not_Found", "Card_Not_Found: This card is missing from your Card Storage!\nHelp: Check cardData.json;", Card.CardStat.HEALTH, 0, 0);
     }
 
     @Override

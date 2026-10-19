@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.example.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public interface Registry<T> extends Iterable<Map.Entry<Identifier, T>> {
     T register(Identifier key, T entry);

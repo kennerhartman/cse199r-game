@@ -1,5 +1,7 @@
 package org.example.card;
 
+import org.example.Character.PlayerCharacter;
+
 import org.example.core.serializer.Codec;
 import org.example.core.serializer.RecordCodecBuilder;
 
@@ -10,7 +12,6 @@ public class LootCard extends Card {
     public static final Codec<LootCard> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.STRING.fieldOf("name").forGetter(Card::getName),
-                    Codec.ofEnum(CardType.class).fieldOf("type").forGetter(Card::getType),
                     Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
                     Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
                     Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
@@ -27,8 +28,8 @@ public class LootCard extends Card {
 
     int price;
 
-    public LootCard(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount, int price) {
-        super(name, type, description, stat, bonus, drawCardsAmount);
+    public LootCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount, int price) {
+        super(name, description, stat, bonus, drawCardsAmount);
 
         this.price = price;
         this.destroyOnPlay = true;
@@ -36,7 +37,7 @@ public class LootCard extends Card {
 
     @Override
     // Add 'Player target' to the inputs
-    public void applyDrawEffect() {
+    public void applyDrawEffect(PlayerCharacter character) {
         // TODO: Logic to apply effect to player target
 
         // target.setStat(stat, value);
@@ -46,10 +47,22 @@ public class LootCard extends Card {
     }
 
     @Override
+    // Reverses bonus
+    public void applyDiscardEffect(PlayerCharacter character){
+        character.statBonus(this.stat.toString(), 0-this.bonus);
+        System.out.println("Applied Discard Effect");
+    }
+
+    @Override
     // To be used when sold or played
     public void destroyCard() {
         // TODO: add destroy self logic to remove from deck
         System.out.println("Card Destroyed");
+    }
+
+    @Override
+    public CardType getType(){
+        return CardType.LOOT;
     }
 
     public int getPrice() {

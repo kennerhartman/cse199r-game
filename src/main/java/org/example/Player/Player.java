@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Player {
 //    TODO: Finish Player implementation
-    String username;
+    public String username;
     String password;
     @Nullable PlayerCharacter character;
     public ArrayList<PlayerCharacter> AllPlayerCharacters = new ArrayList<PlayerCharacter>();
@@ -16,17 +16,25 @@ public class Player {
     int HighestLevelReached;
     int TotalPlaythroughs;
 
-    public void CreateNewCharacter(String name){
+    public Player(String user, String pwrd){
+        this.username = user;
+        this.password = pwrd;
+        this.PlayerLevel = 1;
+        this.HighestLevelReached = 0;
+        this.TotalPlaythroughs = 0;
+    }
+
+    public void createNewCharacter(String name){
         this.character = new PlayerCharacter(this, name);
         AllPlayerCharacters.add(this.character);
     }
 
-    public void CreateCustomCharacter(String name, int level, int health, int strength, int speed, int attack){
-        this.character = new PlayerCharacter(this, name, level, health, strength, speed, attack);
+    public void createCustomCharacter(String name, int level, int health, int strength, int speed, int attack, int currency){
+        this.character = new PlayerCharacter(this, name, level, health, strength, speed, attack, currency);
         AllPlayerCharacters.add(this.character);
     }
 
-    public void LoadPrevCharacter(String name, int level){
+    public void loadPrevCharacter(String name, int level){
         for(PlayerCharacter character : AllPlayerCharacters){
             if(Objects.equals(character.name, name) & character.level == level){
                 this.character = character;

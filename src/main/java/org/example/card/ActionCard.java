@@ -1,5 +1,7 @@
 package org.example.card;
 
+import org.example.Character.PlayerCharacter;
+
 import org.example.core.serializer.Codec;
 import org.example.core.serializer.RecordCodecBuilder;
 
@@ -8,7 +10,6 @@ public class ActionCard extends Card {
     public static final Codec<ActionCard> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.STRING.fieldOf("name").forGetter(Card::getName),
-                    Codec.ofEnum(CardType.class).fieldOf("type").forGetter(Card::getType),
                     Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
                     Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
                     Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
@@ -18,14 +19,21 @@ public class ActionCard extends Card {
 
     int price;
 
-    public ActionCard(String name, CardType type, String description, CardStat stat, int bonus, int drawCardsAmount) {
-        super(name, type, description, stat, bonus, drawCardsAmount);
+    public ActionCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount) {
+        super(name, description, stat, bonus, drawCardsAmount);
     }
 
     @Override
-    public void applyDrawEffect() {
+    public void applyDrawEffect(PlayerCharacter character) {
         // TODO: Roll Bonus, player targeting and stat setting logic, remove printlns
         System.out.println("Applied Draw Effect");
+    }
+
+    @Override
+    // Reverses bonus
+    public void applyDiscardEffect(PlayerCharacter character){
+        character.statBonus(this.stat.toString(), 0-this.bonus);
+        System.out.println("Applied Discard Effect");
     }
 
     @Override
@@ -33,6 +41,11 @@ public class ActionCard extends Card {
     public void destroyCard() {
         // TODO: destroy card logic to remove from the card from the deck
         System.out.println("Card Destroyed");
+    }
+
+    @Override
+    public CardType getType(){
+        return CardType.ACTION;
     }
 
     // Called when the card is played
