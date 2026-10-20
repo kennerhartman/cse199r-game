@@ -44,63 +44,48 @@ public class PlayerCharacter {
 
 
     public void permaChangeStat(String statName, int value){
-        int stat = 4;
-        switch(stat){
-            case 1:
-                statName = "HEALTH";
+        switch(statName){
+            case "HEALTH":
                 this.Health = value;
                 break;
-            case 2:
-                statName = "STRENGTH";
+            case "STRENGTH":
                 this.Strength = value;
                 break;
-            case 3:
-                statName = "SPEED";
+            case "SPEED":
                 this.Speed = value;
                 break;
-            case 4:
-                statName = "ATTACK";
+            case "ATTACK":
                 this.Attack = value;
                 break;
         }
     }
 
     public void statBonus(String statName, int value){
-        int stat = 4;
-        switch(stat){
-            case 1:
-                statName = "HEALTH";
+        switch(statName){
+            case "HEALTH":
                 this.Health = value;
                 break;
-            case 2:
-                statName = "STRENGTH";
+            case "STRENGTH":
                 this.Strength = value;
                 break;
-            case 3:
-                statName = "SPEED";
+            case "SPEED":
                 this.Speed = value;
                 break;
-            case 4:
-                statName = "ATTACK";
+            case "ATTACK":
                 this.Attack = value;
                 break;
         }
     }
 
     public int getStat(String statName){
-        int stat = 4;
-        switch(stat){
-            case 1:
-                statName = "HEALTH";
+        switch(statName){
+            case "HEALTH":
                 return this.Health;
-            case 2:
-                statName = "STRENGTH";
+            case "STRENGTH":
                 return this.Strength;
-            case 3:
-                statName = "SPEED";
+            case "SPEED":
                 return this.Speed;
-            case 4:
-                statName = "ATTACK";
+            case "ATTACK":
                 return this.Attack;
         }
         return 0;

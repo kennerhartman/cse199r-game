@@ -12,6 +12,8 @@ import org.example.Player.Player;
 import org.example.card.AbilityCard;
 import org.example.card.Card;
 import org.example.card.CardStorage;
+import org.example.core.registries.Registries;
+
 import java.util.Scanner;
 
 public class Main {
@@ -22,11 +24,13 @@ public class Main {
         Raylib.SetWindowState(FLAG_WINDOW_RESIZABLE);
         Raylib.SetTargetFPS(60);
 
+        Registries.load();
         Client client = new Client();
 
         while (!Raylib.WindowShouldClose()) {
             client.run();
         }
+
 //        Add Text based Game loop Here!
 //        Create new player and character
         Player newPlayer1 = new Player("Player_1", "Password123");
@@ -45,7 +49,7 @@ public class Main {
         System.out.println("Pseudo Game Started\n Loading Deck...");
 //        Create card storage from file
         CardStorage pseudoStorage = new CardStorage();
-        pseudoStorage.loadDeck("./src/main/java/org/example/card/cardData.json");
+        pseudoStorage.loadDeck();
 //        Display cards
         System.out.println("PlayerCharacter Creation - Pick an Ability: ");
         pseudoStorage.loadStore(4, Card.CardType.ABILITY);

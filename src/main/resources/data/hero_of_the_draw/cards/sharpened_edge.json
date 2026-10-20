@@ -1,0 +1,10 @@
+{
+    "name": "Sharpened Edge",
+    "type": "ABILITY",
+    "description": "Increases base attack to 6. When played, deal 4 extra damage.",
+    "stat": "ATTACK",
+    "bonus": 4,
+    "draw_cards_amount": 0,
+    "destroy_on_play": false,
+    "base": 6
+}
