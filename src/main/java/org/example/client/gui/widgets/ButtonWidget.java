@@ -36,4 +36,8 @@ public class ButtonWidget extends AbstractWidget{
     public void onClick(int mouseX, int mouseY) {
         this.action.run();
     }
+
+    public String getText() {
+        return this.text;
+    }
 }

@@ -16,9 +16,7 @@ public class Player {
     int HighestLevelReached;
     int TotalPlaythroughs;
 
-    public Player(String user, String pwrd){
-        this.username = user;
-        this.password = pwrd;
+    public Player() {
         this.PlayerLevel = 1;
         this.HighestLevelReached = 0;
         this.TotalPlaythroughs = 0;

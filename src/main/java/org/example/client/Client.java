@@ -30,6 +30,7 @@ public class Client {
         this.graphics = new GuiGraphics(this);
         this.input = new InputHandler();
         this.gui.setScreen(new MainMenuScreen(Client.getInstance()));
+        // this.gui.setScreen(new SaveSlotScreen(Client.getInstance()));
 
         this.player = new Player();
     }

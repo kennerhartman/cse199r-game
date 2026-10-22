@@ -43,7 +43,7 @@ public class MainMenuScreen extends Screen {
                         borderY + 95,
                         125,
                         45,
-                        () -> {}
+                        () -> this.client.gui.setScreen(new LoadSaveSlotScreen(this.client, null))
                 )
         );
     }

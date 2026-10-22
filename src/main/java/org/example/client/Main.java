@@ -34,7 +34,7 @@ public class Main {
 
 //        Add Text based Game loop Here!
 //        Create new player and character
-        Player newPlayer1 = new Player("Player_1", "Password123");
+        Player newPlayer1 = new Player();
         //        Text based game input
         int choiceInput;
         String nameIn;

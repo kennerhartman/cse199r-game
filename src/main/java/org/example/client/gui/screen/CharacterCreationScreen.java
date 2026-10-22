@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.example.Character.GameSaveData;
 import org.example.card.Card;
 import org.example.card.Cards;
 import org.example.client.Client;
@@ -11,7 +12,6 @@ import org.example.client.gui.widgets.ButtonWidget;
 import org.example.client.gui.widgets.CardWidget;
 import org.example.client.gui.widgets.TextInputWidget;
 import org.example.client.gui.widgets.TextWidget;
-import org.example.core.registries.Registries;
 
 public class CharacterCreationScreen extends Screen {
     private final Screen parent;
@@ -71,7 +71,7 @@ public class CharacterCreationScreen extends Screen {
             return;
         }
 
-        this.client.player.CreateNewCharacter(name);
+        this.client.player.createNewCharacter(name);
 
         this.client.gui.setScreen(new DeckBuilderScreen(this.client, this.parent));
     }
@@ -136,7 +136,7 @@ public class CharacterCreationScreen extends Screen {
         }
 
         private void addCardToDeckAndRefresh(ScreenCard card) {
-            ArrayList<Card> playersHand = this.client.player.getCharacter().getHand();
+            ArrayList<Card> playersHand = this.client.player.getCharacter().getDrawPile();
 
             playersHand.add(card.card);
 
@@ -149,7 +149,9 @@ public class CharacterCreationScreen extends Screen {
 
                 this.rebuildScreen();
             } else {
-                // SAVE CHARACTER
+                GameSaveData saveData = new GameSaveData(this.client.player.getCharacter(), this.client.player);
+
+                this.client.gui.setScreen(new LoadSaveSlotScreen(this.client, saveData));
 
                 // CLOSE SCREEN
 

@@ -109,7 +109,7 @@ public class PlayerCharacter {
         return 0;
     }
 
-    public ArrayList<Card> getHand() {
-        return this.deck.hand;
+    public ArrayList<Card> getDrawPile() {
+        return this.deck.drawPile;
     }
 }

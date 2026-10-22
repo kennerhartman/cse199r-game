@@ -30,4 +30,10 @@ public class SaveSystem {
             System.err.println("Error Saving Game: " + e.getMessage());
         }
     }
+
+    public static boolean doesSaveExist(String saveName) {
+        File saveFile = new File("./saves/" + saveName + ".json");
+
+        return saveFile.exists();
+    }
 }

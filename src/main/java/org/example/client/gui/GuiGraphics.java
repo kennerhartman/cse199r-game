@@ -17,7 +17,11 @@ public class GuiGraphics {
     }
 
     public void text(String text, int x, int y, Raylib.Color color) {
-        Raylib.DrawText(text, x, y, 24, color);
+        this.text(text, x, y, 24, color);
+    }
+
+    public void text(String text, int x, int y, int fontSize, Raylib.Color color) {
+        Raylib.DrawText(text, x, y, fontSize, color);
     }
 
     public void blitNineSliced(int x, int y, int width, int height, int textureWidth, int textureHeight) {
