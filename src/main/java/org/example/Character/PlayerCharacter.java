@@ -90,4 +90,8 @@ public class PlayerCharacter {
         }
         return 0;
     }
+
+    public int getLevel(){
+        return this.level;
+    }
 }

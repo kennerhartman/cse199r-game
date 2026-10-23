@@ -37,7 +37,7 @@ public class CardStorage implements TypeAdapterFactory{
     //      Draw a new card, add it to the store
         boolean cardloop = true;
         int numChecked = 0;
-        while (cardloop & numChecked < AllCards.size()){
+        while (cardloop && numChecked < AllCards.size()){
             Card newCard = AllCards.getFirst();
             AllCards.removeFirst();
             AllCards.add(newCard);
@@ -55,7 +55,7 @@ public class CardStorage implements TypeAdapterFactory{
         //      Draw a new card, add it to the store
         boolean cardloop = true;
         int numChecked = 0;
-        while (cardloop & numChecked < AllCards.size()){
+        while (cardloop && numChecked < AllCards.size()){
             Card newCard = AllCards.getFirst();
             AllCards.removeFirst();
             AllCards.add(newCard);
