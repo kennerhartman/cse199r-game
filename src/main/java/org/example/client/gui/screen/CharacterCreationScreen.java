@@ -32,11 +32,11 @@ public class CharacterCreationScreen extends Screen {
                 50
         );
 
-        this.elements.add(
+        this.addElement(
                 new ButtonWidget("X", 15, 15, 50, 50, this::onClose)
         );
 
-        this.elements.add(
+        this.addElement(
                 new TextWidget(
                         "Enter Character Name:",
                         this.width / 2 - 150,
@@ -44,9 +44,9 @@ public class CharacterCreationScreen extends Screen {
                 )
         );
 
-        this.elements.add(this.characterNameInputWidget);
+        this.addElement(this.characterNameInputWidget);
 
-        this.elements.add(
+        this.addElement(
                 new ButtonWidget(
                         "Continue",
                         this.width / 2 - 150,
@@ -102,7 +102,7 @@ public class CharacterCreationScreen extends Screen {
 
         @Override
         public void init() {
-            this.elements.add(
+            this.addElement(
                     new ButtonWidget("X", 15, 15, 50, 50, this::onClose)
             );
 
@@ -110,8 +110,8 @@ public class CharacterCreationScreen extends Screen {
 
             CardWidget widget2 = this.buildCardWidget(this.card2);
 
-            this.elements.add(widget1);
-            this.elements.add(widget2);
+            this.addElement(widget1);
+            this.addElement(widget2);
         }
 
         @Override

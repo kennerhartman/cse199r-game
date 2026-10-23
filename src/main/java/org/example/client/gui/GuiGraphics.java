@@ -24,6 +24,22 @@ public class GuiGraphics {
         Raylib.DrawText(text, x, y, fontSize, color);
     }
 
+    public static int getTextWidth(String text) {
+        return getTextWidth(text, 24);
+    }
+
+    public static int getTextHeight(String text) {
+        return getTextHeight(text, 24);
+    }
+
+    public static int getTextWidth(String text, int fontSize) {
+        return (int) Raylib.MeasureTextEx(Client.getInstance().font, text, fontSize, 2).x();
+    }
+
+    public static int getTextHeight(String text, int fontSize) {
+        return (int) Raylib.MeasureTextEx(Client.getInstance().font, text, fontSize, 2).y();
+    }
+
     public void blitNineSliced(int x, int y, int width, int height, int textureWidth, int textureHeight) {
         int srcW, srcH, cLeft, cTop, cRight, cBottom, textureScale;
 

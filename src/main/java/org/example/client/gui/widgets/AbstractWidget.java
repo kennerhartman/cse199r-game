@@ -13,6 +13,7 @@ public abstract class AbstractWidget implements Element, Focusable, GuiElementEv
 
     boolean isHovered = false;
     boolean isFocused = false;
+    boolean isActive = true;
 
     public AbstractWidget(int x, int y, int width, int height) {
         this.x = x;
@@ -23,7 +24,7 @@ public abstract class AbstractWidget implements Element, Focusable, GuiElementEv
 
     @Override
     public void extractRenderState(GuiGraphics graphics, int mouseX, int mouseY) {
-        this.isHovered = this.isMouseOver(mouseX, mouseY);
+        this.isHovered = this.isMouseOver(mouseX, mouseY) && this.isActive;
         this.render(graphics, mouseX, mouseY);
     }
 
@@ -36,13 +37,16 @@ public abstract class AbstractWidget implements Element, Focusable, GuiElementEv
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY) {
-        if (this.isMouseOver(mouseX, mouseY)) {
-            this.onClick(mouseX, mouseY);
+        if (this.isActive) {
+            if (this.isMouseOver(mouseX, mouseY)) {
+                this.onClick(mouseX, mouseY);
 
-            return true;
+                return true;
+            }
+
+            this.setFocused(false);
+
         }
-
-        this.setFocused(false);
 
         return false;
     }
@@ -110,5 +114,15 @@ public abstract class AbstractWidget implements Element, Focusable, GuiElementEv
     @Override
     public int getHeight() {
         return this.height;
+    }
+
+    @Override
+    public boolean getActive() {
+        return this.isActive;
+    }
+
+    @Override
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 }

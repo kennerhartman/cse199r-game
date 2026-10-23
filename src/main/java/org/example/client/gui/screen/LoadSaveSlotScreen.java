@@ -5,6 +5,7 @@ import org.example.GameLoop.LoadSystem;
 import org.example.GameLoop.SaveSystem;
 import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
+import org.example.client.gui.screen.overlay.ConfirmationOverlay;
 import org.example.client.gui.widgets.ButtonWidget;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,24 +34,30 @@ public class LoadSaveSlotScreen extends Screen {
         int saveSlotTwoX = saveSlotOneX + widgetWidth + gap;
         int saveSlotThreeX = saveSlotTwoX + widgetWidth + gap;
 
-        this.elements.add(
+        this.addElement(
                 new SaveSlotWidget(1, "Save 1", widgetWidth, saveSlotOneX, y, () -> this.saveOrLoadSlot(1))
         );
 
-        this.elements.add(
+        this.addElement(
                 new SaveSlotWidget(2, "Save 2", widgetWidth, saveSlotTwoX, y, () -> this.saveOrLoadSlot(2))
         );
 
-        this.elements.add(
+        this.addElement(
                 new SaveSlotWidget(3, "Save 3", widgetWidth, saveSlotThreeX, y, () -> this.saveOrLoadSlot(3))
         );
     }
 
     private void saveOrLoadSlot(int slotNumber) {
         if (this.saveData != null) {
-            SaveSystem.saveGame(this.saveData, slotNumber);
+            boolean doesSaveExist = SaveSystem.doesSaveExist("save" + slotNumber);
 
-            this.client.gui.setScreen(new MainMenuScreen(this.client));
+            if (doesSaveExist) {
+                this.client.gui.setScreenOverlay(new ConfirmationOverlay(this.client, this.saveData, slotNumber));
+            } else {
+                SaveSystem.saveGame(this.saveData, slotNumber);
+
+                this.client.gui.setScreen(new MainMenuScreen(this.client));
+            }
         } else {
             LoadSystem.loadGame(slotNumber);
         }

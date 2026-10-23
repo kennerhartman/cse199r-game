@@ -16,16 +16,7 @@ public class MainMenuScreen extends Screen {
         int borderX = this.width / 2 - borderWidgetWidth / 2;
         int borderY = this.height / 2 - borderWidgetHeight / 2;
 
-        this.elements.add(
-                new BorderWidget(
-                        borderX,
-                        borderY,
-                        borderWidgetWidth,
-                        borderWidgetHeight
-                )
-        );
-
-        this.elements.add(
+        this.addElement(
                 new ButtonWidget(
                         "New",
                         borderX + 125 / 8,
@@ -36,7 +27,7 @@ public class MainMenuScreen extends Screen {
                 )
         );
 
-        this.elements.add(
+        this.addElement(
                 new ButtonWidget(
                         "Load",
                         borderX + 125/8,
@@ -44,6 +35,26 @@ public class MainMenuScreen extends Screen {
                         125,
                         45,
                         () -> this.client.gui.setScreen(new LoadSaveSlotScreen(this.client, null))
+                )
+        );
+
+        this.addElement(
+                new ButtonWidget(
+                        "Exit",
+                        borderX + 125/8,
+                        borderY + 165,
+                        125,
+                        45,
+                        () -> this.client.stop()
+                )
+        );
+
+        this.addElement(
+                new BorderWidget(
+                        borderX,
+                        borderY,
+                        borderWidgetWidth,
+                        borderWidgetHeight
                 )
         );
     }

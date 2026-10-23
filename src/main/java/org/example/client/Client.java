@@ -19,6 +19,7 @@ public class Client {
     public final Gui gui;
     public final InputHandler input;
     public final Player player;
+    private boolean running;
 
     public Client() {
         Client.client = this;
@@ -33,6 +34,8 @@ public class Client {
         // this.gui.setScreen(new SaveSlotScreen(Client.getInstance()));
 
         this.player = new Player();
+
+        this.running = true;
     }
 
     protected void run() {
@@ -47,6 +50,14 @@ public class Client {
         }
 
         this.gui.render(this.graphics, this.input.getMouseX(), this.input.getMouseY());
+    }
+
+    public boolean isRunning() {
+        return this.running;
+    }
+
+    public void stop() {
+        this.running = false;
     }
 
     public static Client getInstance() {

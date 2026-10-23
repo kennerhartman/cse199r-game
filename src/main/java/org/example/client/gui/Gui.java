@@ -1,7 +1,9 @@
 package org.example.client.gui;
 
 import org.example.client.Client;
+import org.example.client.gui.element.Element;
 import org.example.client.gui.screen.Screen;
+import org.example.client.gui.screen.overlay.ScreenOverlay;
 import org.jetbrains.annotations.Nullable;
 import com.raylib.Colors;
 import com.raylib.Raylib;
@@ -11,8 +13,8 @@ import com.raylib.Raylib.Rectangle;
 public class Gui {
     public Client client;
 
-    @Nullable
-    public Screen screen;
+    @Nullable public Screen screen;
+    @Nullable public ScreenOverlay screenOverlay;
 
     public static final int VIRTUAL_WIDTH = 850;
     public static final int VIRTUAL_HEIGHT = 500;
@@ -45,6 +47,10 @@ public class Gui {
             this.screen.render(graphics, virtualMouseX, virtualMouseY);
         }
 
+        if (this.screenOverlay != null) {
+            this.screenOverlay.render(graphics, virtualMouseX, virtualMouseY);
+        }
+
         Raylib.EndTextureMode();
 
         Raylib.BeginDrawing();
@@ -60,11 +66,36 @@ public class Gui {
     }
 
     public void setScreen(@Nullable Screen screen) {
+        if (screen instanceof ScreenOverlay) {
+            throw new IllegalArgumentException("Cannot pass a ScreenOverlay to setScreen(). Use setOverlay() instead.");
+        }
+
         this.screen = screen;
 
         if (screen != null) {
             screen.clearElements();
             screen.init(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        }
+    }
+
+    public void setScreenOverlay(@Nullable ScreenOverlay overlay) {
+        this.screenOverlay = overlay;
+
+        if (this.screenOverlay != null) {
+            if (this.screen != null) {
+                for (Element element : this.screen.getElements()) {
+                    element.setActive(false);
+                }
+            }
+
+            this.screenOverlay.clearElements();
+            this.screenOverlay.init(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
+        } else {
+            if (this.screen != null) {
+                for (Element element : this.screen.getElements()) {
+                    element.setActive(true);
+                }
+            }
         }
     }
 
