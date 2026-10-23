@@ -32,7 +32,7 @@ public class TextInputWidget extends AbstractWidget {
         graphics.text(
                 this.visibleText,
                 this.x + 4,
-                this.y + (TextWidget.getTextHeight(this.text) / 2),
+                this.y + (GuiGraphics.getTextHeight(this.text) / 2),
                 Colors.BLUE
         );
 
@@ -193,7 +193,7 @@ public class TextInputWidget extends AbstractWidget {
         this.cursorPosition = Math.clamp(this.cursorPosition, 0, this.text.length());
         this.selectionAnchor = Math.clamp(this.selectionAnchor, 0, this.text.length());
 
-        if (TextWidget.getTextWidth(this.text) <= maxTextWidth) {
+        if (GuiGraphics.getTextWidth(this.text) <= maxTextWidth) {
             this.scrollOffset = 0;
             this.visibleText = this.text;
 
@@ -208,7 +208,7 @@ public class TextInputWidget extends AbstractWidget {
 
         int end = this.scrollOffset;
 
-        while (end < this.text.length() && TextWidget.getTextWidth(this.text.substring(this.scrollOffset, end + 1)) <= maxTextWidth) {
+        while (end < this.text.length() && GuiGraphics.getTextWidth(this.text.substring(this.scrollOffset, end + 1)) <= maxTextWidth) {
             end++;
         }
 
@@ -216,7 +216,7 @@ public class TextInputWidget extends AbstractWidget {
             this.scrollOffset++;
             end = this.scrollOffset;
 
-            while (end < this.text.length() && TextWidget.getTextWidth(this.text.substring(this.scrollOffset, end + 1)) <= maxTextWidth) {
+            while (end < this.text.length() && GuiGraphics.getTextWidth(this.text.substring(this.scrollOffset, end + 1)) <= maxTextWidth) {
                 end++;
             }
         }
@@ -224,7 +224,7 @@ public class TextInputWidget extends AbstractWidget {
         while (this.scrollOffset > 0) {
             int testEnd = this.scrollOffset - 1;
 
-            while (testEnd < this.text.length() && TextWidget.getTextWidth(this.text.substring(this.scrollOffset - 1, testEnd + 1)) <= maxTextWidth) {
+            while (testEnd < this.text.length() && GuiGraphics.getTextWidth(this.text.substring(this.scrollOffset - 1, testEnd + 1)) <= maxTextWidth) {
                 testEnd++;
             }
 
@@ -237,7 +237,7 @@ public class TextInputWidget extends AbstractWidget {
 
         end = this.scrollOffset;
 
-        while (end < this.text.length() && TextWidget.getTextWidth(this.text.substring(this.scrollOffset, end + 1)) <= maxTextWidth) {
+        while (end < this.text.length() && GuiGraphics.getTextWidth(this.text.substring(this.scrollOffset, end + 1)) <= maxTextWidth) {
             end++;
         }
 
