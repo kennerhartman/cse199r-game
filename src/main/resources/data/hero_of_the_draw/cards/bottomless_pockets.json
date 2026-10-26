@@ -1,0 +1,10 @@
+{
+    "name": "Adrenaline Rush",
+    "type": "ABILITY",
+    "description": "Increases base number of cards played per turn to 4. When played, play 2 extra cards.",
+    "stat": "SPEED",
+    "bonus": 2,
+    "draw_cards_amount": 0,
+    "destroy_on_play": false,
+    "base": 4
+}

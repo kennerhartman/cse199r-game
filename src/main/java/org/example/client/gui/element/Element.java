@@ -13,4 +13,7 @@ public interface Element {
 
     int getWidth();
     int getHeight();
+
+    boolean getActive();
+    void setActive(boolean value);
 }

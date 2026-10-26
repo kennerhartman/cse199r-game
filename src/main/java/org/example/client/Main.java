@@ -1,6 +1,7 @@
 package org.example.client;
 
 import static com.raylib.Raylib.FLAG_WINDOW_RESIZABLE;
+import static com.raylib.Raylib.KEY_NULL;
 
 import com.raylib.Raylib;
 //Pseudo game imports
@@ -23,17 +24,24 @@ public class Main {
         Raylib.InitWindow(850, 500, "Hero of the Draw");
         Raylib.SetWindowState(FLAG_WINDOW_RESIZABLE);
         Raylib.SetTargetFPS(60);
+        Raylib.SetExitKey(KEY_NULL);
+
+        Registries.load();
 
         Registries.load();
         Client client = new Client();
 
         while (!Raylib.WindowShouldClose()) {
             client.run();
+
+            if (!client.isRunning()) {
+                break;
+            }
         }
 
 //        Add Text based Game loop Here!
 //        Create new player and character
-        Player newPlayer1 = new Player("Player_1", "Password123");
+        Player newPlayer1 = new Player();
         //        Text based game input
         int choiceInput;
         String nameIn;

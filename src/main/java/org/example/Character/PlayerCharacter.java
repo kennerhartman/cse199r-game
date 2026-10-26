@@ -1,6 +1,9 @@
 package org.example.Character;
 
+import java.util.ArrayList;
+
 import org.example.Player.Player;
+import org.example.card.Card;
 import org.example.card.Deck;
 
 public class PlayerCharacter {
@@ -89,5 +92,9 @@ public class PlayerCharacter {
                 return this.Attack;
         }
         return 0;
+    }
+
+    public ArrayList<Card> getDrawPile() {
+        return this.deck.drawPile;
     }
 }
