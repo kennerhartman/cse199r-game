@@ -2,10 +2,12 @@ package org.example.client;
 
 import org.example.client.gui.Gui;
 import org.example.client.gui.screen.Screen;
+import org.example.client.renderer.map.MapRenderer;
 
 import com.raylib.Raylib;
 
 public class InputHandler {
+    boolean isDragging = false;
     int mouseX = 0;
     int mouseY = 0;
 
@@ -63,11 +65,20 @@ public class InputHandler {
 
         Raylib.Vector2 mousePos = Raylib.GetMousePosition();
 
+        if (Raylib.IsMouseButtonPressed(0)) {
+            this.isDragging = true;
+
+            this.mouseClicked(this.getVirtualMouseX(), this.getVirtualMouseY());
+        }
+        if (this.isDragging) {
+            this.mouseDragged(this.getVirtualMouseX(), this.getVirtualMouseY());
+        }
+
         this.mouseX = (int) mousePos.x();
         this.mouseY = (int) mousePos.y();
 
-        if (Raylib.IsMouseButtonPressed(0)) {
-            this.mouseClicked(this.getVirtualMouseX(), this.getVirtualMouseY());
+        if (Raylib.IsMouseButtonReleased(0)) {
+            this.mouseReleased(this.getVirtualMouseX(), this.getVirtualMouseY());
         }
     }
 
@@ -101,13 +112,38 @@ public class InputHandler {
         if (screen != null) {
             screen.mouseClicked(mouseX, mouseY);
         }
+
+        MapRenderer renderer = Client.getInstance().mapRenderer;
+
+        if (renderer != null) {
+            renderer.mouseClicked(mouseX, mouseY);
+        }
+    }
+
+    public void mouseDragged(double mouseX, double mouseY) {
+        MapRenderer renderer = Client.getInstance().mapRenderer;
+
+        if (renderer != null) {
+            renderer.mouseDragged(mouseX, mouseY);
+        }
+    }
+
+    public void mouseReleased(int mouseX, int mouseY) {
+        this.isDragging = false;
+
+        MapRenderer renderer = Client.getInstance().mapRenderer;
+
+        if (renderer != null) {
+            renderer.mouseReleased(mouseX, mouseY);
+        }
     }
 
     public int getVirtualMouseX() {
         float scale = Client.getInstance().gui.getScale();
         float screenWidth = (float) Client.getInstance().gui.getScreenWidth();
-        int destWidth = (int) (Gui.VIRTUAL_WIDTH * scale);
-        int destX = (int) ((screenWidth - destWidth) / 2);
+
+        float destWidthF = Gui.VIRTUAL_WIDTH * scale;
+        int destX = (int) ((screenWidth - destWidthF) / 2.0f);
 
         return (int) ((this.mouseX - destX) / scale);
     }
@@ -115,8 +151,9 @@ public class InputHandler {
     public int getVirtualMouseY() {
         float scale = Client.getInstance().gui.getScale();
         float screenHeight = (float) Client.getInstance().gui.getScreenHeight();
-        int destHeight = (int) (Gui.VIRTUAL_HEIGHT * scale);
-        int destY = (int) ((screenHeight - destHeight) / 2);
+
+        float destHeightF = Gui.VIRTUAL_HEIGHT * scale;
+        int destY = (int) ((screenHeight - destHeightF) / 2.0f);
 
         return (int) ((this.mouseY - destY) / scale);
     }

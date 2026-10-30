@@ -7,6 +7,8 @@ import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.overlay.ConfirmationOverlay;
 import org.example.client.gui.widgets.ButtonWidget;
+import org.example.client.renderer.map.MapRenderer;
+import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import com.raylib.Colors;
@@ -60,6 +62,10 @@ public class LoadSaveSlotScreen extends Screen {
             }
         } else {
             LoadSystem.loadGame(slotNumber);
+
+            this.client.gui.setScreen(null);
+
+            this.client.mapRenderer = new MapRenderer();
         }
     }
 
@@ -86,7 +92,16 @@ public class LoadSaveSlotScreen extends Screen {
         public void render(GuiGraphics graphics, int mouseX, int mouseY) {
             Raylib.Color color = this.isHovered() ? Colors.BLUE : Colors.WHITE;
 
-            graphics.blitNineSliced(this.getX(), this.getY(), this.getWidth(), this.getHeight(), 32, 16);
+            graphics.blitNineSliced(
+                    GuiGraphics.TexturePipeline.GUI,
+                    Identifier.ofDefault("button.png"),
+                    this.getX(),
+                    this.getY(),
+                    this.getWidth(),
+                    this.getHeight(),
+                    32,
+                    16
+            );
 
             int x = this.getX() + (this.getWidth() / 2) - (Raylib.MeasureText(this.getText(), 24) / 2);
             int y = this.getY() + (this.getHeight() / 2) - (24 / 2);

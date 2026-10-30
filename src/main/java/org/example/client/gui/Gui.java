@@ -30,18 +30,26 @@ public class Gui {
         float screenWidth = (float) this.getScreenWidth();
         float screenHeight = (float) this.getScreenHeight();
 
-        float scale = Math.min(screenWidth / VIRTUAL_WIDTH, screenHeight / VIRTUAL_HEIGHT);
+        float scale = Math.max(screenWidth / VIRTUAL_WIDTH, screenHeight / VIRTUAL_HEIGHT);
 
-        int destWidth = (int) (VIRTUAL_WIDTH * scale);
-        int destHeight = (int) (VIRTUAL_HEIGHT * scale);
-        int destX = (int) ((screenWidth - destWidth) / 2);
-        int destY = (int) ((screenHeight - destHeight) / 2);
+        float destWidthF = VIRTUAL_WIDTH * scale;
+        float destHeightF = VIRTUAL_HEIGHT * scale;
+
+        int destWidth = (int) destWidthF;
+        int destHeight = (int) destHeightF;
+
+        int destX = (int) ((screenWidth - destWidthF) / 2.0f);
+        int destY = (int) ((screenHeight - destHeightF) / 2.0f);
 
         int virtualMouseX = (int) ((mouseX - destX) / scale);
         int virtualMouseY = (int) ((mouseY - destY) / scale);
 
         Raylib.BeginTextureMode(target);
         Raylib.ClearBackground(Colors.BLACK);
+
+        if (this.client.mapRenderer != null) {
+            this.client.mapRenderer.render(graphics);
+        }
 
         if (this.screen != null) {
             this.screen.render(graphics, virtualMouseX, virtualMouseY);

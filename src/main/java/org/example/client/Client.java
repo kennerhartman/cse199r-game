@@ -5,6 +5,7 @@ import org.example.client.gui.Gui;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.MainMenuScreen;
 import org.example.client.gui.screen.Screen;
+import org.example.client.renderer.map.MapRenderer;
 import org.example.client.texture.TextureAtlas;
 import org.example.util.Identifier;
 
@@ -14,6 +15,9 @@ public class Client {
     private static Client client;
 
     public final TextureAtlas guiTextures;
+    public final TextureAtlas mapTextures;
+    public MapRenderer mapRenderer;
+
     final GuiGraphics graphics;
     public final Raylib.Font font;
     public final Gui gui;
@@ -26,6 +30,10 @@ public class Client {
 
         this.guiTextures = new TextureAtlas(Identifier.ofDefault("gui/widget"));
         this.guiTextures.prepare();
+
+        this.mapTextures = new TextureAtlas(Identifier.ofDefault("map"));
+        this.mapTextures.prepare();
+
         this.font = Raylib.GetFontDefault();
         this.gui = new Gui(this);
         this.graphics = new GuiGraphics(this);

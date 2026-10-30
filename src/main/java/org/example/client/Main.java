@@ -30,7 +30,6 @@ public class Main {
 
         Registries.load();
 
-        Registries.load();
         Client client = new Client();
 
         while (!Raylib.WindowShouldClose()) {
