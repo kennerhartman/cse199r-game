@@ -2,11 +2,14 @@ package org.example.client.renderer.map;
 
 import org.example.client.gui.Gui;
 import org.example.client.gui.GuiGraphics;
+import org.example.core.registries.Registries;
+import org.example.map.Map;
 import org.example.util.Identifier;
 
 import com.raylib.Raylib;
 
 public class MapRenderer {
+    private final Map map;
     private final Identifier mapId;
 
     public Raylib.Camera2D mapCamera = new Raylib.Camera2D();
@@ -19,6 +22,7 @@ public class MapRenderer {
 
     public MapRenderer() {
         this.mapId = Identifier.ofDefault("map_tile_1");
+        this.map = Registries.MAPS.getValue(mapId);
 
         this.mapCamera.offset(new Raylib.Vector2().x(Gui.VIRTUAL_WIDTH / 2.0f).y(Gui.VIRTUAL_HEIGHT / 2.0f));
 
@@ -39,9 +43,11 @@ public class MapRenderer {
                 Identifier.of(this.mapId.namespace, "pieces/" + this.mapId.path + ".png"),
                 0,
                 0,
-                0,
-                0
+                this.mapWidth,
+                this.mapHeight
         );
+
+        this.renderSpaces(graphics);
 
         Raylib.EndMode2D();
         Raylib.EndScissorMode();
@@ -63,6 +69,20 @@ public class MapRenderer {
                 64,
                 64
         );
+    }
+
+    private void renderSpaces(GuiGraphics graphics) {
+        for (Map.Space space : this.map.spaces) {
+            String spaceName = space.type().name().toLowerCase();
+
+            graphics.blit(
+                    Identifier.of(this.mapId.namespace, "space/" + spaceName + ".png"),
+                    space.x(),
+                    space.y(),
+                    32,
+                    32
+            );
+        }
     }
 
     public void mouseClicked(double mouseX, double mouseY) {

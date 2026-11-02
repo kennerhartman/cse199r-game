@@ -41,7 +41,26 @@ public class GuiGraphics {
     public void blit(Identifier id, int x, int y, int width, int height) {
         UploadedTexture texture = Client.getInstance().mapTextures.getTexture(id);
 
-        Raylib.DrawTexture(texture.texture(), 0, 0, new Raylib.Color().a((byte) 255).r((byte) 255).g((byte) 255).b((byte) 255));
+        Raylib.DrawTexturePro(
+                texture.texture(),
+                new Raylib.Rectangle()
+                        .x(0)
+                        .y(0)
+                        .width(width)
+                        .height(height),
+                new Raylib.Rectangle()
+                        .x(x)
+                        .y(y)
+                        .width(width)
+                        .height(height),
+                new Raylib.Vector2().x(0).y(0),
+                0,
+                new Raylib.Color()
+                        .a((byte) 255)
+                        .r((byte) 255)
+                        .g((byte) 255)
+                        .b((byte) 255)
+        );
     }
 
     public void blitNineSliced(TexturePipeline pipeline, Identifier id, int x, int y, int width, int height, int textureWidth, int textureHeight) {

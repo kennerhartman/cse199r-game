@@ -3,7 +3,7 @@
         "type": "nine_slice",
         "width": 64,
         "height": 64,
-        "scale": 2,
+        "scale": 4,
         "corner": 4
     }
 }
