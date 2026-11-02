@@ -3,6 +3,8 @@ package org.example.map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MapManager {
 //    This class handles all of the map generation and choice storage.
@@ -19,9 +21,31 @@ public class MapManager {
         currentNode = new MapNode ("Tavern", MapNode.NodeType.COMBAT, "Starting Area!", 0, true);
 //        Set choices to either start a shop if they don't know what they're doing, or go to a real combat which starts the normal loop
         activeChoices.add(new MapNode("Merchant", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 0));
-        activeChoices.add(new MapNode("Combat1", MapNode.NodeType.COMBAT, "Start Your Journey! (Skip the tutorial...)", currentNode, 0));
+        activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey! (Skip the tutorial...)", currentNode, 0));
     }
 
+    public MapManager(List<MapNodeDTO> mapSave){
+        this.activeChoices = new ArrayList<>();
+        int i = 0;
+        MapNode lastCreated = null;
+        for(MapNodeDTO dto:mapSave){
+            MapNode newNode = new MapNode(dto.ID, MapNode.NodeType.valueOf(dto.type), dto.tooltip, dto.nodesSinceBoss, dto.isStartNode);
+            if(i == 0 && !dto.isStartNode){
+                lastCreated = newNode;
+                this.currentNode = newNode;
+                i++;
+            }else{
+                newNode.setNextNode(lastCreated);
+                lastCreated = newNode;
+            }
+        }
+        addEdges();
+    }
+
+    private void setCurrentNode(MapNode newCurrent){ this.currentNode = newCurrent; }
+    private void setActiveChoices(List<MapNode> newActive){ this.activeChoices = newActive; }
+
+//    Called when a node is clicked on, pass in the chose node
     public void selectNode(MapNode chosenNode){
 //        Set the currentNodes next node to be the chosen node, then switch it to the new node
         this.currentNode.setNextNode(chosenNode);
@@ -30,21 +54,40 @@ public class MapManager {
         this.activeChoices.clear();
 //        set the new choices- if you just finished the new shop, start a new cycle, if not generate normally
         if(currentNode.getID().equals("Merchant")){
-            activeChoices.add(new MapNode("combat1", MapNode.NodeType.COMBAT, "Start Your Journey!", currentNode, 0));
+            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey!", currentNode, 0));
         }else{
             addEdges();
         }
+        System.out.println("Edges Added\nLoad Encounter...");
 //        TODO: Start an encounter, which should be the fight?
     }
 
     public String generateID(String currentID){
-        int number = (int) currentID.charAt(currentID.length() -1) +1;
-        return String.valueOf(number);
+        Pattern ID_PATTERN = Pattern.compile("^(.*?)(\\d+)$");
+        if (currentID == null || currentID.isEmpty()) {
+            throw new IllegalArgumentException("ID string cannot be null or empty");
+        }
+        Matcher matcher = ID_PATTERN.matcher(currentID);
+        if (matcher.find()) {
+            String prefix = matcher.group(1);      // e.g., "player_score_" or "item"
+            String numberStr = matcher.group(2);    // e.g., "095" or "123"
+
+            // 1. Convert to integer and increment
+            int nextNumber = Integer.parseInt(numberStr) + 1;
+
+            // 2. Format with the same amount of padding if your IDs use leading zeros (e.g., "095" -> "096")
+            String nextNumberStr = String.format("%0" + numberStr.length() + "d", nextNumber);
+
+            // 3. Return the fully formed next sequential ID
+            return nextNumberStr;
+        }
+
+        throw new IllegalArgumentException("ID does not end with a valid sequential integer: " + currentID);
     }
 
     public String getToolTip(MapNode.NodeType type){
-        Random rand = new Random(5);
-        int num = rand.nextInt();
+        Random rand = new Random();
+        int num = rand.nextInt(4);
         switch(type){
             case MapNode.NodeType.COMBAT:
                 return combatTips.get(num);
@@ -59,6 +102,35 @@ public class MapManager {
 //    Returns available next nodes
     public List<MapNode> getActiveChoices() {
         return activeChoices;
+    }
+
+    public MapNode getCurrentNode(){ return currentNode;}
+
+    public List<MapNode> getPath(){
+//        Create a list to store the path, store current node
+        List<MapNode> path = new ArrayList<>();
+        MapNode newNode = currentNode;
+        boolean pathCheck = true;
+//        path.add(newNode);
+//        Until you hit the start node, add each one and get the node before it
+        while(pathCheck){
+            path.add(newNode);
+            if(!newNode.checkIsStart()){
+                newNode = newNode.getLastNode();
+            }else{
+                pathCheck = false;
+            }
+        }
+//        Return the list of nodes.
+        return path;
+    }
+
+    public List<MapNodeDTO> getSaveData(){
+        List<MapNodeDTO> saveData = new ArrayList<>();
+        for(MapNode newNode: this.getPath()){
+            saveData.add(new MapNodeDTO(newNode));
+        }
+        return saveData;
     }
 
 //    Generates new edge nodes and adds them to activeChoices based on the current node
@@ -143,4 +215,5 @@ public class MapManager {
             System.out.println("There was an error in MapNode.addEdges()");
         }
     }
+
 }

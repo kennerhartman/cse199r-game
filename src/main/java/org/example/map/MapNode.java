@@ -44,6 +44,7 @@ public class MapNode {
     public void setNextNode(MapNode next){
         this.nextNode = next;
     }
+//    public void setLastNode(MapNode last) { this.lastNode = last; }
 
     public int getNodesSinceBoss() {
         return nodesSinceBoss;
@@ -57,9 +58,9 @@ public class MapNode {
         return tooltip;
     }
 
-    public MapNode getLastNode() {
-        return lastNode;
-    }
+    public MapNode getLastNode() { return lastNode;    }
+
+    public boolean checkIsStart(){ return isStartNode; }
 
     public MapNode getNextNode() {
         return nextNode;
