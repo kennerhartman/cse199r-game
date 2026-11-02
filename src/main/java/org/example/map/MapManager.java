@@ -18,10 +18,10 @@ public class MapManager {
 //        Initialize
         this.activeChoices = new ArrayList<>();
 //        Set current node to new start node with no last node
-        currentNode = new MapNode ("Tavern", MapNode.NodeType.COMBAT, "Starting Area!", 0, true);
+        currentNode = new MapNode ("Tavern", MapNode.NodeType.COMBAT, "Starting Area!", 0, true, 0);
 //        Set choices to either start a shop if they don't know what they're doing, or go to a real combat which starts the normal loop
-        activeChoices.add(new MapNode("Merchant", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 0));
-        activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey! (Skip the tutorial...)", currentNode, 0));
+        activeChoices.add(new MapNode("Merchant", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 0, 0));
+        activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey! (Skip the tutorial...)", currentNode, 0, 0));
     }
 
     public MapManager(List<MapNodeDTO> mapSave){
@@ -29,7 +29,7 @@ public class MapManager {
         int i = 0;
         MapNode lastCreated = null;
         for(MapNodeDTO dto:mapSave){
-            MapNode newNode = new MapNode(dto.ID, MapNode.NodeType.valueOf(dto.type), dto.tooltip, dto.nodesSinceBoss, dto.isStartNode);
+            MapNode newNode = new MapNode(dto.ID, MapNode.NodeType.valueOf(dto.type), dto.tooltip, dto.nodesSinceBoss, dto.isStartNode, dto.currentTile);
             if(i == 0 && !dto.isStartNode){
                 lastCreated = newNode;
                 this.currentNode = newNode;
@@ -54,7 +54,7 @@ public class MapManager {
         this.activeChoices.clear();
 //        set the new choices- if you just finished the new shop, start a new cycle, if not generate normally
         if(currentNode.getID().equals("Merchant")){
-            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey!", currentNode, 0));
+            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey!", currentNode, 0, 0));
         }else{
             addEdges();
         }
@@ -137,6 +137,7 @@ public class MapManager {
     public void addEdges() {
         boolean evenNode = (currentNode.getNodesSinceBoss() % 2) == 0;
         boolean bossTime = (currentNode.getNodesSinceBoss() >= 3);
+        int currentTile = currentNode.getTile();
         String id = generateID(currentNode.getID());
         if (currentNode.getType() == MapNode.NodeType.BOSS) {
             // Start a new cycle after the boss, initial combat should be 0
@@ -145,7 +146,8 @@ public class MapManager {
                     MapNode.NodeType.COMBAT,
                     getToolTip(MapNode.NodeType.COMBAT),
                     this.currentNode,
-                    0
+                    0,
+                    currentTile+1
             );
             activeChoices.add(combat);
 
@@ -156,7 +158,8 @@ public class MapManager {
                     MapNode.NodeType.BOSS,
                     getToolTip(MapNode.NodeType.BOSS),
                     this.currentNode,
-                    -1
+                    -1,
+                    currentTile
             );
             activeChoices.add(boss);
 
@@ -167,14 +170,16 @@ public class MapManager {
                     MapNode.NodeType.SHOP,
                     getToolTip(MapNode.NodeType.SHOP),
                     this.currentNode,
-                    currentNode.getNodesSinceBoss() + 1
+                    currentNode.getNodesSinceBoss() + 1,
+                    currentTile
             );
             MapNode combat = new MapNode(
                     "combat"+id,
                     MapNode.NodeType.COMBAT,
                     getToolTip(MapNode.NodeType.COMBAT),
                     this.currentNode,
-                    currentNode.getNodesSinceBoss() + 1
+                    currentNode.getNodesSinceBoss() + 1,
+                    currentTile
             );
 
             activeChoices.add(shop);
@@ -187,7 +192,8 @@ public class MapManager {
                         MapNode.NodeType.BOSS,
                         getToolTip(MapNode.NodeType.BOSS),
                         this.currentNode,
-                        -1
+                        -1,
+                        currentTile
                 );
                 activeChoices.add(boss);
             } else {
@@ -196,7 +202,8 @@ public class MapManager {
                         MapNode.NodeType.COMBAT,
                         getToolTip(MapNode.NodeType.COMBAT),
                         this.currentNode,
-                        currentNode.getNodesSinceBoss() + 1
+                        currentNode.getNodesSinceBoss() + 1,
+                        currentTile
                 );
                 activeChoices.add(combat);
             }
@@ -207,7 +214,8 @@ public class MapManager {
                     MapNode.NodeType.COMBAT,
                     getToolTip(MapNode.NodeType.COMBAT),
                     this.currentNode,
-                    currentNode.getNodesSinceBoss() + 1
+                    currentNode.getNodesSinceBoss() + 1,
+                    currentTile
             );
             activeChoices.add(combat);
 

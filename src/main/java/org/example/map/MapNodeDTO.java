@@ -11,6 +11,8 @@ public class MapNodeDTO {
     public int nodesSinceBoss;
     public boolean isStartNode = false;
 
+    public int currentTile;
+
     public MapNodeDTO(MapNode mapNode){
         this.ID = mapNode.getID();
         this.type = mapNode.getType().toString();
@@ -23,5 +25,6 @@ public class MapNodeDTO {
                 : null;
         this.nodesSinceBoss = mapNode.getNodesSinceBoss();
         this.isStartNode = mapNode.checkIsStart();
+        this.currentTile = mapNode.getTile();
     }
 }

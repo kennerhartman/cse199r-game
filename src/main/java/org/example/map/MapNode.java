@@ -19,26 +19,29 @@ public class MapNode {
 
     private int nodesSinceBoss;
     private boolean isStartNode = false;
+    private int tile;
 
 
 //    Creates a regular node
-    public MapNode(String ID, NodeType type, String tooltip, MapNode last, int nodesSinceBoss){
+    public MapNode(String ID, NodeType type, String tooltip, MapNode last, int nodesSinceBoss, int tile){
         this.ID = ID;
         this.type = type;
         this.tooltip = tooltip;
         this.lastNode = last;
         this.nodesSinceBoss = nodesSinceBoss;
+        this.tile = tile;
     }
 
 //    Creates a starting node with a null lastNode
 //    (This means that when searching nodes, you have to check isStart to stop searching last Node when you
 //    hit the start again)
-    public MapNode(String ID, NodeType type, String tooltip, int nodesSinceBoss, boolean isStart){
+    public MapNode(String ID, NodeType type, String tooltip, int nodesSinceBoss, boolean isStart, int tile){
         this.ID = ID;
         this.type = type;
         this.tooltip = tooltip;
         this.nodesSinceBoss = nodesSinceBoss;
         this.isStartNode = isStart;
+        this.tile = tile;
     }
 
     public void setNextNode(MapNode next){
@@ -69,6 +72,8 @@ public class MapNode {
     public NodeType getType() {
         return type;
     }
+
+    public int getTile() { return tile; }
 
     public enum NodeType {
         COMBAT,
