@@ -7,6 +7,7 @@ import org.example.client.gui.screen.MainMenuScreen;
 import org.example.client.gui.screen.Screen;
 import org.example.client.renderer.map.MapRenderer;
 import org.example.client.texture.TextureAtlas;
+import org.example.map.MapManager;
 import org.example.util.Identifier;
 
 import com.raylib.Raylib;
@@ -16,6 +17,8 @@ public class Client {
 
     public final TextureAtlas guiTextures;
     public final TextureAtlas mapTextures;
+
+    public MapManager mapManager;
     public MapRenderer mapRenderer;
 
     final GuiGraphics graphics;
