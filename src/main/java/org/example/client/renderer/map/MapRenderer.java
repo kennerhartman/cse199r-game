@@ -32,7 +32,7 @@ public class MapRenderer {
         this.mapCamera.zoom(this.cameraZoom);
     }
 
-    public void render(GuiGraphics graphics) {
+    public void render(GuiGraphics graphics, double mouseX, double mouseY) {
         Raylib.BeginScissorMode(0, 0, Gui.VIRTUAL_WIDTH, Gui.VIRTUAL_HEIGHT);
 
         Raylib.BeginMode2D(this.mapCamera);
@@ -47,7 +47,7 @@ public class MapRenderer {
                 this.mapHeight
         );
 
-        this.renderSpaces(graphics);
+        this.renderSpaces(graphics, mouseX, mouseY);
 
         Raylib.EndMode2D();
         Raylib.EndScissorMode();
@@ -71,12 +71,30 @@ public class MapRenderer {
         );
     }
 
-    private void renderSpaces(GuiGraphics graphics) {
+    private void renderSpaces(GuiGraphics graphics, double virtualMouseX, double virtualMouseY) {
+        Raylib.Vector2 screenMouse = new Raylib.Vector2().x((float) virtualMouseX).y((float) virtualMouseY);
+        Raylib.Vector2 worldMouse = Raylib.GetScreenToWorld2D(screenMouse, this.mapCamera);
+
+        boolean isMouseDown = Raylib.IsMouseButtonDown(0);
+
         for (Map.Space space : this.map.spaces) {
             String spaceName = space.type().name().toLowerCase();
 
+            int startX = space.x();
+            int startY = space.y();
+            int endY = space.y() + 32;
+            int endX = space.x() + 32;
+
+            String textureId = spaceName;
+
+            boolean isHovered = worldMouse.x() > startX && worldMouse.x() < endX && worldMouse.y() > startY && worldMouse.y() < endY;
+
+            if (isHovered && isMouseDown) {
+                textureId += "_pressed";
+            }
+
             graphics.blit(
-                    Identifier.of(this.mapId.namespace, "space/" + spaceName + ".png"),
+                    Identifier.of(this.mapId.namespace, "space/" + textureId + ".png"),
                     space.x(),
                     space.y(),
                     32,

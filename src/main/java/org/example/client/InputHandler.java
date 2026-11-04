@@ -70,6 +70,7 @@ public class InputHandler {
 
             this.mouseClicked(this.getVirtualMouseX(), this.getVirtualMouseY());
         }
+
         if (this.isDragging) {
             this.mouseDragged(this.getVirtualMouseX(), this.getVirtualMouseY());
         }

@@ -48,7 +48,7 @@ public class Gui {
         Raylib.ClearBackground(Colors.BLACK);
 
         if (this.client.mapRenderer != null) {
-            this.client.mapRenderer.render(graphics);
+            this.client.mapRenderer.render(graphics, virtualMouseX, virtualMouseY);
         }
 
         if (this.screen != null) {
