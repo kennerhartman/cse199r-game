@@ -5,6 +5,7 @@ import org.example.Character.GameSaveData;
 import org.example.Character.PlayerCharacter;
 import org.example.Player.Player;
 import org.example.card.CardStorage;
+import org.example.map.MapManager;
 
 import java.io.File;
 import java.io.FileReader;
@@ -52,5 +53,11 @@ public class LoadSystem {
 //        Debugging v
         System.out.println("Loaded: "+savedCharacter.name+"'s game belonging to "+player.username);
         return savedCharacter;
+    }
+
+    public static MapManager loadMap(GameSaveData gameSave){
+        MapManager savedMap = new MapManager(gameSave.allNodes);
+
+        return savedMap;
     }
 }

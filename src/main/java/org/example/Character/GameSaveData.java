@@ -3,6 +3,8 @@ package org.example.Character;
 
 import org.example.Player.Player;
 import org.example.card.Card;
+import org.example.map.MapManager;
+import org.example.map.MapNodeDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +21,13 @@ public class GameSaveData {
     public int Speed;
     public int Attack;
     public int currency;
-//    TODO: Add in game save data, such as map node, currency, etc.
+//    TODO: Add in game save data, such as map node, etc.
 
-    public GameSaveData(PlayerCharacter character, Player player){
+    public String currentNodeID;
+    public int currentNodesSinceBoss;
+    public List<MapNodeDTO> allNodes = new ArrayList<>();
+
+    public GameSaveData(PlayerCharacter character, Player player, MapManager mapManager){
         this.owner = player.username;
         for(Card card : character.deck.drawPile){
             this.deck.add(card.name);
@@ -34,5 +40,9 @@ public class GameSaveData {
         this.Speed = character.Speed;
         this.Attack = character.Attack;
         this.currency = character.currency;
+
+        this.currentNodeID = mapManager.getCurrentNode().getID();
+        this.currentNodesSinceBoss = mapManager.getCurrentNode().getNodesSinceBoss();
+        this.allNodes = mapManager.getSaveData();
     }
 }

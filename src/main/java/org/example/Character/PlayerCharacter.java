@@ -94,6 +94,10 @@ public class PlayerCharacter {
         return 0;
     }
 
+    public int getLevel(){
+        return this.level;
+    }
+  
     public ArrayList<Card> getDrawPile() {
         return this.deck.drawPile;
     }

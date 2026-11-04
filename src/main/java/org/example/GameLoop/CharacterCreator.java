@@ -5,17 +5,18 @@ import org.example.Character.PlayerCharacter;
 import org.example.Player.Player;
 import org.example.card.Card;
 import org.example.card.CardStorage;
+import org.example.map.MapManager;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class CharacterCreator {
-    public PlayerCharacter createCharacter(Player target, CardStorage storage){
+    public PlayerCharacter createCharacter(Player target, CardStorage storage, MapManager mapManager){
         String name = "";
 //        TODO: Ask player for input and set name to input
 //         (Add some character limit and content censoring for validation)
         PlayerCharacter newCharacter = new PlayerCharacter(target, name);
-        GameSaveData saveData = new GameSaveData(newCharacter, target);
+        GameSaveData saveData = new GameSaveData(newCharacter, target, mapManager);
 //        storage.loadStore(8, Card.CardType.ABILITY);
         List<Card.CardStat> stats = Arrays.asList(Card.CardStat.values());
         for(int i = 0; i < 4; i++){
