@@ -1,6 +1,7 @@
 package org.example.Player;
 
 import org.example.Character.PlayerCharacter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -9,15 +10,13 @@ public class Player {
 //    TODO: Finish Player implementation
     public String username;
     String password;
-    PlayerCharacter character;
+    @Nullable PlayerCharacter character;
     public ArrayList<PlayerCharacter> AllPlayerCharacters = new ArrayList<PlayerCharacter>();
     int PlayerLevel;
     int HighestLevelReached;
     int TotalPlaythroughs;
 
-    public Player(String user, String pwrd){
-        this.username = user;
-        this.password = pwrd;
+    public Player() {
         this.PlayerLevel = 1;
         this.HighestLevelReached = 0;
         this.TotalPlaythroughs = 0;
@@ -41,5 +40,9 @@ public class Player {
                 System.out.println("Character information not found");
             }
         }
+    }
+
+    public @Nullable PlayerCharacter getCharacter() {
+        return this.character;
     }
 }
