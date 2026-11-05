@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.example.Player.Player;
 import org.example.card.Card;
 import org.example.card.Deck;
+import org.example.enemies.Enemy;
 
 public class PlayerCharacter {
 //    TODO: Finish PlayerCharacter implementation
@@ -43,6 +44,10 @@ public class PlayerCharacter {
         this.Speed = speed;
         this.Attack = attack;
         this.currency = currency;
+    }
+
+    public void attack(Enemy target){
+        target.giveDamage(this.Attack);
     }
 
 

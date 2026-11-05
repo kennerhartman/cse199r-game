@@ -29,6 +29,12 @@ public class Deck {
         hand.add(newCard);
     }
 
+    public void fillHand(){
+        for(int i = 0; i<=owner.getStat("STRENGTH")-hand.size(); i++){
+            draw();
+        }
+    }
+
 //    Handles playing a card from your hand
     public void play(PlayerCharacter target){
 //        TODO: Change this selector to detect player input and select a card based on that instead
