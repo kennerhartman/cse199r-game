@@ -12,6 +12,7 @@ import org.example.client.gui.widgets.ButtonWidget;
 import org.example.client.gui.widgets.CardWidget;
 import org.example.client.gui.widgets.TextInputWidget;
 import org.example.client.gui.widgets.TextWidget;
+import org.example.map.MapManager;
 
 public class CharacterCreationScreen extends Screen {
     private final Screen parent;
@@ -149,6 +150,8 @@ public class CharacterCreationScreen extends Screen {
 
                 this.rebuildScreen();
             } else {
+                this.client.mapManager = new MapManager();
+
                 GameSaveData saveData = new GameSaveData(this.client.player.getCharacter(), this.client.player, this.client.mapManager);
 
                 this.client.gui.setScreen(new LoadSaveSlotScreen(this.client, saveData));

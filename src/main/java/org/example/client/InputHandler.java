@@ -2,7 +2,7 @@ package org.example.client;
 
 import org.example.client.gui.Gui;
 import org.example.client.gui.screen.Screen;
-import org.example.client.renderer.map.MapRenderer;
+import org.example.client.map.MapInputHandler;
 
 import com.raylib.Raylib;
 
@@ -108,35 +108,47 @@ public class InputHandler {
     }
 
     public void mouseClicked(int mouseX, int mouseY) {
-        Screen screen = Client.getInstance().gui.screen;
+        Gui gui = Client.getInstance().gui;
+        Screen screen = gui.screen;
+        boolean consumed = false;
 
         if (screen != null) {
-            screen.mouseClicked(mouseX, mouseY);
+            consumed = screen.mouseClicked(mouseX, mouseY);
         }
 
-        MapRenderer renderer = Client.getInstance().mapRenderer;
+        MapInputHandler mapInput = Client.getInstance().mapInput;
 
-        if (renderer != null) {
-            renderer.mouseClicked(mouseX, mouseY);
+        if (mapInput != null && !consumed && gui.screen == screen && mapAcceptsInput(gui)) {
+            mapInput.mouseClicked(mouseX, mouseY);
         }
     }
 
     public void mouseDragged(double mouseX, double mouseY) {
-        MapRenderer renderer = Client.getInstance().mapRenderer;
+        MapInputHandler mapInput = Client.getInstance().mapInput;
 
-        if (renderer != null) {
-            renderer.mouseDragged(mouseX, mouseY);
+        if (mapInput != null && mapAcceptsInput(Client.getInstance().gui)) {
+            mapInput.mouseDragged(mouseX, mouseY);
         }
     }
 
     public void mouseReleased(int mouseX, int mouseY) {
         this.isDragging = false;
 
-        MapRenderer renderer = Client.getInstance().mapRenderer;
+        MapInputHandler mapInput = Client.getInstance().mapInput;
 
-        if (renderer != null) {
-            renderer.mouseReleased(mouseX, mouseY);
+        if (mapInput == null) {
+            return;
         }
+
+        if (mapAcceptsInput(Client.getInstance().gui)) {
+            mapInput.mouseReleased(mouseX, mouseY);
+        } else {
+            mapInput.cancelPress();
+        }
+    }
+
+    private static boolean mapAcceptsInput(Gui gui) {
+        return gui.screenOverlay == null && (gui.screen == null || gui.screen.allowsMapInput());
     }
 
     public int getVirtualMouseX() {

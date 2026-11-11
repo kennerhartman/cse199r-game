@@ -1,14 +1,21 @@
 package org.example.client;
 
+import org.example.Character.GameSaveData;
+import org.example.GameLoop.SaveSystem;
 import org.example.Player.Player;
 import org.example.client.gui.Gui;
 import org.example.client.gui.GuiGraphics;
+import org.example.client.gui.screen.GameScreen;
 import org.example.client.gui.screen.MainMenuScreen;
 import org.example.client.gui.screen.Screen;
-import org.example.client.renderer.map.MapRenderer;
+import org.example.client.map.MapInputHandler;
+import org.example.client.map.MapView;
+import org.example.client.map.renderer.MapCamera;
+import org.example.client.map.renderer.MapRenderer;
 import org.example.client.texture.TextureAtlas;
 import org.example.map.MapManager;
 import org.example.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import com.raylib.Raylib;
 
@@ -18,8 +25,10 @@ public class Client {
     public final TextureAtlas guiTextures;
     public final TextureAtlas mapTextures;
 
-    public MapManager mapManager;
-    public MapRenderer mapRenderer;
+    @Nullable public MapManager mapManager;
+    @Nullable public MapRenderer mapRenderer;
+    @Nullable public MapInputHandler mapInput;
+    public int currentSaveSlot = 0;
 
     final GuiGraphics graphics;
     public final Raylib.Font font;
@@ -42,7 +51,6 @@ public class Client {
         this.graphics = new GuiGraphics(this);
         this.input = new InputHandler();
         this.gui.setScreen(new MainMenuScreen(Client.getInstance()));
-        // this.gui.setScreen(new SaveSlotScreen(Client.getInstance()));
 
         this.player = new Player();
 

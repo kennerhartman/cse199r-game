@@ -45,4 +45,8 @@ public class Player {
     public @Nullable PlayerCharacter getCharacter() {
         return this.character;
     }
+
+    public void setCharacter(PlayerCharacter character) {
+        this.character = character;
+    }
 }

@@ -1,39 +1,11 @@
 {
     "spaces": [
-        {
-            "type": "COMBAT",
-            "x": 81,
-            "y": 190
-        },
-        {
-            "type": "SHOP",
-            "x": 203,
-            "y": 145
-        },
-        {
-            "type": "COMBAT",
-            "x": 204,
-            "y": 250
-        },
-        {
-            "type": "COMBAT",
-            "x": 340,
-            "y": 192
-        },
-        {
-            "type": "SHOP",
-            "x": 494,
-            "y": 145
-        },
-        {
-            "type": "COMBAT",
-            "x": 494,
-            "y": 250
-        },
-        {
-            "type": "BOSS",
-            "x": 614,
-            "y": 192
-        }
+        { "type": "COMBAT", "step": 0,  "x": 81,  "y": 190 },
+        { "type": "SHOP",   "step": 1,  "x": 203, "y": 145 },
+        { "type": "COMBAT", "step": 1,  "x": 204, "y": 250 },
+        { "type": "COMBAT", "step": 2,  "x": 340, "y": 192 },
+        { "type": "SHOP",   "step": 3,  "x": 494, "y": 145 },
+        { "type": "COMBAT", "step": 3,  "x": 494, "y": 250 },
+        { "type": "BOSS",   "step": -1, "x": 614, "y": 192 }
     ]
 }

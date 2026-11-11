@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MapManager {
-//    This class handles all of the map generation and choice storage.
+    //    This class handles all of the map generation and choice storage.
     private MapNode currentNode;
     private List<MapNode> activeChoices;
     private List<String> shopTips = List.of("Shop!", "A shady merchant awaits...", "Rest and Restock!", "Spend your coins here!", "Curios for sale!");
@@ -20,44 +20,43 @@ public class MapManager {
 //        Set current node to new start node with no last node
         currentNode = new MapNode ("Tavern", MapNode.NodeType.COMBAT, "Starting Area!", 0, true, 0);
 //        Set choices to either start a shop if they don't know what they're doing, or go to a real combat which starts the normal loop
-        activeChoices.add(new MapNode("Merchant", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 0, 0));
-        activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey! (Skip the tutorial...)", currentNode, 0, 0));
+        populateChoices();
     }
 
+    //    Rebuilds the chain from a save. The save list is ordered current node -> ... -> start node (see getPath()).
     public MapManager(List<MapNodeDTO> mapSave){
         this.activeChoices = new ArrayList<>();
-        int i = 0;
-        MapNode lastCreated = null;
-        for(MapNodeDTO dto:mapSave){
-            MapNode newNode = new MapNode(dto.ID, MapNode.NodeType.valueOf(dto.type), dto.tooltip, dto.nodesSinceBoss, dto.isStartNode, dto.currentTile);
-            if(i == 0 && !dto.isStartNode){
-                lastCreated = newNode;
-                this.currentNode = newNode;
-                i++;
-            }else{
-                newNode.setNextNode(lastCreated);
-                lastCreated = newNode;
-            }
+        if(mapSave == null || mapSave.isEmpty()){
+            throw new IllegalArgumentException("Map save data cannot be null or empty");
         }
-        addEdges();
+
+        List<MapNode> nodes = new ArrayList<>();
+        for(MapNodeDTO dto : mapSave){
+            nodes.add(new MapNode(dto.ID, MapNode.NodeType.valueOf(dto.type), dto.tooltip, dto.nodesSinceBoss, dto.isStartNode, dto.currentTile));
+        }
+
+//        Link each node to the one before it in the path (and back)
+        for(int i = 0; i < nodes.size() - 1; i++){
+            MapNode node = nodes.get(i);
+            MapNode previous = nodes.get(i + 1);
+            node.setLastNode(previous);
+            previous.setNextNode(node);
+        }
+
+        this.currentNode = nodes.get(0);
+        populateChoices();
     }
 
     private void setCurrentNode(MapNode newCurrent){ this.currentNode = newCurrent; }
     private void setActiveChoices(List<MapNode> newActive){ this.activeChoices = newActive; }
 
-//    Called when a node is clicked on, pass in the chose node
+    //    Called when a node is clicked on, pass in the chose node
     public void selectNode(MapNode chosenNode){
 //        Set the currentNodes next node to be the chosen node, then switch it to the new node
         this.currentNode.setNextNode(chosenNode);
         this.currentNode = chosenNode;
-//        Clear the old choices
-        this.activeChoices.clear();
-//        set the new choices- if you just finished the new shop, start a new cycle, if not generate normally
-        if(currentNode.getID().equals("Merchant")){
-            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey!", currentNode, 0, 0));
-        }else{
-            addEdges();
-        }
+//        Generate the new choices from the new current node
+        populateChoices();
         System.out.println("Edges Added\nLoad Encounter...");
 //        TODO: Start an encounter, which should be the fight?
     }
@@ -87,19 +86,18 @@ public class MapManager {
 
     public String getToolTip(MapNode.NodeType type){
         Random rand = new Random();
-        int num = rand.nextInt(4);
         switch(type){
             case MapNode.NodeType.COMBAT:
-                return combatTips.get(num);
+                return combatTips.get(rand.nextInt(combatTips.size()));
             case MapNode.NodeType.SHOP:
-                return shopTips.get(num);
+                return shopTips.get(rand.nextInt(shopTips.size()));
             case MapNode.NodeType.BOSS:
-                return bossTips.get(num);
+                return bossTips.get(rand.nextInt(bossTips.size()));
         }
         return "<Type Mismatch in MapManager.getToolTip()>";
     }
 
-//    Returns available next nodes
+    //    Returns available next nodes
     public List<MapNode> getActiveChoices() {
         return activeChoices;
     }
@@ -133,7 +131,22 @@ public class MapManager {
         return saveData;
     }
 
-//    Generates new edge nodes and adds them to activeChoices based on the current node
+    //    Fills activeChoices for the current node, including the special tutorial nodes (Tavern / Merchant)
+    private void populateChoices(){
+        this.activeChoices.clear();
+        if(currentNode.checkIsStart()){
+//            Start a shop if they don't know what they're doing, or go to a real combat which starts the normal loop
+            activeChoices.add(new MapNode("Merchant", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 0, 0));
+            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey! (Skip the tutorial...)", currentNode, 0, 0));
+        }else if(currentNode.getID().equals("Merchant")){
+//            If you just finished the tutorial shop, start a new cycle
+            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey!", currentNode, 0, 0));
+        }else{
+            addEdges();
+        }
+    }
+
+    //    Generates new edge nodes and adds them to activeChoices based on the current node
     public void addEdges() {
         boolean evenNode = (currentNode.getNodesSinceBoss() % 2) == 0;
         boolean bossTime = (currentNode.getNodesSinceBoss() >= 3);

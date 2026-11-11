@@ -1,13 +1,19 @@
 package org.example.client.gui.screen;
 
 import org.example.Character.GameSaveData;
+import org.example.Character.PlayerCharacter;
 import org.example.GameLoop.LoadSystem;
 import org.example.GameLoop.SaveSystem;
+import org.example.card.CardStorage;
 import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.overlay.ConfirmationOverlay;
 import org.example.client.gui.widgets.ButtonWidget;
-import org.example.client.renderer.map.MapRenderer;
+import org.example.client.map.MapInputHandler;
+import org.example.client.map.MapView;
+import org.example.client.map.renderer.MapCamera;
+import org.example.client.map.renderer.MapRenderer;
+import org.example.map.MapManager;
 import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,12 +67,33 @@ public class LoadSaveSlotScreen extends Screen {
                 this.client.gui.setScreen(new MainMenuScreen(this.client));
             }
         } else {
-            LoadSystem.loadGame(slotNumber);
+            GameSaveData save = LoadSystem.loadGame(slotNumber);
 
-            this.client.gui.setScreen(null);
+            if (save == null) {
+                return;
+            }
 
-            this.client.mapRenderer = new MapRenderer();
+            CardStorage cards = new CardStorage();
+            cards.loadDeck();
+            PlayerCharacter character = LoadSystem.loadCharacter(cards, save, this.client.player);
+            this.client.player.setCharacter(character);
+
+            this.startGame(LoadSystem.loadMap(save), slotNumber);
         }
+    }
+
+    private void startGame(MapManager mapManager, int saveSlot) {
+        this.client.mapManager = mapManager;
+
+        MapView view = new MapView(mapManager);
+        MapCamera camera = new MapCamera();
+
+        this.client.mapInput = new MapInputHandler(view, camera);
+        this.client.mapRenderer = new MapRenderer(view, camera, this.client.mapInput);
+        this.client.currentSaveSlot = saveSlot;
+
+        this.client.gui.setScreenOverlay(null);
+        this.client.gui.setScreen(new GameScreen(this.client));
     }
 
     static class SaveSlotWidget extends ButtonWidget {

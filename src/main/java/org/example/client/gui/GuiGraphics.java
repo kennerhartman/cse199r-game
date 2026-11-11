@@ -39,6 +39,10 @@ public class GuiGraphics {
     }
 
     public void blit(Identifier id, int x, int y, int width, int height) {
+        this.blit(id, x, y, width, height, Colors.WHITE);
+    }
+
+    public void blit(Identifier id, int x, int y, int width, int height, Raylib.Color color) {
         UploadedTexture texture = Client.getInstance().mapTextures.getTexture(id);
 
         Raylib.DrawTexturePro(
@@ -55,11 +59,7 @@ public class GuiGraphics {
                         .height(height),
                 new Raylib.Vector2().x(0).y(0),
                 0,
-                new Raylib.Color()
-                        .a((byte) 255)
-                        .r((byte) 255)
-                        .g((byte) 255)
-                        .b((byte) 255)
+                color
         );
     }
 
