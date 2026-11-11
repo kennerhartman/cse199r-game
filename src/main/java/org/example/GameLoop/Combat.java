@@ -49,6 +49,11 @@ public class Combat {
                     }
                 }
             }
+            if(playerhealths.getFirst()<=0){
+//                TODO: End Save/Run logic. rather than actually deleting the file this should just mark the
+//                 save as available and then rewrite it next time
+                break;
+            }
             for(PlayerCharacter player:characters){
                 for(int i = 0; i<player.getStat("SPEED"); i++){
 //                    TODO: Fill in Selection Logic

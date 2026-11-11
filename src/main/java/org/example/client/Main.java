@@ -95,7 +95,7 @@ public class Main {
             System.out.println("-1. Quit");
             choiceInput = Integer.parseInt(scanner.nextLine());
             if(choiceInput!=-1) {
-                mapManager.selectNode(mapManager.getActiveChoices().get(choiceInput));
+                mapManager.selectNode(mapManager.getActiveChoices().get(choiceInput), newCharacter);
             }
         }
         System.out.println("Save Game?\n0. Yes\n1. No");
@@ -121,7 +121,7 @@ public class Main {
             System.out.println("-1. Quit");
             choiceInput = Integer.parseInt(scanner.nextLine());
             if(choiceInput!=-1) {
-                mapManager.selectNode(mapManager.getActiveChoices().get(choiceInput));
+                mapManager.selectNode(mapManager.getActiveChoices().get(choiceInput), newCharacter);
             }
         }
     }

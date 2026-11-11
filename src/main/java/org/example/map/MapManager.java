@@ -1,5 +1,7 @@
 package org.example.map;
 
+import org.example.Character.PlayerCharacter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -46,7 +48,7 @@ public class MapManager {
     private void setActiveChoices(List<MapNode> newActive){ this.activeChoices = newActive; }
 
 //    Called when a node is clicked on, pass in the chose node
-    public void selectNode(MapNode chosenNode){
+    public void selectNode(MapNode chosenNode, PlayerCharacter character){
 //        Set the currentNodes next node to be the chosen node, then switch it to the new node
         this.currentNode.setNextNode(chosenNode);
         this.currentNode = chosenNode;
@@ -60,6 +62,7 @@ public class MapManager {
         }
         System.out.println("Edges Added\nLoad Encounter...");
 //        TODO: Start an encounter, which should be the fight?
+        Encounter newEncounter = new Encounter(currentNode, character);
     }
 
     public String generateID(String currentID){
