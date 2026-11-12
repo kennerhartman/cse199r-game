@@ -77,6 +77,7 @@ public class MapNode {
     public int getTile() { return tile; }
 
     public enum NodeType {
+        TAVERN,
         COMBAT,
         SHOP,
         BOSS

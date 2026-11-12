@@ -18,8 +18,8 @@ public class MapManager {
 //        Initialize
         this.activeChoices = new ArrayList<>();
 //        Set current node to new start node with no last node
-        currentNode = new MapNode ("Tavern", MapNode.NodeType.COMBAT, "Starting Area!", 0, true, 0);
-//        Set choices to either start a shop if they don't know what they're doing, or go to a real combat which starts the normal loop
+        currentNode = new MapNode ("Tavern", MapNode.NodeType.TAVERN, "Starting Area!", 0, true, 0);
+//        The tavern tile is the first loop; its first choice is the tutorial shop
         populateChoices();
     }
 
@@ -32,7 +32,9 @@ public class MapManager {
 
         List<MapNode> nodes = new ArrayList<>();
         for(MapNodeDTO dto : mapSave){
-            nodes.add(new MapNode(dto.ID, MapNode.NodeType.valueOf(dto.type), dto.tooltip, dto.nodesSinceBoss, dto.isStartNode, dto.currentTile));
+//            Older saves stored the start node as COMBAT; the start node is always the tavern
+            MapNode.NodeType type = dto.isStartNode ? MapNode.NodeType.TAVERN : MapNode.NodeType.valueOf(dto.type);
+            nodes.add(new MapNode(dto.ID, type, dto.tooltip, dto.nodesSinceBoss, dto.isStartNode, dto.currentTile));
         }
 
 //        Link each node to the one before it in the path (and back)
@@ -131,25 +133,26 @@ public class MapManager {
         return saveData;
     }
 
-    //    Fills activeChoices for the current node, including the special tutorial nodes (Tavern / Merchant)
+    //    Fills activeChoices for the current node. The start (Tavern) node leads to the tutorial shop at step 1
+    //    of the tavern tile; after that, addEdges() follows the normal loop.
     private void populateChoices(){
         this.activeChoices.clear();
         if(currentNode.checkIsStart()){
-//            Start a shop if they don't know what they're doing, or go to a real combat which starts the normal loop
-            activeChoices.add(new MapNode("Merchant", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 0, 0));
-            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey! (Skip the tutorial...)", currentNode, 0, 0));
-        }else if(currentNode.getID().equals("Merchant")){
-//            If you just finished the tutorial shop, start a new cycle
-            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey!", currentNode, 0, 0));
+            activeChoices.add(new MapNode("shop1", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 1, currentNode.getTile()));
         }else{
             addEdges();
         }
     }
 
+    //    Number of completed nodes before the boss appears. The tavern tile (0) has an extra combat before its boss.
+    private static int bossThreshold(int tile){
+        return tile == 0 ? 4 : 3;
+    }
+
     //    Generates new edge nodes and adds them to activeChoices based on the current node
     public void addEdges() {
         boolean evenNode = (currentNode.getNodesSinceBoss() % 2) == 0;
-        boolean bossTime = (currentNode.getNodesSinceBoss() >= 3);
+        boolean bossTime = (currentNode.getNodesSinceBoss() >= bossThreshold(currentNode.getTile()));
         int currentTile = currentNode.getTile();
         String id = generateID(currentNode.getID());
         if (currentNode.getType() == MapNode.NodeType.BOSS) {

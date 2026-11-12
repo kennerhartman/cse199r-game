@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 import org.example.core.registries.Registries;
@@ -20,10 +21,14 @@ public class MapView {
     public static final int MAP_HEIGHT = 357;
 
     private static final Identifier FALLBACK_MAP_ID = Identifier.ofDefault("map_tile_1");
+    private static final int LAST_FIXED_TILE = 6;
 
-    private final MapManager mapManager;
+    private final Random random = new Random();
+    private final java.util.Map<Integer, Integer> randomLayouts = new HashMap<>();
 
     private Map map;
+    private final MapManager mapManager;
+
     private Identifier mapId;
     private int loadedTile = Integer.MIN_VALUE;
 
@@ -47,12 +52,14 @@ public class MapView {
             return;
         }
 
+        int layout = this.layoutFor(tile);
+
         Identifier id;
 
-        if (tile == 0) {
+        if (layout == 0) {
             id = Identifier.ofDefault("tavern");
         } else {
-            id = Identifier.ofDefault("map_tile_" + (tile + 1));
+            id = Identifier.ofDefault("map_tile_" + layout);
         }
 
         Map loaded = Registries.MAPS.getValue(id);
@@ -72,7 +79,19 @@ public class MapView {
     private int displayTile() {
         List<MapNode> choices = this.mapManager.getActiveChoices();
 
-        return choices.isEmpty() ? this.mapManager.getCurrentNode().getTile() : choices.getFirst().getTile();
+        if (choices.isEmpty()) {
+            return this.mapManager.getCurrentNode().getTile();
+        }
+
+        return choices.getFirst().getTile();
+    }
+
+    private int layoutFor(int tile) {
+        if (tile <= LAST_FIXED_TILE) {
+            return tile;
+        }
+
+        return this.randomLayouts.computeIfAbsent(tile, i -> this.random.nextInt(LAST_FIXED_TILE) + 1);
     }
 
     public SpaceStates computeStates() {
@@ -81,14 +100,14 @@ public class MapView {
         MapNode currentNode = this.mapManager.getCurrentNode();
         int tile = this.loadedTile;
 
-        Map.Space current = currentNode.checkIsStart() || currentNode.getTile() != tile
+        Map.Space current = currentNode.getTile() != tile
                 ? null
                 : this.map.getSpaceFromMap(currentNode).orElse(null);
 
         Set<Map.Space> visited = new HashSet<>();
 
         for (MapNode node : this.mapManager.getPath()) {
-            if (node.getTile() == tile && !node.checkIsStart()) {
+            if (node.getTile() == tile) {
                 this.map.getSpaceFromMap(node).ifPresent(visited::add);
             }
         }

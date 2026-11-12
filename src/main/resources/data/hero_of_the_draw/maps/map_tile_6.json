@@ -1,0 +1,11 @@
+{
+    "spaces": [
+        { "type": "COMBAT", "step": 0,  "x": 77,  "y": 191 },
+        { "type": "SHOP",   "step": 1,  "x": 198, "y": 144 },
+        { "type": "COMBAT", "step": 1,  "x": 198, "y": 249 },
+        { "type": "COMBAT", "step": 2,  "x": 328, "y": 192 },
+        { "type": "SHOP",   "step": 3,  "x": 474, "y": 145 },
+        { "type": "COMBAT", "step": 3,  "x": 473, "y": 249 },
+        { "type": "BOSS",   "step": -1, "x": 588, "y": 197 }
+    ]
+}
