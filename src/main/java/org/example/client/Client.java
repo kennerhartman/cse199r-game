@@ -6,7 +6,14 @@ import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.MainMenuScreen;
 import org.example.client.gui.screen.Screen;
 import org.example.client.texture.TextureAtlas;
+import org.example.map.MapManager;
 import org.example.util.Identifier;
+import org.example.client.GameSettings;
+import org.example.client.audio.MusicManager;
+import org.example.client.audio.MusicManager.MusicType;
+import org.example.client.audio.SoundManager;
+import org.example.client.audio.SoundManager.SoundType;
+import org.example.client.texture.SpriteManager;
 
 import com.raylib.Raylib;
 
@@ -19,10 +26,16 @@ public class Client {
     public final Gui gui;
     public final InputHandler input;
     public final Player player;
+    public final MapManager mapManager;
+    public final MusicManager musicManager;
+    public final SoundManager soundManager;
+    public final SpriteManager spriteManager;
+    public final GameSettings settings = new GameSettings();
     private boolean running;
 
     public Client() {
         Client.client = this;
+        this.settings.load();
 
         this.guiTextures = new TextureAtlas(Identifier.ofDefault("gui/widget"));
         this.guiTextures.prepare();
@@ -30,10 +43,22 @@ public class Client {
         this.gui = new Gui(this);
         this.graphics = new GuiGraphics(this);
         this.input = new InputHandler();
-        this.gui.setScreen(new MainMenuScreen(Client.getInstance()));
-        // this.gui.setScreen(new SaveSlotScreen(Client.getInstance()));
 
         this.player = new Player();
+        this.mapManager = new MapManager();
+        this.musicManager = new MusicManager();
+        this.spriteManager = new SpriteManager();
+        this.musicManager.setVolume(this.settings.getMusicVolume());
+        this.soundManager = new SoundManager();
+
+        this.soundManager.setVolume(
+                this.settings.getSoundVolume()
+        );
+
+        this.gui.setScreen(new MainMenuScreen(Client.getInstance()));
+
+        this.musicManager.play(MusicType.MENU);
+        // this.gui.setScreen(new SaveSlotScreen(Client.getInstance()));
 
         this.running = true;
     }
@@ -49,6 +74,8 @@ public class Client {
             }
         }
 
+        this.musicManager.update();
+
         this.gui.render(this.graphics, this.input.getMouseX(), this.input.getMouseY());
     }
 
@@ -58,6 +85,14 @@ public class Client {
 
     public void stop() {
         this.running = false;
+    }
+
+    public void close(){
+        this.settings.save();
+
+        this.spriteManager.close();
+        this.soundManager.close();
+        this.musicManager.close();
     }
 
     public static Client getInstance() {

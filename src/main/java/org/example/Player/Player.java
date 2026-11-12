@@ -22,8 +22,12 @@ public class Player {
         this.TotalPlaythroughs = 0;
     }
 
-    public void createNewCharacter(String name){
-        this.character = new PlayerCharacter(this, name);
+    public void createNewCharacter(String name) {
+        createNewCharacter(name, "knight");
+    }
+
+    public void createNewCharacter(String name, String spriteId) {
+        this.character = new PlayerCharacter(this, name, spriteId);
         AllPlayerCharacters.add(this.character);
     }
 

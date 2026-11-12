@@ -1,6 +1,8 @@
 package org.example.client.gui.screen;
 
 import org.example.client.Client;
+import org.example.client.audio.MusicManager;
+import org.example.client.audio.MusicManager.MusicType;
 import org.example.client.gui.widgets.BorderWidget;
 import org.example.client.gui.widgets.ButtonWidget;
 
@@ -50,6 +52,19 @@ public class MainMenuScreen extends Screen {
         );
 
         this.addElement(
+                new ButtonWidget(
+                        "Animations",
+                        15,
+                        this.height - 55,
+                        150,
+                        40,
+                        () -> this.client.gui.setScreen(
+                                new AnimationTestScreen(this.client, this)
+                        )
+                )
+        );
+
+        this.addElement(
                 new BorderWidget(
                         borderX,
                         borderY,
@@ -57,5 +72,6 @@ public class MainMenuScreen extends Screen {
                         borderWidgetHeight
                 )
         );
+        this.client.musicManager.play(MusicType.MENU);
     }
 }

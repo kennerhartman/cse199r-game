@@ -5,33 +5,76 @@ import org.example.Character.GameSaveData;
 import org.example.Character.PlayerCharacter;
 import org.example.Player.Player;
 import org.example.card.CardStorage;
+import org.example.client.GamePaths;
 import org.example.map.MapManager;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class LoadSystem {
-//    TODO: Refactor to work with GameSaving rather than just CharacterSaving
-    public static GameSaveData loadGame(int saveNumber){
-//        Get the file based on the save slot
-        File saveFile = new File("./saves/save"+saveNumber+".json");
-//        TODO: add real error logging here
-//        Checks if the file exists, error if not
-        if(!saveFile.exists()){
-            System.out.println("No save file found");
+    private static final Gson gson = new Gson();
+
+    public static GameSaveData loadGame(int saveNumber) {
+        Path saveDirectory = GamePaths.getSavesDirectory();
+
+        Path savePath = saveDirectory.resolve(
+                "save" + saveNumber + ".json"
+        );
+
+        Path backupPath = saveDirectory.resolve(
+                "save" + saveNumber + ".json.bak"
+        );
+
+        // Try the main save first
+        GameSaveData gameSave = loadFromPath(savePath);
+
+        if (gameSave != null) {
+            System.out.println("Game Loaded Successfully");
+            return gameSave;
+        }
+
+        // If the main save failed, try the backup
+        System.err.println(
+                "Primary save unavailable. Checking backup..."
+        );
+
+        gameSave = loadFromPath(backupPath);
+
+        if (gameSave != null) {
+            System.out.println(
+                    "Game Recovered Successfully From Backup"
+            );
+        } else {
+            System.err.println(
+                    "No valid save or backup found for slot "
+                            + saveNumber
+            );
+        }
+
+        return gameSave;
+    }
+
+    private static GameSaveData loadFromPath(Path path) {
+        if (!Files.isRegularFile(path)) {
             return null;
         }
-        Gson gson = new Gson();
-//        Creates new GameSaveData based on the save file, or else throws an error
-        try(FileReader reader = new FileReader(saveFile)){
-            GameSaveData gameSave = gson.fromJson(reader, GameSaveData.class);
 
-            System.out.println("Game Loaded Successfully");
+        try (Reader reader = Files.newBufferedReader(path)) {
+            GameSaveData data = gson.fromJson(
+                    reader,
+                    GameSaveData.class
+            );
 
-            return gameSave;
-        } catch(IOException e){
-            System.err.println("Error Loading Game: " + e.getMessage());
+            return data;
+
+        } catch (IOException | com.google.gson.JsonParseException e) {
+            System.err.println(
+                    "Failed to load " + path.getFileName()
+                            + ": " + e.getMessage()
+            );
+
             return null;
         }
     }
@@ -46,7 +89,10 @@ public class LoadSystem {
                 gameSave.Strength,
                 gameSave.Speed,
                 gameSave.Attack,
-                gameSave.currency);
+                gameSave.currency,
+                gameSave.spriteId != null
+                        ? gameSave.spriteId
+                        : "knight");
         for(String cardName : gameSave.deck){
             savedCharacter.deck.drawPile.add(cards.findCard(cardName));
         }

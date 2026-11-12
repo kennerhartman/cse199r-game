@@ -4,6 +4,8 @@ import org.example.Character.GameSaveData;
 import org.example.GameLoop.LoadSystem;
 import org.example.GameLoop.SaveSystem;
 import org.example.client.Client;
+import org.example.client.audio.MusicManager;
+import org.example.client.audio.MusicManager.MusicType;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.overlay.ConfirmationOverlay;
 import org.example.client.gui.widgets.ButtonWidget;
@@ -45,6 +47,7 @@ public class LoadSaveSlotScreen extends Screen {
         this.addElement(
                 new SaveSlotWidget(3, "Save 3", widgetWidth, saveSlotThreeX, y, () -> this.saveOrLoadSlot(3))
         );
+        this.client.musicManager.play(MusicType.MENU);
     }
 
     private void saveOrLoadSlot(int slotNumber) {

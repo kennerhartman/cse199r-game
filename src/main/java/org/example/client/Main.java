@@ -23,6 +23,7 @@ public class Main {
 
 
     static void main(String[] args) {
+
         Raylib.InitWindow(850, 500, "Hero of the Draw");
         Raylib.SetWindowState(FLAG_WINDOW_RESIZABLE);
         Raylib.SetTargetFPS(60);
@@ -30,99 +31,106 @@ public class Main {
 
         Registries.load();
 
-        Registries.load();
-        Client client = new Client();
+        Client client = null;
 
-        while (!Raylib.WindowShouldClose()) {
-            client.run();
+        try {
+            client = new Client();
 
-            if (!client.isRunning()) {
-                break;
+            while (!Raylib.WindowShouldClose()
+                    && client.isRunning()) {
+
+                client.run();
             }
+        } finally {
+            if (client != null) {
+                client.close();
+            }
+
+            Raylib.CloseWindow();
         }
 
 //        Add Text based Game loop Here!
 //        Create new player and character
-        Player newPlayer1 = new Player();
-        MapManager mapManager = new MapManager();
-      
-        //        Text based game input
-        int choiceInput;
-        String nameIn;
-        Scanner scanner = new Scanner(System.in);
-//        Start Game, create character
-        System.out.println("Pseudo Game Started\n Create Character...");
-        System.out.print("Name: ");
-
-        nameIn = scanner.nextLine();
-        PlayerCharacter newCharacter = new PlayerCharacter(newPlayer1, nameIn);
-
-//        Start loop
-        System.out.println("Pseudo Game Started\n Loading Deck...");
-//        Create card storage from file
-        CardStorage pseudoStorage = new CardStorage();
-        pseudoStorage.loadDeck();
-//        Display cards
-        System.out.println("PlayerCharacter Creation - Pick an Ability: ");
-        pseudoStorage.loadStore(4, Card.CardType.ABILITY);
-//        Ask for choice, register changes
-        choiceInput = Integer.parseInt(scanner.nextLine());
-        Card chosenCard = pseudoStorage.StoreCards.get(choiceInput);
-        if(chosenCard instanceof AbilityCard){
-            AbilityCard ability = (AbilityCard) chosenCard;
-            ability.instantEffect(newCharacter);
-            newCharacter.deck.drawPile.add(chosenCard);
-        }else{
-            System.out.println("Not an ability Card");
-        }
-        GameSaveData newSave = new GameSaveData(newCharacter, newPlayer1, mapManager);
-        SaveSystem.saveGame(newSave, 1);
-        System.out.println("Load Saved Character?\n0. yes\n1. no");
-        choiceInput = Integer.parseInt(scanner.nextLine());
-        if(choiceInput == 0){
-            GameSaveData loadedSave = LoadSystem.loadGame(1);
-            PlayerCharacter loadedCharacter = LoadSystem.loadCharacter(pseudoStorage, loadedSave, newPlayer1);
-            System.out.println("Character successfully loaded into Main: "+ loadedCharacter.name);
-        }
-
-        while(choiceInput != -1){
-            System.out.println("Current Location: "+mapManager.getCurrentNode().getTooltip());
-            int i = 0;
-            for(MapNode currentNode: mapManager.getActiveChoices()){
-                System.out.println(i+". "+currentNode.getTooltip());
-                i++;
-            }
-            System.out.println("-1. Quit");
-            choiceInput = Integer.parseInt(scanner.nextLine());
-            if(choiceInput!=-1) {
-                mapManager.selectNode(mapManager.getActiveChoices().get(choiceInput));
-            }
-        }
-        System.out.println("Save Game?\n0. Yes\n1. No");
-        choiceInput = Integer.parseInt(scanner.nextLine());
-        if(choiceInput == 0){
-            newSave = new GameSaveData(newCharacter, newPlayer1, mapManager);
-            SaveSystem.saveGame(newSave, 1);
-            System.out.println("Game Saved!");
-        }
-        System.out.println("Load Saved Map?\n0. Yes\n1. No");
-        if(choiceInput == 0){
-            mapManager = new MapManager(newSave.allNodes);
-            System.out.println("Map Loaded!");
-        }
-
-        while(choiceInput != -1){
-            System.out.println("Current Location: "+mapManager.getCurrentNode().getTooltip());
-            int i = 0;
-            for(MapNode currentNode: mapManager.getActiveChoices()){
-                System.out.println(i+". "+currentNode.getTooltip());
-                i++;
-            }
-            System.out.println("-1. Quit");
-            choiceInput = Integer.parseInt(scanner.nextLine());
-            if(choiceInput!=-1) {
-                mapManager.selectNode(mapManager.getActiveChoices().get(choiceInput));
-            }
-        }
+//        Player newPlayer1 = new Player();
+//        MapManager mapManager = new MapManager();
+//
+//        //        Text based game input
+//        int choiceInput;
+//        String nameIn;
+//        Scanner scanner = new Scanner(System.in);
+////        Start Game, create character
+//        System.out.println("Pseudo Game Started\n Create Character...");
+//        System.out.print("Name: ");
+//
+//        nameIn = scanner.nextLine();
+//        PlayerCharacter newCharacter = new PlayerCharacter(newPlayer1, nameIn);
+//
+////        Start loop
+//        System.out.println("Pseudo Game Started\n Loading Deck...");
+////        Create card storage from file
+//        CardStorage pseudoStorage = new CardStorage();
+//        pseudoStorage.loadDeck();
+////        Display cards
+//        System.out.println("PlayerCharacter Creation - Pick an Ability: ");
+//        pseudoStorage.loadStore(4, Card.CardType.ABILITY);
+////        Ask for choice, register changes
+//        choiceInput = Integer.parseInt(scanner.nextLine());
+//        Card chosenCard = pseudoStorage.StoreCards.get(choiceInput);
+//        if(chosenCard instanceof AbilityCard){
+//            AbilityCard ability = (AbilityCard) chosenCard;
+//            ability.instantEffect(newCharacter);
+//            newCharacter.deck.drawPile.add(chosenCard);
+//        }else{
+//            System.out.println("Not an ability Card");
+//        }
+//        GameSaveData newSave = new GameSaveData(newCharacter, newPlayer1, mapManager);
+//        SaveSystem.saveGame(newSave, 1);
+//        System.out.println("Load Saved Character?\n0. yes\n1. no");
+//        choiceInput = Integer.parseInt(scanner.nextLine());
+//        if(choiceInput == 0){
+//            GameSaveData loadedSave = LoadSystem.loadGame(1);
+//            PlayerCharacter loadedCharacter = LoadSystem.loadCharacter(pseudoStorage, loadedSave, newPlayer1);
+//            System.out.println("Character successfully loaded into Main: "+ loadedCharacter.name);
+//        }
+//
+//        while(choiceInput != -1){
+//            System.out.println("Current Location: "+mapManager.getCurrentNode().getTooltip());
+//            int i = 0;
+//            for(MapNode currentNode: mapManager.getActiveChoices()){
+//                System.out.println(i+". "+currentNode.getTooltip());
+//                i++;
+//            }
+//            System.out.println("-1. Quit");
+//            choiceInput = Integer.parseInt(scanner.nextLine());
+//            if(choiceInput!=-1) {
+//                mapManager.selectNode(mapManager.getActiveChoices().get(choiceInput));
+//            }
+//        }
+//        System.out.println("Save Game?\n0. Yes\n1. No");
+//        choiceInput = Integer.parseInt(scanner.nextLine());
+//        if(choiceInput == 0){
+//            newSave = new GameSaveData(newCharacter, newPlayer1, mapManager);
+//            SaveSystem.saveGame(newSave, 1);
+//            System.out.println("Game Saved!");
+//        }
+//        System.out.println("Load Saved Map?\n0. Yes\n1. No");
+//        if(choiceInput == 0){
+//            mapManager = new MapManager(newSave.allNodes);
+//            System.out.println("Map Loaded!");
+//        }
+//
+//        while(choiceInput != -1){
+//            System.out.println("Current Location: "+mapManager.getCurrentNode().getTooltip());
+//            int i = 0;
+//            for(MapNode currentNode: mapManager.getActiveChoices()){
+//                System.out.println(i+". "+currentNode.getTooltip());
+//                i++;
+//            }
+//            System.out.println("-1. Quit");
+//            choiceInput = Integer.parseInt(scanner.nextLine());
+//            if(choiceInput!=-1) {
+//                mapManager.selectNode(mapManager.getActiveChoices().get(choiceInput));
+//            }
+//        }
     }
 }

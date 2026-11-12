@@ -8,6 +8,7 @@ import org.example.client.gui.element.Element;
 import org.example.client.gui.element.GuiElementEvent;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.overlay.ScreenOverlay;
+import org.example.client.gui.widgets.ButtonWidget;
 
 public abstract class Screen {
     protected Client client;
@@ -24,6 +25,22 @@ public abstract class Screen {
         this.height = height;
 
         this.init();
+
+//        Talia Addition: Settings screen button on every screen except settings page
+        if (!(this instanceof SettingsScreen)) {
+            this.addElement(
+                    new ButtonWidget(
+                            "⚙",
+                            this.width - 110,
+                            10,
+                            100,
+                            40,
+                            () -> this.client.gui.setScreen(
+                                    new SettingsScreen(this.client, this)
+                            )
+                    )
+            );
+        }
 
         if (this.client.gui.screenOverlay != null && !(this instanceof ScreenOverlay)) {
             for (Element element : this.elements) {

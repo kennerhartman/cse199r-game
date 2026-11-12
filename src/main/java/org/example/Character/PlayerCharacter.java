@@ -13,6 +13,7 @@ public class PlayerCharacter {
     public Deck deck;
     public String name;
     public int level;
+    public String spriteId;
 
     int Health;
     int Strength;
@@ -21,9 +22,17 @@ public class PlayerCharacter {
 
     int currency;
 
-    public PlayerCharacter(Player owner, String name){
+//    Updated to work with old constructors and give default knight sprite to those without a specified ID
+
+    public PlayerCharacter(Player owner, String name) {
+        this(owner, name, "knight");
+    }
+
+    public PlayerCharacter(Player owner, String name, String spriteId) {
         this.owner = owner;
         this.name = name;
+        this.spriteId = spriteId;
+
         this.deck = new Deck(this);
         this.level = 0;
         this.Health = 10;
@@ -33,9 +42,35 @@ public class PlayerCharacter {
         this.currency = 0;
     }
 
-    public PlayerCharacter(Player owner, String name, int level, int health, int strength, int speed, int attack, int currency){
+    public PlayerCharacter(
+            Player owner,
+            String name,
+            int level,
+            int health,
+            int strength,
+            int speed,
+            int attack,
+            int currency
+    ) {
+        this(owner, name, level, health, strength,
+                speed, attack, currency, "knight");
+    }
+
+    public PlayerCharacter(
+            Player owner,
+            String name,
+            int level,
+            int health,
+            int strength,
+            int speed,
+            int attack,
+            int currency,
+            String spriteId
+    ) {
         this.owner = owner;
         this.name = name;
+        this.spriteId = spriteId;
+
         this.deck = new Deck(this);
         this.level = level;
         this.Health = health;
