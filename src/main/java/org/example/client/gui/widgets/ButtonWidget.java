@@ -1,5 +1,7 @@
 package org.example.client.gui.widgets;
 
+import org.example.client.Client;
+import org.example.client.audio.SoundManager.SoundType;
 import org.example.client.gui.GuiGraphics;
 
 import com.raylib.Colors;
@@ -34,6 +36,12 @@ public class ButtonWidget extends AbstractWidget{
 
     @Override
     public void onClick(int mouseX, int mouseY) {
+        Client client = Client.getInstance();
+
+        if (client != null) {
+            client.soundManager.play(SoundType.BUTTON_CLICK);
+        }
+
         this.action.run();
     }
 

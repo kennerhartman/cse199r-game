@@ -12,6 +12,7 @@ public class SliderWidget extends AbstractWidget {
     private float value;
     private final Consumer<Float> onValueChanged;
     private boolean dragging = false;
+    private Runnable onRelease = null;
 
     public SliderWidget(
             int x, int y, int width, int height,
@@ -71,8 +72,18 @@ public class SliderWidget extends AbstractWidget {
                 updateValue(mouseX);
             } else {
                 dragging = false;
+
+                if (onRelease != null) {
+                    onRelease.run();
+                }
             }
         }
+    }
+
+    /** Called once when the user lets go of the slider. */
+    public SliderWidget onRelease(Runnable onRelease) {
+        this.onRelease = onRelease;
+        return this;
     }
 
     @Override

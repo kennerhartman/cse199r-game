@@ -12,7 +12,6 @@ import org.example.client.GameSettings;
 import org.example.client.audio.MusicManager;
 import org.example.client.audio.MusicManager.MusicType;
 import org.example.client.audio.SoundManager;
-import org.example.client.audio.SoundManager.SoundType;
 import org.example.client.texture.SpriteManager;
 
 import com.raylib.Raylib;
@@ -46,14 +45,15 @@ public class Client {
 
         this.player = new Player();
         this.mapManager = new MapManager();
-        this.musicManager = new MusicManager();
         this.spriteManager = new SpriteManager();
-        this.musicManager.setVolume(this.settings.getMusicVolume());
-        this.soundManager = new SoundManager();
 
-        this.soundManager.setVolume(
-                this.settings.getSoundVolume()
-        );
+        Raylib.InitAudioDevice();
+
+        this.musicManager = new MusicManager();
+        this.musicManager.setVolume(this.settings.getMusicVolume());
+
+        this.soundManager = new SoundManager();
+        this.soundManager.setVolume(this.settings.getSoundVolume());
 
         this.gui.setScreen(new MainMenuScreen(Client.getInstance()));
 
@@ -93,6 +93,8 @@ public class Client {
         this.spriteManager.close();
         this.soundManager.close();
         this.musicManager.close();
+
+        Raylib.CloseAudioDevice();
     }
 
     public static Client getInstance() {

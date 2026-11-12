@@ -2,6 +2,7 @@
 package org.example.client.gui.screen;
 
 import org.example.client.Client;
+import org.example.client.audio.SoundManager.SoundType;
 import org.example.client.gui.widgets.ButtonWidget;
 import org.example.client.gui.widgets.BorderWidget;
 import org.example.client.gui.widgets.SliderWidget;
@@ -101,6 +102,8 @@ public class SettingsScreen extends Screen {
                             this.client.settings.setSoundVolume(volume);
                             this.client.soundManager.setVolume(volume);
                         }
+                ).onRelease(
+                        () -> this.client.soundManager.play(SoundType.BUTTON_CLICK)
                 )
         );
 

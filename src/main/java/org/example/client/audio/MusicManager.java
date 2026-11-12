@@ -3,8 +3,11 @@ package org.example.client.audio;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.raylib.Raylib;
 import java.util.Random;
+
+import org.bytedeco.javacpp.BytePointer;
+
+import com.raylib.Raylib;
 
 public class MusicManager {
 
@@ -18,6 +21,10 @@ public class MusicManager {
     }
 
     private final Map<MusicType, Raylib.Music> tracks =
+            new EnumMap<>(MusicType.class);
+
+    /** Encoded file bytes each stream reads from; freed in close(). */
+    private final Map<MusicType, BytePointer> trackData =
             new EnumMap<>(MusicType.class);
 
     private MusicType currentType = null;
@@ -41,28 +48,45 @@ public class MusicManager {
 
     private final Random random = new Random();
 
+    /** Requires the audio device to be initialised (see {@code Client}). */
     public MusicManager() {
-        Raylib.InitAudioDevice();
-
-        load(MusicType.MENU, getMusicPath("stargazer_na.mp3"));
-        load(MusicType.SHOP_1, getMusicPath("a_shop_that_doesnt_exist_na.mp3"));
-        load(MusicType.SHOP_2, getMusicPath("lets_groove_na.mp3"));
-        load(MusicType.MAP, getMusicPath("falling_leaves_prelude_DbM_na.mp3"));
-        load(MusicType.COMBAT_1, getMusicPath("catastrophic_impact_na.mp3"));
-        load(MusicType.COMBAT_2, getMusicPath("prayer_in_a_land_of_war_na.mp3"));
+        load(MusicType.MENU, "stargazer_na.mp3");
+        load(MusicType.SHOP_1, "a_shop_that_doesnt_exist_na.mp3");
+        load(MusicType.SHOP_2, "lets_groove_na.mp3");
+        load(MusicType.MAP, "falling_leaves_prelude_DbM_na.mp3");
+        load(MusicType.COMBAT_1, "catastrophic_impact_na.mp3");
+        load(MusicType.COMBAT_2, "prayer_in_a_land_of_war_na.mp3");
     }
 
-    private void load(MusicType type, String path) {
-        Raylib.Music music = Raylib.LoadMusicStream(path);
+    private void load(MusicType type, String fileName) {
+        byte[] bytes = AudioResources.read("/music/" + fileName);
+
+        if (bytes == null) {
+            throw new IllegalArgumentException(
+                    "Music resource not found: " + fileName
+            );
+        }
+
+        // raylib streams from this buffer while the track plays (it does not
+        // copy it), so it must live in native memory until the track is
+        // unloaded. A plain byte[] would only be pinned for the call itself.
+        BytePointer data = new BytePointer(bytes.length);
+        data.put(bytes);
+
+        Raylib.Music music = Raylib.LoadMusicStreamFromMemory(
+                AudioResources.fileType(fileName), data, bytes.length
+        );
 
         if (!Raylib.IsMusicValid(music)) {
+            data.close();
             throw new IllegalStateException(
-                    "Failed to load music: " + path
+                    "Failed to load music: " + fileName
             );
         }
 
         Raylib.SetMusicVolume(music, volume);
         tracks.put(type, music);
+        trackData.put(type, data);
     }
 
     public void play(MusicType type) {
@@ -228,43 +252,14 @@ public class MusicManager {
         }
 
         tracks.clear();
+
+        // Free the encoded audio only after its stream has been unloaded.
+        for (BytePointer data : trackData.values()) {
+            data.close();
+        }
+
+        trackData.clear();
         currentMusic = null;
         currentType = null;
-
-        Raylib.CloseAudioDevice();
-    }
-
-    private String getMusicPath(String filename) {
-        try {
-            var resource = MusicManager.class.getResourceAsStream(
-                    "/music/" + filename
-            );
-
-            if (resource == null) {
-                throw new IllegalArgumentException(
-                        "Music resource not found: " + filename
-                );
-            }
-
-            java.nio.file.Path tempFile =
-                    java.nio.file.Files.createTempFile("music_", ".mp3");
-
-            tempFile.toFile().deleteOnExit();
-
-            try (resource) {
-                java.nio.file.Files.copy(
-                        resource,
-                        tempFile,
-                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
-                );
-            }
-
-            return tempFile.toAbsolutePath().toString();
-
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                    "Failed to load music: " + filename, e
-            );
-        }
     }
 }
