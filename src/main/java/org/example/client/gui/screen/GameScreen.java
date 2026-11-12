@@ -1,7 +1,7 @@
 package org.example.client.gui.screen;
 
 import org.example.client.Client;
-import org.example.client.gui.widgets.ButtonWidget;
+import org.example.client.gui.transition.FadeOutTransition;
 
 import com.raylib.Raylib;
 
@@ -23,6 +23,7 @@ public class GameScreen extends Screen {
     public void keyPressed(int keyCode) {
         if (keyCode == Raylib.KEY_ESCAPE) {
             this.openPauseMenu();
+
             return;
         }
 

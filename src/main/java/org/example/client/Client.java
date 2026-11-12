@@ -1,16 +1,11 @@
 package org.example.client;
 
-import org.example.Character.GameSaveData;
-import org.example.GameLoop.SaveSystem;
 import org.example.Player.Player;
 import org.example.client.gui.Gui;
 import org.example.client.gui.GuiGraphics;
-import org.example.client.gui.screen.GameScreen;
 import org.example.client.gui.screen.MainMenuScreen;
 import org.example.client.gui.screen.Screen;
 import org.example.client.map.MapInputHandler;
-import org.example.client.map.MapView;
-import org.example.client.map.renderer.MapCamera;
 import org.example.client.map.renderer.MapRenderer;
 import org.example.client.texture.TextureAtlas;
 import org.example.map.MapManager;

@@ -4,6 +4,7 @@ import org.example.client.Client;
 import org.example.client.gui.element.Element;
 import org.example.client.gui.screen.Screen;
 import org.example.client.gui.screen.overlay.ScreenOverlay;
+import org.example.client.gui.transition.Transition;
 import org.jetbrains.annotations.Nullable;
 import com.raylib.Colors;
 import com.raylib.Raylib;
@@ -15,6 +16,7 @@ public class Gui {
 
     @Nullable public Screen screen;
     @Nullable public ScreenOverlay screenOverlay;
+    @Nullable public Transition transition;
 
     public static final int VIRTUAL_WIDTH = 850;
     public static final int VIRTUAL_HEIGHT = 500;
@@ -57,6 +59,16 @@ public class Gui {
 
         if (this.screenOverlay != null) {
             this.screenOverlay.render(graphics, virtualMouseX, virtualMouseY);
+        }
+
+        if (this.transition != null) {
+            this.transition.animation(graphics, Raylib.GetFrameTime());
+
+            if (this.transition.completed()) {
+                this.transition.cleanupTransition();
+
+                this.transition = null;
+            }
         }
 
         Raylib.EndTextureMode();
@@ -105,6 +117,10 @@ public class Gui {
                 }
             }
         }
+    }
+
+    public void runTransition(Transition transition) {
+        this.transition = transition;
     }
 
     public int getScreenWidth() {

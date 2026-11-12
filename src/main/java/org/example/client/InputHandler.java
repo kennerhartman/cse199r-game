@@ -7,6 +7,8 @@ import org.example.client.map.MapInputHandler;
 import com.raylib.Raylib;
 
 public class InputHandler {
+    boolean locked = false;
+
     boolean isDragging = false;
     int mouseX = 0;
     int mouseY = 0;
@@ -19,6 +21,10 @@ public class InputHandler {
     long startTime = 0L;
 
     public void handleInput() {
+        if (this.locked) {
+            return;
+        }
+
         int code = Raylib.GetKeyPressed();
 
         if (code != 0) {
@@ -149,6 +155,10 @@ public class InputHandler {
 
     private static boolean mapAcceptsInput(Gui gui) {
         return gui.screenOverlay == null && (gui.screen == null || gui.screen.allowsMapInput());
+    }
+
+    public void lock(boolean value) {
+        this.locked = value;
     }
 
     public int getVirtualMouseX() {

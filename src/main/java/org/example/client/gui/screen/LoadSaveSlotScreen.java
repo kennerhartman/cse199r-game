@@ -8,12 +8,15 @@ import org.example.card.CardStorage;
 import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.overlay.ConfirmationOverlay;
+import org.example.client.gui.transition.FadeOutTransition;
 import org.example.client.gui.widgets.ButtonWidget;
 import org.example.client.map.MapInputHandler;
 import org.example.client.map.MapView;
 import org.example.client.map.renderer.MapCamera;
 import org.example.client.map.renderer.MapRenderer;
 import org.example.map.MapManager;
+import org.example.map.MapNode;
+import org.example.map.MapNodeDTO;
 import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,22 +81,33 @@ public class LoadSaveSlotScreen extends Screen {
             PlayerCharacter character = LoadSystem.loadCharacter(cards, save, this.client.player);
             this.client.player.setCharacter(character);
 
-            this.startGame(LoadSystem.loadMap(save), slotNumber);
+            this.client.gui.runTransition(new FadeOutTransition(2, () -> this.startGame(LoadSystem.loadMap(save), slotNumber)));
         }
     }
 
     private void startGame(MapManager mapManager, int saveSlot) {
         this.client.mapManager = mapManager;
 
-        MapView view = new MapView(mapManager);
-        MapCamera camera = new MapCamera();
-
-        this.client.mapInput = new MapInputHandler(view, camera);
-        this.client.mapRenderer = new MapRenderer(view, camera, this.client.mapInput);
         this.client.currentSaveSlot = saveSlot;
 
-        this.client.gui.setScreenOverlay(null);
-        this.client.gui.setScreen(new GameScreen(this.client));
+        int tile = this.client.mapManager.getCurrentNode().getTile();
+        boolean isTavern = this.client.mapManager.getCurrentNode().getType() == MapNode.NodeType.TAVERN;
+
+        if (tile == 0 && isTavern) {
+            // TODO: CREATE A SCENE WHERE AN NPC IS GIVING AN OVERVIEW OF THE GAME
+
+            this.client.gui.setScreenOverlay(null);
+            this.client.gui.setScreen(null);
+        } else {
+            MapView view = new MapView(mapManager);
+            MapCamera camera = new MapCamera();
+
+            this.client.mapInput = new MapInputHandler(view, camera);
+            this.client.mapRenderer = new MapRenderer(view, camera, this.client.mapInput);
+
+            this.client.gui.setScreenOverlay(null);
+            this.client.gui.setScreen(new GameScreen(this.client));
+        }
     }
 
     static class SaveSlotWidget extends ButtonWidget {
