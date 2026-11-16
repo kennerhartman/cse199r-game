@@ -6,5 +6,6 @@
     "bonus": 4,
     "draw_cards_amount": 0,
     "destroy_on_play": false,
-    "base": 6
+    "base": 6,
+    "price": 7
 }
