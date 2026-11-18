@@ -1,10 +1,12 @@
 package org.example.client;
 
 import org.example.Player.Player;
+import org.example.card.CardStorage;
 import org.example.client.gui.Gui;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.MainMenuScreen;
 import org.example.client.gui.screen.Screen;
+import org.example.client.gui.screen.gameplay.ShopScreen;
 import org.example.client.map.MapInputHandler;
 import org.example.client.map.renderer.MapRenderer;
 import org.example.client.texture.TextureAtlas;
@@ -31,6 +33,8 @@ public class Client {
     public final InputHandler input;
     public final Player player;
     private boolean running;
+
+    public CardStorage cardStorage;
 
     public Client() {
         Client.client = this;

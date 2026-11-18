@@ -26,8 +26,6 @@ public class LootCard extends Card {
     // Speed (number of cards played per turn)
     // Attack (base damage)
 
-    int price;
-
     public LootCard(String name, String description, CardStat stat, int price, int bonus, int drawCardsAmount) {
         super(name, description, stat, price, bonus, drawCardsAmount);
 

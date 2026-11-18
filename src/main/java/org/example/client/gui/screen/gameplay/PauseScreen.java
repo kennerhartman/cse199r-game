@@ -1,9 +1,11 @@
-package org.example.client.gui.screen;
+package org.example.client.gui.screen.gameplay;
 
 import org.example.Character.GameSaveData;
 import org.example.GameLoop.SaveSystem;
 import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
+import org.example.client.gui.screen.MainMenuScreen;
+import org.example.client.gui.screen.Screen;
 import org.example.client.gui.widgets.ButtonWidget;
 
 import com.raylib.Colors;

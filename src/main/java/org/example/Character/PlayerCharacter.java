@@ -107,7 +107,7 @@ public class PlayerCharacter {
     }
 
     public boolean spendCurrency(int amount) {
-        boolean canSpend = amount > this.currency;
+        boolean canSpend = amount < this.currency;
 
         if (canSpend) {
             this.currency -= amount;

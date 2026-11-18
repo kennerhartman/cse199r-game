@@ -7,6 +7,8 @@ import org.example.GameLoop.SaveSystem;
 import org.example.card.CardStorage;
 import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
+import org.example.client.gui.screen.gameplay.GameScreen;
+import org.example.client.gui.screen.gameplay.ShopScreen;
 import org.example.client.gui.screen.overlay.ConfirmationOverlay;
 import org.example.client.gui.transition.FadeOutTransition;
 import org.example.client.gui.widgets.ButtonWidget;
@@ -16,7 +18,6 @@ import org.example.client.map.renderer.MapCamera;
 import org.example.client.map.renderer.MapRenderer;
 import org.example.map.MapManager;
 import org.example.map.MapNode;
-import org.example.map.MapNodeDTO;
 import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,10 +79,15 @@ public class LoadSaveSlotScreen extends Screen {
 
             CardStorage cards = new CardStorage();
             cards.loadDeck();
+
+            this.client.cardStorage = cards;
             PlayerCharacter character = LoadSystem.loadCharacter(cards, save, this.client.player);
             this.client.player.setCharacter(character);
 
-            this.client.gui.runTransition(new FadeOutTransition(2, () -> this.startGame(LoadSystem.loadMap(save), slotNumber)));
+            // TODO: RE-ENABLE
+            // this.client.gui.runTransition(new FadeOutTransition(2, () -> this.startGame(LoadSystem.loadMap(save), slotNumber)));
+
+            this.startGame(LoadSystem.loadMap(save), slotNumber);
         }
     }
 
