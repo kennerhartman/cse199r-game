@@ -1,10 +1,12 @@
 package org.example.client;
 
 import org.example.Player.Player;
+import org.example.card.CardStorage;
 import org.example.client.gui.Gui;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.MainMenuScreen;
 import org.example.client.gui.screen.Screen;
+import org.example.client.gui.screen.gameplay.ShopScreen;
 import org.example.client.map.MapInputHandler;
 import org.example.client.map.renderer.MapRenderer;
 import org.example.client.texture.TextureAtlas;
@@ -17,8 +19,7 @@ import com.raylib.Raylib;
 public class Client {
     private static Client client;
 
-    public final TextureAtlas guiTextures;
-    public final TextureAtlas mapTextures;
+    public final TextureAtlas textureAtlas;
 
     @Nullable public MapManager mapManager;
     @Nullable public MapRenderer mapRenderer;
@@ -32,14 +33,13 @@ public class Client {
     public final Player player;
     private boolean running;
 
+    public CardStorage cardStorage;
+
     public Client() {
         Client.client = this;
 
-        this.guiTextures = new TextureAtlas(Identifier.ofDefault("gui/widget"));
-        this.guiTextures.prepare();
-
-        this.mapTextures = new TextureAtlas(Identifier.ofDefault("map"));
-        this.mapTextures.prepare();
+        this.textureAtlas = new TextureAtlas();
+        this.textureAtlas.prepare();
 
         this.font = Raylib.GetFontDefault();
         this.gui = new Gui(this);

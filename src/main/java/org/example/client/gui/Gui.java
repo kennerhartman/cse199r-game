@@ -5,6 +5,7 @@ import org.example.client.gui.element.Element;
 import org.example.client.gui.screen.Screen;
 import org.example.client.gui.screen.overlay.ScreenOverlay;
 import org.example.client.gui.transition.Transition;
+import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import com.raylib.Colors;
 import com.raylib.Raylib;

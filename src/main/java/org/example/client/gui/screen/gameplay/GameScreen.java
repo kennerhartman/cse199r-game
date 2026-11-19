@@ -1,7 +1,7 @@
-package org.example.client.gui.screen;
+package org.example.client.gui.screen.gameplay;
 
 import org.example.client.Client;
-import org.example.client.gui.transition.FadeOutTransition;
+import org.example.client.gui.screen.Screen;
 
 import com.raylib.Raylib;
 

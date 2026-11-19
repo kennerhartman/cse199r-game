@@ -9,14 +9,8 @@ import org.jetbrains.annotations.Nullable;
 public class TextureAtlas {
     public Map<Identifier, UploadedTexture> textures = new HashMap<>();
 
-    private final Identifier location;
-
-    public TextureAtlas(Identifier location) {
-        this.location = location;
-    }
-
     public void prepare() {
-        Map<Identifier, UploadedTexture.@Nullable TextureMetadata> textureLocations = TextureLoader.prepare(this.location);
+        Map<Identifier, UploadedTexture.@Nullable TextureMetadata> textureLocations = TextureLoader.prepare();
 
         this.upload(textureLocations);
     }
@@ -27,9 +21,6 @@ public class TextureAtlas {
     }
 
     public UploadedTexture getTexture(Identifier textureId) {
-        String namespace = textureId.namespace;
-        String path = textureId.path;
-
-        return this.textures.get(Identifier.of(namespace, this.location.path + "/" + path));
+        return this.textures.get(textureId);
     }
 }

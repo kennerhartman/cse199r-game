@@ -42,8 +42,33 @@ public class GuiGraphics {
         this.blit(id, x, y, width, height, Colors.WHITE);
     }
 
+    public void blit(Identifier id, int x, int y, int width, int height, int sourceWidth, int sourceHeight) {
+        this.blit(id, x, y, width, height, sourceWidth, sourceHeight, Colors.WHITE);
+    }
+
+    public void blit(Identifier id, int x, int y, int width, int height, int sourceWidth, int sourceHeight, Raylib.Color color) {
+        UploadedTexture texture = Client.getInstance().textureAtlas.getTexture(id);
+
+        Raylib.DrawTexturePro(
+                texture.texture(),
+                new Raylib.Rectangle()
+                        .x(0)
+                        .y(0)
+                        .width(sourceWidth)
+                        .height(sourceHeight),
+                new Raylib.Rectangle()
+                        .x(x)
+                        .y(y)
+                        .width(width)
+                        .height(height),
+                new Raylib.Vector2().x(0).y(0),
+                0,
+                color
+        );
+    }
+
     public void blit(Identifier id, int x, int y, int width, int height, Raylib.Color color) {
-        UploadedTexture texture = Client.getInstance().mapTextures.getTexture(id);
+        UploadedTexture texture = Client.getInstance().textureAtlas.getTexture(id);
 
         Raylib.DrawTexturePro(
                 texture.texture(),
@@ -67,9 +92,11 @@ public class GuiGraphics {
         UploadedTexture texture;
 
         if (pipeline == TexturePipeline.GUI) {
-            texture =  Client.getInstance().guiTextures.getTexture(id);
+            Identifier guiTexture = Identifier.of(id.namespace, "gui/widget/" + id.path);
+
+            texture = Client.getInstance().textureAtlas.getTexture(guiTexture);
         } else {
-            texture = Client.getInstance().mapTextures.getTexture(id);
+            texture = Client.getInstance().textureAtlas.getTexture(id);
         }
 
         int srcW, srcH, cLeft, cTop, cRight, cBottom, textureScale;
