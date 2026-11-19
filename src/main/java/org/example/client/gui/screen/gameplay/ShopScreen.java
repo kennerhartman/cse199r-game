@@ -20,8 +20,6 @@ public class ShopScreen extends EncounterScreen {
     public ShopScreen(Client client) {
         super(client);
 
-        this.encounter.createShop(this.client.cardStorage);
-
         this.shop = this.client.cardStorage;
     }
 

@@ -10,8 +10,9 @@ import org.example.client.Client;
 import org.example.client.gui.screen.gameplay.ShopScreen;
 
 public class MapManager {
-    //    This class handles all of the map generation and choice storage.
     private MapNode currentNode;
+    private MapNode stockedShopNode;
+
     private List<MapNode> activeChoices;
     private List<String> shopTips = List.of("Shop!", "A shady merchant awaits...", "Rest and Restock!", "Spend your coins here!", "Curios for sale!");
     private List<String> combatTips = List.of("Looks like a fight...", "Trouble ahead!", "Hostile presence detected.", "Unfamiliar footsteps echo...", "Monsters block the path!");
@@ -64,7 +65,7 @@ public class MapManager {
 
         switch (chosenNode.type) {
             case SHOP:
-                client.gui.setScreen(new ShopScreen(client));
+                openShop(client);
 
                 break;
             case COMBAT:
@@ -80,6 +81,30 @@ public class MapManager {
         }
 
         populateChoices();
+    }
+
+    public boolean canRevisitCurrent(){
+        return this.currentNode.getType() == MapNode.NodeType.SHOP;
+    }
+
+    public void revisitCurrentNode(){
+        if (!canRevisitCurrent()) {
+            return;
+        }
+
+        openShop(Client.getInstance());
+    }
+
+    private void openShop(Client client){
+        if (this.stockedShopNode != this.currentNode){
+            client.cardStorage.StoreCards.clear();
+
+            new Encounter().createShop(client.cardStorage);
+
+            this.stockedShopNode = this.currentNode;
+        }
+
+        client.gui.setScreen(new ShopScreen(client));
     }
 
     public String generateID(String currentID){

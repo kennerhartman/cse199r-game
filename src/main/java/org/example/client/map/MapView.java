@@ -118,6 +118,10 @@ public class MapView {
             this.map.getSpaceFromMap(choice).ifPresent(space -> available.put(space, choice));
         }
 
+        if (current != null && this.mapManager.canRevisitCurrent()) {
+            available.put(current, currentNode);
+        }
+
         return new SpaceStates(current, visited, available);
     }
 
@@ -132,6 +136,11 @@ public class MapView {
     }
 
     public void select(MapNode choice) {
+        if (choice == this.mapManager.getCurrentNode()) {
+            this.mapManager.revisitCurrentNode();
+            return;
+        }
+
         this.mapManager.selectNode(choice);
     }
 
