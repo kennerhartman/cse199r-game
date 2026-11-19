@@ -19,8 +19,7 @@ import com.raylib.Raylib;
 public class Client {
     private static Client client;
 
-    public final TextureAtlas guiTextures;
-    public final TextureAtlas mapTextures;
+    public final TextureAtlas textureAtlas;
 
     @Nullable public MapManager mapManager;
     @Nullable public MapRenderer mapRenderer;
@@ -39,11 +38,8 @@ public class Client {
     public Client() {
         Client.client = this;
 
-        this.guiTextures = new TextureAtlas(Identifier.ofDefault("gui/widget"));
-        this.guiTextures.prepare();
-
-        this.mapTextures = new TextureAtlas(Identifier.ofDefault("map"));
-        this.mapTextures.prepare();
+        this.textureAtlas = new TextureAtlas();
+        this.textureAtlas.prepare();
 
         this.font = Raylib.GetFontDefault();
         this.gui = new Gui(this);

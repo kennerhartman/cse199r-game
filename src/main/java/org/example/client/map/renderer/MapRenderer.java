@@ -39,7 +39,7 @@ public class MapRenderer {
         this.renderFrame(graphics);
 
         graphics.blit(
-                Identifier.of(mapId.namespace, "pieces/" + mapId.path + ".png"),
+                Identifier.of(mapId.namespace, "map/pieces/" + mapId.path + ".png"),
                 0,
                 0,
                 MapView.MAP_WIDTH,
@@ -58,7 +58,7 @@ public class MapRenderer {
 
         graphics.blitNineSliced(
                 GuiGraphics.TexturePipeline.MAP,
-                Identifier.ofDefault("map_background.png"),
+                Identifier.ofDefault("map/map_background.png"),
                 -FRAME_BORDER / 2,
                 -FRAME_BORDER / 2,
                 frameWidth,
@@ -81,7 +81,7 @@ public class MapRenderer {
             String texture = space.type().name().toLowerCase() + (hovered && this.input.isPressed() ? "_pressed" : "");
 
             graphics.blit(
-                    Identifier.of(this.view.getMapId().namespace, "space/" + texture + ".png"),
+                    Identifier.of(this.view.getMapId().namespace, "map/space/" + texture + ".png"),
                     space.x(),
                     space.y(),
                     SPACE_SIZE,
