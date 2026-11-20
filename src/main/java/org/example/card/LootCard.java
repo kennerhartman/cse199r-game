@@ -36,21 +36,19 @@ public class LootCard extends Card {
     }
 
     @Override
-    // Add 'Player target' to the inputs
     public void applyDrawEffect(PlayerCharacter character) {
-        // TODO: Logic to apply effect to player target
-
-        // target.setStat(stat, value);
-        // Then wait for perform action
-        // After actions, revert stat change and destroy card
-        System.out.println("Applied Draw Effect");
+        // No effect when drawn.
     }
 
     @Override
-    // Reverses bonus
-    public void applyDiscardEffect(PlayerCharacter character){
-        character.statBonus(this.stat.toString(), 0-this.bonus);
-        System.out.println("Applied Discard Effect");
+    public void applyDiscardEffect(PlayerCharacter character) {
+        // No passive hand effect to remove.
+    }
+
+    @Override
+    public void applyPlayEffect(PlayerCharacter character) {
+        // TODO: Apply temporary turn bonus.
+        System.out.println("Played LootCard: " + this.name);
     }
 
     @Override

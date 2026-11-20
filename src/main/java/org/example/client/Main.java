@@ -7,13 +7,17 @@ import com.raylib.Raylib;
 //Pseudo game imports
 import org.example.Character.GameSaveData;
 import org.example.Character.PlayerCharacter;
+import org.example.GameLoop.Combat;
+import org.example.GameLoop.CombatAction;
 import org.example.GameLoop.LoadSystem;
 import org.example.GameLoop.SaveSystem;
 import org.example.Player.Player;
 import org.example.card.AbilityCard;
+import org.example.card.ActionCard;
 import org.example.card.Card;
 import org.example.card.CardStorage;
 import org.example.core.registries.Registries;
+import org.example.enemies.Enemy;
 import org.example.map.MapManager;
 import org.example.map.MapNode;
 
@@ -30,7 +34,6 @@ public class Main {
 
         Registries.load();
 
-        Registries.load();
         Client client = new Client();
 
         while (!Raylib.WindowShouldClose()) {
@@ -60,7 +63,7 @@ public class Main {
 //        Start loop
         System.out.println("Pseudo Game Started\n Loading Deck...");
 //        Create card storage from file
-        CardStorage pseudoStorage = new CardStorage();
+        CardStorage pseudoStorage = Client.getInstance().cardStorage;
         pseudoStorage.loadDeck();
 //        Display cards
         System.out.println("PlayerCharacter Creation - Pick an Ability: ");

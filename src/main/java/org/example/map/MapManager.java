@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 public class MapManager {
 //    This class handles all of the map generation and choice storage.
     private MapNode currentNode;
+    private Encounter currentEncounter;
     private List<MapNode> activeChoices;
     private List<String> shopTips = List.of("Shop!", "A shady merchant awaits...", "Rest and Restock!", "Spend your coins here!", "Curios for sale!");
     private List<String> combatTips = List.of("Looks like a fight...", "Trouble ahead!", "Hostile presence detected.", "Unfamiliar footsteps echo...", "Monsters block the path!");
@@ -49,6 +50,16 @@ public class MapManager {
 
 //    Called when a node is clicked on, pass in the chose node
     public void selectNode(MapNode chosenNode, PlayerCharacter character){
+        if (currentEncounter != null && !currentEncounter.isCompleted()) {
+            System.out.println(
+                    "Cannot select another node while an encounter is active."
+            );
+            return;
+        }
+        if (chosenNode == null || !activeChoices.contains(chosenNode)) {
+            System.out.println("Invalid map node selection.");
+            return;
+        }
 //        Set the currentNodes next node to be the chosen node, then switch it to the new node
         this.currentNode.setNextNode(chosenNode);
         this.currentNode = chosenNode;
@@ -62,7 +73,7 @@ public class MapManager {
         }
         System.out.println("Edges Added\nLoad Encounter...");
 //        TODO: Start an encounter, which should be the fight?
-        Encounter newEncounter = new Encounter(currentNode, character);
+        currentEncounter = new Encounter(currentNode, character);
     }
 
     public String generateID(String currentID){
@@ -134,6 +145,10 @@ public class MapManager {
             saveData.add(new MapNodeDTO(newNode));
         }
         return saveData;
+    }
+
+    public Encounter getCurrentEncounter() {
+        return currentEncounter;
     }
 
 //    Generates new edge nodes and adds them to activeChoices based on the current node

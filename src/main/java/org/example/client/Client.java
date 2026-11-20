@@ -1,11 +1,13 @@
 package org.example.client;
 
 import org.example.Player.Player;
+import org.example.card.CardStorage;
 import org.example.client.gui.Gui;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.MainMenuScreen;
 import org.example.client.gui.screen.Screen;
 import org.example.client.texture.TextureAtlas;
+import org.example.map.MapManager;
 import org.example.util.Identifier;
 
 import com.raylib.Raylib;
@@ -20,6 +22,8 @@ public class Client {
     public final InputHandler input;
     public final Player player;
     private boolean running;
+    public CardStorage cardStorage;
+    public MapManager mapManager;
 
     public Client() {
         Client.client = this;
@@ -34,6 +38,7 @@ public class Client {
         // this.gui.setScreen(new SaveSlotScreen(Client.getInstance()));
 
         this.player = new Player();
+        this.mapManager = new MapManager();
 
         this.running = true;
     }

@@ -27,8 +27,8 @@ public class Player {
         AllPlayerCharacters.add(this.character);
     }
 
-    public void createCustomCharacter(String name, int level, int health, int strength, int speed, int attack, int currency){
-        this.character = new PlayerCharacter(this, name, level, health, strength, speed, attack, currency);
+    public void createCustomCharacter(String name, int level, int health, int strength, int speed, int attack, int currency, int currentHealth){
+        this.character = new PlayerCharacter(this, name, level, health, strength, speed, attack, currency, currentHealth);
         AllPlayerCharacters.add(this.character);
     }
 

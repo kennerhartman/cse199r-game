@@ -48,6 +48,12 @@ public class AbilityCard extends Card {
         System.out.println("Applied Discard Effect");
     }
 
+    @Override
+    public void applyPlayEffect(PlayerCharacter character) {
+        // AbilityCards have no additional effect when played.
+        // Their passive bonus is handled by drawing and discarding.
+    }
+
     // Shouldn't really be used
     @Override
     public void destroyCard() {

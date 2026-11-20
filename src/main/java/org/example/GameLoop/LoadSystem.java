@@ -46,7 +46,8 @@ public class LoadSystem {
                 gameSave.Strength,
                 gameSave.Speed,
                 gameSave.Attack,
-                gameSave.currency);
+                gameSave.currency,
+                gameSave.currentHealth);
         for(String cardName : gameSave.deck){
             savedCharacter.deck.drawPile.add(cards.findCard(cardName));
         }

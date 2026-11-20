@@ -21,6 +21,8 @@ public class GameSaveData {
     public int Speed;
     public int Attack;
     public int currency;
+
+    public int currentHealth;
 //    TODO: Add in game save data, such as map node, etc.
 
     public String currentNodeID;
@@ -40,6 +42,7 @@ public class GameSaveData {
         this.Speed = character.Speed;
         this.Attack = character.Attack;
         this.currency = character.currency;
+        this.currentHealth = character.getCurrentHealth();
 
         this.currentNodeID = mapManager.getCurrentNode().getID();
         this.currentNodesSinceBoss = mapManager.getCurrentNode().getNodesSinceBoss();

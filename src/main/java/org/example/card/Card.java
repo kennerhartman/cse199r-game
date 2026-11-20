@@ -2,6 +2,7 @@ package org.example.card;
 
 import com.google.gson.annotations.SerializedName;
 import org.example.Character.PlayerCharacter;
+import org.example.GameLoop.Combat;
 
 import org.example.core.serializer.Codec;
 
@@ -59,6 +60,18 @@ public abstract class Card {
         this.drawCardsAmount = drawCardsAmount;
     }
 
+    public boolean hasPlanningEffect() {
+        return stat == CardStat.STRENGTH
+                || stat == CardStat.SPEED;
+    }
+
+    public void applyPlanningEffect(
+            PlayerCharacter character,
+            Combat combat
+    ) {
+        // Default: no planning effect.
+    }
+
     public String getName() {
         return this.name;
     }
@@ -88,6 +101,8 @@ public abstract class Card {
     abstract void applyDrawEffect(PlayerCharacter character);
 
     abstract void applyDiscardEffect(PlayerCharacter character);
+
+    public abstract void applyPlayEffect(PlayerCharacter character);
 
     abstract void destroyCard();
 

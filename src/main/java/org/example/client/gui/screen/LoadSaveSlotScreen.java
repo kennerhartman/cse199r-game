@@ -1,8 +1,10 @@
 package org.example.client.gui.screen;
 
 import org.example.Character.GameSaveData;
+import org.example.Character.PlayerCharacter;
 import org.example.GameLoop.LoadSystem;
 import org.example.GameLoop.SaveSystem;
+import org.example.card.CardStorage;
 import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
 import org.example.client.gui.screen.overlay.ConfirmationOverlay;
@@ -59,9 +61,26 @@ public class LoadSaveSlotScreen extends Screen {
                 this.client.gui.setScreen(new MainMenuScreen(this.client));
             }
         } else {
-            LoadSystem.loadGame(slotNumber);
+            GameSaveData save = LoadSystem.loadGame(slotNumber);
+
+            if (save == null) {
+                return;
+            }
+
+            CardStorage cards = new CardStorage();
+            cards.loadDeck();
+
+            this.client.cardStorage = cards;
+            PlayerCharacter character = LoadSystem.loadCharacter(cards, save, this.client.player);
+//            this.client.player.setCharacter(character);
+
+            // TODO: RE-ENABLE
+            // this.client.gui.runTransition(new FadeOutTransition(2, () -> this.startGame(LoadSystem.loadMap(save), slotNumber)));
+
+//            this.startGame(LoadSystem.loadMap(save), slotNumber);
         }
     }
+
 
     static class SaveSlotWidget extends ButtonWidget {
         private final int saveSlot;

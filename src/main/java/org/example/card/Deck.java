@@ -1,6 +1,7 @@
 package org.example.card;
 
 import org.example.Character.PlayerCharacter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,41 +18,56 @@ public class Deck {
         this.owner = owner;
     }
 
-//    Handles pulling a card from the draw pile and putting it into your hand
-    public void draw(){
-//        Check if there is a card to draw, if not, shuffle discard into draw pile
-        if(drawPile.isEmpty()){
-            shuffleAll();
-        }
-//        Draw a new card, add it to the hand
-        Card newCard = drawPile.getFirst();
-        drawPile.removeFirst();
-        hand.add(newCard);
+    //    Handles pulling a card from the draw pile and putting it into your hand
+    public boolean draw() {
+        return drawCard() != null;
     }
 
-    public void fillHand(){
-        for(int i = 0; i<=owner.getStat("STRENGTH")-hand.size(); i++){
-            draw();
+    public void fillHand() {
+        while (hand.size() < owner.getStat("STRENGTH")) {
+            if (!draw()) {
+                break;
+            }
         }
     }
 
 //    Handles playing a card from your hand
-    public void play(PlayerCharacter target){
-//        TODO: Change this selector to detect player input and select a card based on that instead
-        Card currentCard = hand.getFirst();
-        hand.removeFirst();
-        currentCard.applyDrawEffect(target);
-        discard(currentCard);
+    public boolean play(Card selectedCard, PlayerCharacter target) {
+
+        if (!removeFromHand(selectedCard)) {
+            return false;
+        }
+
+        selectedCard.applyPlayEffect(target);
+        discard(selectedCard);
+
+        return true;
     }
 
-//    Handles moving cards from current hand to discard
-    public void discard(Card card){
-//        If the card is one time use, destroy, otherwise add it to the discard
-        if(card.destroyOnPlay){
+    // Places a card into the discard pile,
+// or destroys it if it is single-use.
+    public void discard(Card card) {
+
+        if (card.isDestroyedOnPlay()) {
             card.destroyCard();
-        }else{
+        } else {
             discard.add(card);
         }
+    }
+
+    // Discards a selected card directly from the player's hand.
+// Also removes any passive effects provided by that card.
+    public boolean discardFromHand(Card card) {
+
+        if (!removeFromHand(card)) {
+            return false;
+        }
+
+        // Move the card into the discard pile.
+        // Ordinary discards should not trigger destroyOnPlay.
+        discard.add(card);
+
+        return true;
     }
 
 //    Only used in special cases when the draw pile only has to be shuffled
@@ -60,13 +76,64 @@ public class Deck {
     }
 
 //    Call at the beginning of each fight, and when the draw pile runs out
-    public void shuffleAll(){
-        Collections.shuffle(discard);
+    public void shuffleAll() {
+
         drawPile.addAll(discard);
+        discard.clear();
+
+        Collections.shuffle(drawPile);
     }
 
 //    Used when a card is bought
     public void addCard(Card card){
         discard.add(card);
+    }
+
+    public boolean removeFromHand(Card selectedCard) {
+        for (int i = 0; i < hand.size(); i++) {
+            if (hand.get(i) == selectedCard) {
+                hand.remove(i);
+                selectedCard.applyDiscardEffect(owner);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Card drawCard() {
+        if (drawPile.isEmpty()) {
+            shuffleAll();
+        }
+
+        if (drawPile.isEmpty()) {
+            return null;
+        }
+
+        Card card = drawPile.removeFirst();
+        hand.add(card);
+        card.applyDrawEffect(owner);
+
+        return card;
+    }
+
+    // Returns a drawn card to the top of the draw pile.
+//
+// IMPORTANT GAMEPLAY RULE:
+// Undoing a Strength action does NOT reverse reshuffles.
+// Any shuffle triggered during planning remains in effect.
+//
+// This is intentional and allows strategic deck manipulation.
+    public boolean undoDraw(Card card) {
+        for (int i = 0; i < hand.size(); i++) {
+            if (hand.get(i) == card) {
+                hand.remove(i);
+                card.applyDiscardEffect(owner);
+                drawPile.addFirst(card);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

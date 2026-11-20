@@ -2,6 +2,7 @@ package org.example.card;
 
 import org.example.Character.PlayerCharacter;
 
+import org.example.GameLoop.Combat;
 import org.example.core.serializer.Codec;
 import org.example.core.serializer.RecordCodecBuilder;
 
@@ -25,15 +26,34 @@ public class ActionCard extends Card {
 
     @Override
     public void applyDrawEffect(PlayerCharacter character) {
-        // TODO: Roll Bonus, player targeting and stat setting logic, remove printlns
-        System.out.println("Applied Draw Effect");
+        // ActionCards do not activate when drawn.
     }
 
     @Override
-    // Reverses bonus
-    public void applyDiscardEffect(PlayerCharacter character){
-        character.statBonus(this.stat.toString(), 0-this.bonus);
-        System.out.println("Applied Discard Effect");
+    public void applyDiscardEffect(PlayerCharacter character) {
+        // No passive effect to remove.
+    }
+
+    @Override
+    public void applyPlayEffect(PlayerCharacter character) {
+        switch (stat) {
+            case ATTACK -> {
+                // TODO: Add bonus to the turn's attack total.
+                System.out.println("Attack bonus: " + bonus);
+            }
+
+            case HEALTH -> {
+                character.heal(bonus);
+                System.out.println(
+                        character.name + " healed for " + bonus
+                );
+            }
+
+            case STRENGTH, SPEED -> {
+                // These effects already happened during planning.
+                // Do not apply them again.
+            }
+        }
     }
 
     @Override
@@ -46,6 +66,30 @@ public class ActionCard extends Card {
     @Override
     public CardType getType(){
         return CardType.ACTION;
+    }
+
+    @Override
+    public void applyPlanningEffect(
+            PlayerCharacter character,
+            Combat combat
+    ) {
+        switch (stat) {
+            case STRENGTH -> {
+                for (int i = 0; i < bonus; i++) {
+                    if (!character.deck.draw()) {
+                        break;
+                    }
+                }
+            }
+
+            case SPEED -> {
+                combat.addTemporaryActions(character, bonus);
+            }
+
+            default -> {
+                // ATTACK and HEALTH resolve at turn end.
+            }
+        }
     }
 
     // Called when the card is played

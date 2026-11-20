@@ -149,7 +149,7 @@ public class CharacterCreationScreen extends Screen {
 
                 this.rebuildScreen();
             } else {
-                GameSaveData saveData = new GameSaveData(this.client.player.getCharacter(), this.client.player);
+                GameSaveData saveData = new GameSaveData(this.client.player.getCharacter(), this.client.player, this.client.mapManager);
 
                 this.client.gui.setScreen(new LoadSaveSlotScreen(this.client, saveData));
 

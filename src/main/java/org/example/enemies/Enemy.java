@@ -66,6 +66,10 @@ public class Enemy {
         this.dropsLoot = rand.nextInt(100) < (DROP_CHANCE_PERCENT * 2);
     }
 
+    public boolean isAlive() {
+        return health > 0;
+    }
+
     // --- Getters ---
     public int getHealth() { return this.health; }
     public int getAttacks() { return this.attacks; }
@@ -74,5 +78,11 @@ public class Enemy {
     public boolean checkLoot() { return this.dropsLoot; }
 
     // --- Setters ---
-    public void giveDamage(int damage) { this.health=this.health-damage; }
+    public void giveDamage(int damage) {
+        if (damage <= 0) {
+            return;
+        }
+
+        this.health = Math.max(0, this.health - damage);
+    }
 }
