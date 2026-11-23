@@ -8,10 +8,13 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.example.client.Client;
+import org.example.client.gui.screen.gameplay.ShopScreen;
+
 public class MapManager {
-//    This class handles all of the map generation and choice storage.
     private MapNode currentNode;
     private Encounter currentEncounter;
+    private MapNode stockedShopNode;
     private List<MapNode> activeChoices;
     private List<String> shopTips = List.of("Shop!", "A shady merchant awaits...", "Rest and Restock!", "Spend your coins here!", "Curios for sale!");
     private List<String> combatTips = List.of("Looks like a fight...", "Trouble ahead!", "Hostile presence detected.", "Unfamiliar footsteps echo...", "Monsters block the path!");
@@ -21,34 +24,41 @@ public class MapManager {
 //        Initialize
         this.activeChoices = new ArrayList<>();
 //        Set current node to new start node with no last node
-        currentNode = new MapNode ("Tavern", MapNode.NodeType.COMBAT, "Starting Area!", 0, true, 0);
-//        Set choices to either start a shop if they don't know what they're doing, or go to a real combat which starts the normal loop
-        activeChoices.add(new MapNode("Merchant", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 0, 0));
-        activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey! (Skip the tutorial...)", currentNode, 0, 0));
+        currentNode = new MapNode ("Tavern", MapNode.NodeType.TAVERN, "Starting Area!", 0, true, 0);
+//        The tavern tile is the first loop; its first choice is the tutorial shop
+        populateChoices();
     }
 
+    //    Rebuilds the chain from a save. The save list is ordered current node -> ... -> start node (see getPath()).
     public MapManager(List<MapNodeDTO> mapSave){
         this.activeChoices = new ArrayList<>();
-        int i = 0;
-        MapNode lastCreated = null;
-        for(MapNodeDTO dto:mapSave){
-            MapNode newNode = new MapNode(dto.ID, MapNode.NodeType.valueOf(dto.type), dto.tooltip, dto.nodesSinceBoss, dto.isStartNode, dto.currentTile);
-            if(i == 0 && !dto.isStartNode){
-                lastCreated = newNode;
-                this.currentNode = newNode;
-                i++;
-            }else{
-                newNode.setNextNode(lastCreated);
-                lastCreated = newNode;
-            }
+        if(mapSave == null || mapSave.isEmpty()){
+            throw new IllegalArgumentException("Map save data cannot be null or empty");
         }
-        addEdges();
+
+        List<MapNode> nodes = new ArrayList<>();
+        for(MapNodeDTO dto : mapSave){
+//            Older saves stored the start node as COMBAT; the start node is always the tavern
+            MapNode.NodeType type = dto.isStartNode ? MapNode.NodeType.TAVERN : MapNode.NodeType.valueOf(dto.type);
+            nodes.add(new MapNode(dto.ID, type, dto.tooltip, dto.nodesSinceBoss, dto.isStartNode, dto.currentTile));
+        }
+
+//        Link each node to the one before it in the path (and back)
+        for(int i = 0; i < nodes.size() - 1; i++){
+            MapNode node = nodes.get(i);
+            MapNode previous = nodes.get(i + 1);
+            node.setLastNode(previous);
+            previous.setNextNode(node);
+        }
+
+        this.currentNode = nodes.get(0);
+        populateChoices();
     }
 
     private void setCurrentNode(MapNode newCurrent){ this.currentNode = newCurrent; }
     private void setActiveChoices(List<MapNode> newActive){ this.activeChoices = newActive; }
 
-//    Called when a node is clicked on, pass in the chose node
+    //    Called when a node is clicked on, pass in the chosen node
     public void selectNode(MapNode chosenNode, PlayerCharacter character){
         if (currentEncounter != null && !currentEncounter.isCompleted()) {
             System.out.println(
@@ -60,20 +70,78 @@ public class MapManager {
             System.out.println("Invalid map node selection.");
             return;
         }
-//        Set the currentNodes next node to be the chosen node, then switch it to the new node
         this.currentNode.setNextNode(chosenNode);
+
         this.currentNode = chosenNode;
-//        Clear the old choices
-        this.activeChoices.clear();
-//        set the new choices- if you just finished the new shop, start a new cycle, if not generate normally
-        if(currentNode.getID().equals("Merchant")){
-            activeChoices.add(new MapNode("combat0", MapNode.NodeType.COMBAT, "Start Your Journey!", currentNode, 0, 0));
-        }else{
-            addEdges();
+
+        Client client = Client.getInstance();
+
+        switch (chosenNode.type) {
+            case SHOP:
+                openShop(client);
+
+                break;
+            case COMBAT:
+                // TODO: IMPLEMENT
+
+                break;
+            case BOSS:
+                // TODO: IMPLEMENT
+
+                break;
+            default:
+                break;
         }
         System.out.println("Edges Added\nLoad Encounter...");
-//        TODO: Start an encounter, which should be the fight?
         currentEncounter = new Encounter(currentNode, character);
+        populateChoices();
+    }
+
+    public void selectNode(MapNode chosenNode){
+        this.currentNode.setNextNode(chosenNode);
+        this.currentNode = chosenNode;
+
+        Client client = Client.getInstance();
+
+        switch (chosenNode.type) {
+            case SHOP:
+                openShop(client);
+                break;
+            case COMBAT:
+                // TODO: IMPLEMENT
+                break;
+            case BOSS:
+                // TODO: IMPLEMENT
+                break;
+            default:
+                break;
+        }
+
+        populateChoices();
+    }
+
+    public boolean canRevisitCurrent(){
+        return this.currentNode.getType() == MapNode.NodeType.SHOP;
+    }
+
+    public void revisitCurrentNode(){
+        if (!canRevisitCurrent()) {
+            return;
+        }
+
+        openShop(Client.getInstance());
+    }
+
+    private void openShop(Client client){
+        if (this.stockedShopNode != this.currentNode){
+            client.cardStorage.StoreCards.clear();
+
+            new Encounter().createShop(client.cardStorage);
+
+            this.stockedShopNode = this.currentNode;
+        }
+
+        client.gui.setScreen(new ShopScreen(client));
     }
 
     public String generateID(String currentID){
@@ -101,19 +169,18 @@ public class MapManager {
 
     public String getToolTip(MapNode.NodeType type){
         Random rand = new Random();
-        int num = rand.nextInt(4);
         switch(type){
             case MapNode.NodeType.COMBAT:
-                return combatTips.get(num);
+                return combatTips.get(rand.nextInt(combatTips.size()));
             case MapNode.NodeType.SHOP:
-                return shopTips.get(num);
+                return shopTips.get(rand.nextInt(shopTips.size()));
             case MapNode.NodeType.BOSS:
-                return bossTips.get(num);
+                return bossTips.get(rand.nextInt(bossTips.size()));
         }
         return "<Type Mismatch in MapManager.getToolTip()>";
     }
 
-//    Returns available next nodes
+    //    Returns available next nodes
     public List<MapNode> getActiveChoices() {
         return activeChoices;
     }
@@ -151,10 +218,25 @@ public class MapManager {
         return currentEncounter;
     }
 
-//    Generates new edge nodes and adds them to activeChoices based on the current node
+    //    Fills activeChoices for the current node. The start (Tavern) node leads to the tutorial shop at step 1
+    //    of the tavern tile; after that, addEdges() follows the normal loop.
+    private void populateChoices(){
+        this.activeChoices.clear();
+        if(currentNode.checkIsStart()){
+            activeChoices.add(new MapNode("shop1", MapNode.NodeType.SHOP, "A Merchant on the road...", currentNode, 1, currentNode.getTile()));
+        }else{
+            addEdges();
+        }
+    }
+
+    //    Number of completed nodes before the boss appears. The tavern tile (0) has an extra combat before its boss.
+    private static int bossThreshold(int tile){
+        return tile == 0 ? 4 : 3;
+    }
+
     public void addEdges() {
         boolean evenNode = (currentNode.getNodesSinceBoss() % 2) == 0;
-        boolean bossTime = (currentNode.getNodesSinceBoss() >= 3);
+        boolean bossTime = (currentNode.getNodesSinceBoss() >= bossThreshold(currentNode.getTile()));
         int currentTile = currentNode.getTile();
         String id = generateID(currentNode.getID());
         if (currentNode.getType() == MapNode.NodeType.BOSS) {

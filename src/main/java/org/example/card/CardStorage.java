@@ -118,7 +118,7 @@ public class CardStorage implements TypeAdapterFactory{
             numChecked++;
         }
         System.out.println("Error: No card "+ cardName + " found; Adding null card");
-        return new AbilityCard("Card_Not_Found", "Card_Not_Found: This card is missing from your Card Storage!\nHelp: Check cardData.json;", Card.CardStat.HEALTH, 0, 0, 0);
+        return new AbilityCard("Card_Not_Found", "Card_Not_Found: This card is missing from your Card Storage!\nHelp: Check cardData.json;", Card.CardStat.HEALTH, 0, 0, 0, 0);
     }
 
     @Override

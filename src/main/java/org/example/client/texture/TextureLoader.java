@@ -45,7 +45,7 @@ public class TextureLoader {
         }
     }
 
-    public static Map<Identifier, UploadedTexture.@Nullable TextureMetadata> prepare(Identifier location) {
+    public static Map<Identifier, UploadedTexture.@Nullable TextureMetadata> prepare() {
         Map<Identifier, UploadedTexture.@Nullable TextureMetadata> textures = new HashMap<>();
 
         Path assetsRoot = getAssets();
@@ -61,32 +61,28 @@ public class TextureLoader {
 
                         String namespace = segments[0];
 
-                        if (namespace.equals(location.namespace)) {
-                            int texturesDirIndex = cleanAssetPath.indexOf("textures/");
+                        int texturesDirIndex = cleanAssetPath.indexOf("textures/");
 
-                            if (texturesDirIndex == -1) {
-                                return;
-                            }
+                        if (texturesDirIndex == -1) {
+                            return;
+                        }
 
-                            String textureLocation = cleanAssetPath.substring(texturesDirIndex + "textures/".length());
+                        String textureLocation = cleanAssetPath.substring(texturesDirIndex + "textures/".length());
 
-                            if (textureLocation.startsWith(location.path + "/")) {
-                                UploadedTexture.TextureMetadata metadata = null;
+                        UploadedTexture.TextureMetadata metadata = null;
 
-                                if (assetHasMetadata(path)) {
-                                    File encodedMetadata = Paths.get(path + ".json").toFile();
+                        if (assetHasMetadata(path)) {
+                            File encodedMetadata = Paths.get(path + ".json").toFile();
 
-                                    try (FileReader reader = new FileReader(encodedMetadata.toString())) {
-                                        JsonElement element = GSON.fromJson(reader, JsonElement.class);
-                                        metadata = UploadedTexture.CODEC.decode(JsonOps.INSTANCE, element);
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-
-                                textures.put(Identifier.of(namespace, textureLocation), metadata);
+                            try (FileReader reader = new FileReader(encodedMetadata.toString())) {
+                                JsonElement element = GSON.fromJson(reader, JsonElement.class);
+                                metadata = UploadedTexture.CODEC.decode(JsonOps.INSTANCE, element);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
                             }
                         }
+
+                        textures.put(Identifier.of(namespace, textureLocation), metadata);
                     });
         } catch (IOException e) {
             throw new RuntimeException(e);

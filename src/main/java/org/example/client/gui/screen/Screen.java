@@ -69,7 +69,16 @@ public abstract class Screen {
     public void onClose() {
     }
 
-    public void mouseClicked(int mouseX, int mouseY) {
+    /**
+     * Whether the map behind this screen should still receive mouse input (panning and selecting spaces).
+     * Menus return false so clicks on them can't fall through to the map.
+     */
+    public boolean allowsMapInput() {
+        return false;
+    }
+
+    /** @return true if an element on this screen (or its overlay) handled the click. */
+    public boolean mouseClicked(int mouseX, int mouseY) {
         List<Element> elements = new ArrayList<>(this.elements);
 
         if (this.client.gui.screenOverlay != null) {
@@ -83,10 +92,12 @@ public abstract class Screen {
                 boolean clicked = event.mouseClicked(mouseX, mouseY);
 
                 if (clicked) {
-                    break;
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     public void keyPressed(int keyCode) {

@@ -2,6 +2,7 @@ package org.example.client.gui.widgets;
 
 import org.example.card.Card;
 import org.example.client.gui.GuiGraphics;
+import org.example.util.Identifier;
 
 import com.raylib.Colors;
 import com.raylib.Raylib;
@@ -19,7 +20,17 @@ public class CardWidget extends AbstractWidget {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.blitNineSliced(this.x, this.y, this.width, this.height, 32, 16);
+        graphics.blitNineSliced(
+                GuiGraphics.TexturePipeline.GUI,
+                Identifier.ofDefault("button.png"),
+                this.x,
+                this.y,
+                this.getWidth(),
+                this.getHeight(),
+                32,
+                16
+        );
+
         Raylib.Color color = this.isHovered() ? Colors.BLUE : Colors.WHITE;
 
         int x = this.getX() + (this.width / 2) - (Raylib.MeasureText(this.text, 24) / 2);

@@ -14,6 +14,7 @@ public class ActionCard extends Card {
                     Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
                     Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
                     Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
+                    Codec.INT.fieldOf("price").forGetter(Card::getPrice),
                     Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount)
             ).apply(ActionCard::new)
     );
@@ -21,7 +22,11 @@ public class ActionCard extends Card {
     int price;
 
     public ActionCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount) {
-        super(name, description, stat, bonus, drawCardsAmount);
+        super(name, description, stat, 0, bonus, drawCardsAmount);
+    }
+
+    public ActionCard(String name, String description, CardStat stat, int price, int bonus, int drawCardsAmount) {
+        super(name, description, stat, price, bonus, drawCardsAmount);
     }
 
     @Override

@@ -10,8 +10,6 @@ import com.raylib.Raylib;
 public class GuiGraphics {
     Client client;
 
-    private final UploadedTexture texture = Client.getInstance().guiTextures.getTexture(Identifier.ofDefault("button.png"));
-
     public GuiGraphics(Client client) {
         this.client = client;
     }
@@ -40,17 +38,77 @@ public class GuiGraphics {
         return (int) Raylib.MeasureTextEx(Client.getInstance().font, text, fontSize, 2).y();
     }
 
-    public void blitNineSliced(int x, int y, int width, int height, int textureWidth, int textureHeight) {
+    public void blit(Identifier id, int x, int y, int width, int height) {
+        this.blit(id, x, y, width, height, Colors.WHITE);
+    }
+
+    public void blit(Identifier id, int x, int y, int width, int height, int sourceWidth, int sourceHeight) {
+        this.blit(id, x, y, width, height, sourceWidth, sourceHeight, Colors.WHITE);
+    }
+
+    public void blit(Identifier id, int x, int y, int width, int height, int sourceWidth, int sourceHeight, Raylib.Color color) {
+        UploadedTexture texture = Client.getInstance().textureAtlas.getTexture(id);
+
+        Raylib.DrawTexturePro(
+                texture.texture(),
+                new Raylib.Rectangle()
+                        .x(0)
+                        .y(0)
+                        .width(sourceWidth)
+                        .height(sourceHeight),
+                new Raylib.Rectangle()
+                        .x(x)
+                        .y(y)
+                        .width(width)
+                        .height(height),
+                new Raylib.Vector2().x(0).y(0),
+                0,
+                color
+        );
+    }
+
+    public void blit(Identifier id, int x, int y, int width, int height, Raylib.Color color) {
+        UploadedTexture texture = Client.getInstance().textureAtlas.getTexture(id);
+
+        Raylib.DrawTexturePro(
+                texture.texture(),
+                new Raylib.Rectangle()
+                        .x(0)
+                        .y(0)
+                        .width(width)
+                        .height(height),
+                new Raylib.Rectangle()
+                        .x(x)
+                        .y(y)
+                        .width(width)
+                        .height(height),
+                new Raylib.Vector2().x(0).y(0),
+                0,
+                color
+        );
+    }
+
+    public void blitNineSliced(TexturePipeline pipeline, Identifier id, int x, int y, int width, int height, int textureWidth, int textureHeight) {
+        UploadedTexture texture;
+
+        if (pipeline == TexturePipeline.GUI) {
+            Identifier guiTexture = Identifier.of(id.namespace, "gui/widget/" + id.path);
+
+            texture = Client.getInstance().textureAtlas.getTexture(guiTexture);
+        } else {
+            texture = Client.getInstance().textureAtlas.getTexture(id);
+        }
+
         int srcW, srcH, cLeft, cTop, cRight, cBottom, textureScale;
 
-        if (this.texture.metadata() != null) {
-            srcW = this.texture.metadata().width();
-            srcH = this.texture.metadata().height();
-            cLeft = this.texture.metadata().corner();
-            cTop = this.texture.metadata().corner();
-            cRight = this.texture.metadata().corner();
-            cBottom = this.texture.metadata().corner();
-            textureScale = this.texture.metadata().scale();
+        if (texture.metadata() != null) {
+            srcW = texture.metadata().width();
+            srcH = texture.metadata().height();
+            cLeft = texture.metadata().corner();
+            cTop = texture.metadata().corner();
+            cRight = texture.metadata().corner();
+            cBottom = texture.metadata().corner();
+            textureScale = texture.metadata().scale();
         } else {
             srcW = textureWidth;
             srcH = textureHeight;
@@ -89,7 +147,7 @@ public class GuiGraphics {
                         .height(dstY[row + 1] - dstY[row]);
 
                 if (srcRec.width() > 0 && srcRec.height() > 0 && dstRec.width() > 0 && dstRec.height() > 0) {
-                    Raylib.DrawTexturePro(this.texture.texture(), srcRec, dstRec, origin, 0.0f, Colors.WHITE);
+                    Raylib.DrawTexturePro(texture.texture(), srcRec, dstRec, origin, 0.0f, Colors.WHITE);
                 }
             }
         }
@@ -142,5 +200,10 @@ public class GuiGraphics {
 
     public void rectangle(int x, int y, int width, int height, Raylib.Color color) {
         Raylib.DrawRectangle(x, y, width, height, color);
+    }
+
+    public enum TexturePipeline {
+        GUI,
+        MAP
     }
 }

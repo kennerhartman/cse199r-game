@@ -52,11 +52,14 @@ public abstract class Card {
      * */
     boolean destroyOnPlay = false;
 
-    public Card(String name, String description, CardStat stat, int bonus, int drawCardsAmount) {
+    int price;
+
+    public Card(String name, String description, CardStat stat, int price, int bonus, int drawCardsAmount) {
         this.name = name;
         this.description = description;
         this.stat = stat;
         this.bonus = bonus;
+        this.price = price;
         this.drawCardsAmount = drawCardsAmount;
     }
 
@@ -96,6 +99,10 @@ public abstract class Card {
 
     public boolean isDestroyedOnPlay() {
         return this.destroyOnPlay;
+    }
+
+    public int getPrice() {
+        return this.price;
     }
 
     abstract void applyDrawEffect(PlayerCharacter character);

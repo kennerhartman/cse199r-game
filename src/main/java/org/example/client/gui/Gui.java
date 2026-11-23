@@ -4,6 +4,8 @@ import org.example.client.Client;
 import org.example.client.gui.element.Element;
 import org.example.client.gui.screen.Screen;
 import org.example.client.gui.screen.overlay.ScreenOverlay;
+import org.example.client.gui.transition.Transition;
+import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import com.raylib.Colors;
 import com.raylib.Raylib;
@@ -15,6 +17,7 @@ public class Gui {
 
     @Nullable public Screen screen;
     @Nullable public ScreenOverlay screenOverlay;
+    @Nullable public Transition transition;
 
     public static final int VIRTUAL_WIDTH = 850;
     public static final int VIRTUAL_HEIGHT = 500;
@@ -30,12 +33,16 @@ public class Gui {
         float screenWidth = (float) this.getScreenWidth();
         float screenHeight = (float) this.getScreenHeight();
 
-        float scale = Math.min(screenWidth / VIRTUAL_WIDTH, screenHeight / VIRTUAL_HEIGHT);
+        float scale = Math.max(screenWidth / VIRTUAL_WIDTH, screenHeight / VIRTUAL_HEIGHT);
 
-        int destWidth = (int) (VIRTUAL_WIDTH * scale);
-        int destHeight = (int) (VIRTUAL_HEIGHT * scale);
-        int destX = (int) ((screenWidth - destWidth) / 2);
-        int destY = (int) ((screenHeight - destHeight) / 2);
+        float destWidthF = VIRTUAL_WIDTH * scale;
+        float destHeightF = VIRTUAL_HEIGHT * scale;
+
+        int destWidth = (int) destWidthF;
+        int destHeight = (int) destHeightF;
+
+        int destX = (int) ((screenWidth - destWidthF) / 2.0f);
+        int destY = (int) ((screenHeight - destHeightF) / 2.0f);
 
         int virtualMouseX = (int) ((mouseX - destX) / scale);
         int virtualMouseY = (int) ((mouseY - destY) / scale);
@@ -43,12 +50,26 @@ public class Gui {
         Raylib.BeginTextureMode(target);
         Raylib.ClearBackground(Colors.BLACK);
 
+        if (this.client.mapRenderer != null) {
+            this.client.mapRenderer.render(graphics, virtualMouseX, virtualMouseY);
+        }
+
         if (this.screen != null) {
             this.screen.render(graphics, virtualMouseX, virtualMouseY);
         }
 
         if (this.screenOverlay != null) {
             this.screenOverlay.render(graphics, virtualMouseX, virtualMouseY);
+        }
+
+        if (this.transition != null) {
+            this.transition.animation(graphics, Raylib.GetFrameTime());
+
+            if (this.transition.completed()) {
+                this.transition.cleanupTransition();
+
+                this.transition = null;
+            }
         }
 
         Raylib.EndTextureMode();
@@ -97,6 +118,10 @@ public class Gui {
                 }
             }
         }
+    }
+
+    public void runTransition(Transition transition) {
+        this.transition = transition;
     }
 
     public int getScreenWidth() {

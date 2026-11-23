@@ -4,6 +4,7 @@ package org.example.map;
 import org.example.Character.PlayerCharacter;
 import org.example.GameLoop.Combat;
 import org.example.GameLoop.CombatState;
+import org.example.card.CardStorage;
 import org.example.client.Client;
 import org.example.enemies.Enemy;
 
@@ -20,10 +21,20 @@ public class Encounter {
     // Has this encounter been started?
     private boolean started = false;
 
+    public Encounter() {
+        this.parentNode = null;
+        this.encounterType = null;
+        this.character = null;
+    }
+
     public Encounter(MapNode newNode, PlayerCharacter character) {
         this.parentNode = newNode;
         this.encounterType = newNode.getType();
         this.character = character;
+    }
+
+    public void createShop(CardStorage storage) {
+        storage.loadStore(5);
     }
 
     // Called when the game is ready to begin the encounter

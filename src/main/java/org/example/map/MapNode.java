@@ -47,7 +47,8 @@ public class MapNode {
     public void setNextNode(MapNode next){
         this.nextNode = next;
     }
-//    public void setLastNode(MapNode last) { this.lastNode = last; }
+
+    public void setLastNode(MapNode last) { this.lastNode = last; }
 
     public int getNodesSinceBoss() {
         return nodesSinceBoss;
@@ -76,6 +77,7 @@ public class MapNode {
     public int getTile() { return tile; }
 
     public enum NodeType {
+        TAVERN,
         COMBAT,
         SHOP,
         BOSS

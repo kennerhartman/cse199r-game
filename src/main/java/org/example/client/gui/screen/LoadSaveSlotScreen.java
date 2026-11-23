@@ -7,8 +7,18 @@ import org.example.GameLoop.SaveSystem;
 import org.example.card.CardStorage;
 import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
+import org.example.client.gui.screen.gameplay.GameScreen;
+import org.example.client.gui.screen.gameplay.ShopScreen;
 import org.example.client.gui.screen.overlay.ConfirmationOverlay;
+import org.example.client.gui.transition.FadeOutTransition;
 import org.example.client.gui.widgets.ButtonWidget;
+import org.example.client.map.MapInputHandler;
+import org.example.client.map.MapView;
+import org.example.client.map.renderer.MapCamera;
+import org.example.client.map.renderer.MapRenderer;
+import org.example.map.MapManager;
+import org.example.map.MapNode;
+import org.example.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import com.raylib.Colors;
@@ -72,12 +82,37 @@ public class LoadSaveSlotScreen extends Screen {
 
             this.client.cardStorage = cards;
             PlayerCharacter character = LoadSystem.loadCharacter(cards, save, this.client.player);
-//            this.client.player.setCharacter(character);
+            this.client.player.setCharacter(character);
 
             // TODO: RE-ENABLE
             // this.client.gui.runTransition(new FadeOutTransition(2, () -> this.startGame(LoadSystem.loadMap(save), slotNumber)));
 
-//            this.startGame(LoadSystem.loadMap(save), slotNumber);
+            this.startGame(LoadSystem.loadMap(save), slotNumber);
+        }
+    }
+
+    private void startGame(MapManager mapManager, int saveSlot) {
+        this.client.mapManager = mapManager;
+
+        this.client.currentSaveSlot = saveSlot;
+
+        int tile = this.client.mapManager.getCurrentNode().getTile();
+        boolean isTavern = this.client.mapManager.getCurrentNode().getType() == MapNode.NodeType.TAVERN;
+
+        if (tile == 0 && isTavern) {
+            // TODO: CREATE A SCENE WHERE AN NPC IS GIVING AN OVERVIEW OF THE GAME
+
+            this.client.gui.setScreenOverlay(null);
+            this.client.gui.setScreen(null);
+        } else {
+            MapView view = new MapView(mapManager);
+            MapCamera camera = new MapCamera();
+
+            this.client.mapInput = new MapInputHandler(view, camera);
+            this.client.mapRenderer = new MapRenderer(view, camera, this.client.mapInput);
+
+            this.client.gui.setScreenOverlay(null);
+            this.client.gui.setScreen(new GameScreen(this.client));
         }
     }
 
@@ -105,7 +140,16 @@ public class LoadSaveSlotScreen extends Screen {
         public void render(GuiGraphics graphics, int mouseX, int mouseY) {
             Raylib.Color color = this.isHovered() ? Colors.BLUE : Colors.WHITE;
 
-            graphics.blitNineSliced(this.getX(), this.getY(), this.getWidth(), this.getHeight(), 32, 16);
+            graphics.blitNineSliced(
+                    GuiGraphics.TexturePipeline.GUI,
+                    Identifier.ofDefault("button.png"),
+                    this.getX(),
+                    this.getY(),
+                    this.getWidth(),
+                    this.getHeight(),
+                    32,
+                    16
+            );
 
             int x = this.getX() + (this.getWidth() / 2) - (Raylib.MeasureText(this.getText(), 24) / 2);
             int y = this.getY() + (this.getHeight() / 2) - (24 / 2);

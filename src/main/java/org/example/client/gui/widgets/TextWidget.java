@@ -1,6 +1,5 @@
 package org.example.client.gui.widgets;
 
-import org.example.client.Client;
 import org.example.client.gui.GuiGraphics;
 
 import com.raylib.Colors;
@@ -15,15 +14,22 @@ public class TextWidget extends AbstractWidget {
 
     private final String text;
     private final Alignment alignment;
+    private final Raylib.Color color;
 
     public TextWidget(String text, int x, int y) {
-        this(text, x, y, Alignment.LEFT);
+        this(text, x, y, Alignment.LEFT, Colors.WHITE);
     }
 
-    public TextWidget(String text, int x, int y, Alignment alignment) {
+    public TextWidget(String text, int x, int y, Raylib.Color color) {
+        this(text, x, y, Alignment.LEFT, color);
+    }
+
+    public TextWidget(String text, int x, int y, Alignment alignment, Raylib.Color color) {
         super(x, y, GuiGraphics.getTextWidth(text), GuiGraphics.getTextHeight(text));
+
         this.text = text;
         this.alignment = alignment;
+        this.color = color;
     }
 
     @Override
@@ -38,7 +44,7 @@ public class TextWidget extends AbstractWidget {
                 this.text,
                 renderX,
                 this.getY() - GuiGraphics.getTextHeight(this.text) / 2,
-                Colors.WHITE
+                this.color
         );
     }
 }

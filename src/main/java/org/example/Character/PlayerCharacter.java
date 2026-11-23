@@ -102,7 +102,25 @@ public class PlayerCharacter {
     public int getLevel(){
         return this.level;
     }
-  
+
+    public int getCurrency() {
+        return this.currency;
+    }
+
+    public void addCurrency(int value) {
+        this.currency += value;
+    }
+
+    public boolean spendCurrency(int amount) {
+        boolean canSpend = amount < this.currency;
+
+        if (canSpend) {
+            this.currency -= amount;
+        }
+
+        return canSpend;
+    }
+
     public ArrayList<Card> getDrawPile() {
         return this.deck.drawPile;
     }

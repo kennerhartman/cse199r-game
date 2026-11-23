@@ -2,10 +2,14 @@ package org.example.client;
 
 import org.example.client.gui.Gui;
 import org.example.client.gui.screen.Screen;
+import org.example.client.map.MapInputHandler;
 
 import com.raylib.Raylib;
 
 public class InputHandler {
+    boolean locked = false;
+
+    boolean isDragging = false;
     int mouseX = 0;
     int mouseY = 0;
 
@@ -17,6 +21,10 @@ public class InputHandler {
     long startTime = 0L;
 
     public void handleInput() {
+        if (this.locked) {
+            return;
+        }
+
         int code = Raylib.GetKeyPressed();
 
         if (code != 0) {
@@ -63,11 +71,21 @@ public class InputHandler {
 
         Raylib.Vector2 mousePos = Raylib.GetMousePosition();
 
+        if (Raylib.IsMouseButtonPressed(0)) {
+            this.isDragging = true;
+
+            this.mouseClicked(this.getVirtualMouseX(), this.getVirtualMouseY());
+        }
+
+        if (this.isDragging) {
+            this.mouseDragged(this.getVirtualMouseX(), this.getVirtualMouseY());
+        }
+
         this.mouseX = (int) mousePos.x();
         this.mouseY = (int) mousePos.y();
 
-        if (Raylib.IsMouseButtonPressed(0)) {
-            this.mouseClicked(this.getVirtualMouseX(), this.getVirtualMouseY());
+        if (Raylib.IsMouseButtonReleased(0)) {
+            this.mouseReleased(this.getVirtualMouseX(), this.getVirtualMouseY());
         }
     }
 
@@ -96,18 +114,59 @@ public class InputHandler {
     }
 
     public void mouseClicked(int mouseX, int mouseY) {
-        Screen screen = Client.getInstance().gui.screen;
+        Gui gui = Client.getInstance().gui;
+        Screen screen = gui.screen;
+        boolean consumed = false;
 
         if (screen != null) {
-            screen.mouseClicked(mouseX, mouseY);
+            consumed = screen.mouseClicked(mouseX, mouseY);
         }
+
+        MapInputHandler mapInput = Client.getInstance().mapInput;
+
+        if (mapInput != null && !consumed && gui.screen == screen && mapAcceptsInput(gui)) {
+            mapInput.mouseClicked(mouseX, mouseY);
+        }
+    }
+
+    public void mouseDragged(double mouseX, double mouseY) {
+        MapInputHandler mapInput = Client.getInstance().mapInput;
+
+        if (mapInput != null && mapAcceptsInput(Client.getInstance().gui)) {
+            mapInput.mouseDragged(mouseX, mouseY);
+        }
+    }
+
+    public void mouseReleased(int mouseX, int mouseY) {
+        this.isDragging = false;
+
+        MapInputHandler mapInput = Client.getInstance().mapInput;
+
+        if (mapInput == null) {
+            return;
+        }
+
+        if (mapAcceptsInput(Client.getInstance().gui)) {
+            mapInput.mouseReleased(mouseX, mouseY);
+        } else {
+            mapInput.cancelPress();
+        }
+    }
+
+    private static boolean mapAcceptsInput(Gui gui) {
+        return gui.screenOverlay == null && (gui.screen == null || gui.screen.allowsMapInput());
+    }
+
+    public void lock(boolean value) {
+        this.locked = value;
     }
 
     public int getVirtualMouseX() {
         float scale = Client.getInstance().gui.getScale();
         float screenWidth = (float) Client.getInstance().gui.getScreenWidth();
-        int destWidth = (int) (Gui.VIRTUAL_WIDTH * scale);
-        int destX = (int) ((screenWidth - destWidth) / 2);
+
+        float destWidthF = Gui.VIRTUAL_WIDTH * scale;
+        int destX = (int) ((screenWidth - destWidthF) / 2.0f);
 
         return (int) ((this.mouseX - destX) / scale);
     }
@@ -115,8 +174,9 @@ public class InputHandler {
     public int getVirtualMouseY() {
         float scale = Client.getInstance().gui.getScale();
         float screenHeight = (float) Client.getInstance().gui.getScreenHeight();
-        int destHeight = (int) (Gui.VIRTUAL_HEIGHT * scale);
-        int destY = (int) ((screenHeight - destHeight) / 2);
+
+        float destHeightF = Gui.VIRTUAL_HEIGHT * scale;
+        int destY = (int) ((screenHeight - destHeightF) / 2.0f);
 
         return (int) ((this.mouseY - destY) / scale);
     }

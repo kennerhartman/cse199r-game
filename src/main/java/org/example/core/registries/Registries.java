@@ -9,12 +9,14 @@ import org.example.core.registry.Registry;
 import org.example.core.registry.RegistryKeys;
 import org.example.core.registry.loader.JsonDataLoader;
 import org.example.core.serializer.Codec;
+import org.example.map.Map;
 import org.example.util.Identifier;
 
 public class Registries {
     private static final HashMap<Identifier, Registry<?>> LOADERS = new HashMap<>();
 
     public static Registry<Card> CARDS = createDataRegistry(RegistryKeys.CARDS, Card.CODEC);
+    public static Registry<Map> MAPS = createDataRegistry(RegistryKeys.MAPS, Map.CODEC);
 
     /**
      * Creates a registry that is populated dynamically from data.
