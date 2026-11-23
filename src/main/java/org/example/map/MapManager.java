@@ -6,9 +6,13 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.example.client.Client;
+import org.example.client.gui.screen.gameplay.ShopScreen;
+
 public class MapManager {
-    //    This class handles all of the map generation and choice storage.
     private MapNode currentNode;
+    private MapNode stockedShopNode;
+
     private List<MapNode> activeChoices;
     private List<String> shopTips = List.of("Shop!", "A shady merchant awaits...", "Rest and Restock!", "Spend your coins here!", "Curios for sale!");
     private List<String> combatTips = List.of("Looks like a fight...", "Trouble ahead!", "Hostile presence detected.", "Unfamiliar footsteps echo...", "Monsters block the path!");
@@ -52,15 +56,55 @@ public class MapManager {
     private void setCurrentNode(MapNode newCurrent){ this.currentNode = newCurrent; }
     private void setActiveChoices(List<MapNode> newActive){ this.activeChoices = newActive; }
 
-    //    Called when a node is clicked on, pass in the chose node
     public void selectNode(MapNode chosenNode){
-//        Set the currentNodes next node to be the chosen node, then switch it to the new node
         this.currentNode.setNextNode(chosenNode);
+
         this.currentNode = chosenNode;
-//        Generate the new choices from the new current node
+
+        Client client = Client.getInstance();
+
+        switch (chosenNode.type) {
+            case SHOP:
+                openShop(client);
+
+                break;
+            case COMBAT:
+                // TODO: IMPLEMENT
+
+                break;
+            case BOSS:
+                // TODO: IMPLEMENT
+
+                break;
+            default:
+                break;
+        }
+
         populateChoices();
-        System.out.println("Edges Added\nLoad Encounter...");
-//        TODO: Start an encounter, which should be the fight?
+    }
+
+    public boolean canRevisitCurrent(){
+        return this.currentNode.getType() == MapNode.NodeType.SHOP;
+    }
+
+    public void revisitCurrentNode(){
+        if (!canRevisitCurrent()) {
+            return;
+        }
+
+        openShop(Client.getInstance());
+    }
+
+    private void openShop(Client client){
+        if (this.stockedShopNode != this.currentNode){
+            client.cardStorage.StoreCards.clear();
+
+            new Encounter().createShop(client.cardStorage);
+
+            this.stockedShopNode = this.currentNode;
+        }
+
+        client.gui.setScreen(new ShopScreen(client));
     }
 
     public String generateID(String currentID){

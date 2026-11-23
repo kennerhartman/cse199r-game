@@ -14,9 +14,9 @@ public class LootCard extends Card {
                     Codec.STRING.fieldOf("name").forGetter(Card::getName),
                     Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
                     Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
+                    Codec.INT.fieldOf("price").forGetter(Card::getPrice),
                     Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
-                    Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount),
-                    Codec.INT.fieldOf("price").forGetter(LootCard::getPrice)
+                    Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount)
             ).apply(LootCard::new)
     );
 
@@ -26,12 +26,9 @@ public class LootCard extends Card {
     // Speed (number of cards played per turn)
     // Attack (base damage)
 
-    int price;
+    public LootCard(String name, String description, CardStat stat, int price, int bonus, int drawCardsAmount) {
+        super(name, description, stat, price, bonus, drawCardsAmount);
 
-    public LootCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount, int price) {
-        super(name, description, stat, bonus, drawCardsAmount);
-
-        this.price = price;
         this.destroyOnPlay = true;
     }
 

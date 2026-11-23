@@ -17,6 +17,7 @@ public class AbilityCard extends Card {
                     Codec.STRING.fieldOf("name").forGetter(Card::getName),
                     Codec.STRING.fieldOf("description").forGetter(Card::getDescription),
                     Codec.ofEnum(CardStat.class).fieldOf("stat").forGetter(Card::getStat),
+                    Codec.INT.fieldOf("price").forGetter(Card::getPrice),
                     Codec.INT.fieldOf("bonus").forGetter(Card::getBonus),
                     Codec.INT.fieldOf("draw_cards_amount").forGetter(Card::getDrawCardsAmount),
                     Codec.INT.fieldOf("base").forGetter(AbilityCard::getBase)
@@ -28,8 +29,8 @@ public class AbilityCard extends Card {
      */
     int base = 0;
 
-    public AbilityCard(String name, String description, CardStat stat, int bonus, int drawCardsAmount, int base) {
-        super(name, description, stat, bonus, drawCardsAmount);
+    public AbilityCard(String name, String description, CardStat stat, int price, int bonus, int drawCardsAmount, int base) {
+        super(name, description, stat, price, bonus, drawCardsAmount);
         this.base = base;
     }
 
