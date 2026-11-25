@@ -32,7 +32,6 @@ public class Client {
     public final InputHandler input;
     public final Player player;
     private boolean running;
-
     public CardStorage cardStorage;
 
     public Client() {
@@ -48,6 +47,7 @@ public class Client {
         this.gui.setScreen(new MainMenuScreen(Client.getInstance()));
 
         this.player = new Player();
+        this.mapManager = new MapManager();
 
         this.running = true;
     }

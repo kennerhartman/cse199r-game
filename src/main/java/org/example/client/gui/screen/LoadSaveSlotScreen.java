@@ -116,6 +116,7 @@ public class LoadSaveSlotScreen extends Screen {
         }
     }
 
+
     static class SaveSlotWidget extends ButtonWidget {
         private final int saveSlot;
 

@@ -1,5 +1,7 @@
 package org.example.map;
 
+import org.example.Character.PlayerCharacter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,8 +13,8 @@ import org.example.client.gui.screen.gameplay.ShopScreen;
 
 public class MapManager {
     private MapNode currentNode;
+    private Encounter currentEncounter;
     private MapNode stockedShopNode;
-
     private List<MapNode> activeChoices;
     private List<String> shopTips = List.of("Shop!", "A shady merchant awaits...", "Rest and Restock!", "Spend your coins here!", "Curios for sale!");
     private List<String> combatTips = List.of("Looks like a fight...", "Trouble ahead!", "Hostile presence detected.", "Unfamiliar footsteps echo...", "Monsters block the path!");
@@ -56,7 +58,18 @@ public class MapManager {
     private void setCurrentNode(MapNode newCurrent){ this.currentNode = newCurrent; }
     private void setActiveChoices(List<MapNode> newActive){ this.activeChoices = newActive; }
 
-    public void selectNode(MapNode chosenNode){
+    //    Called when a node is clicked on, pass in the chosen node
+    public void selectNode(MapNode chosenNode, PlayerCharacter character){
+        if (currentEncounter != null && !currentEncounter.isCompleted()) {
+            System.out.println(
+                    "Cannot select another node while an encounter is active."
+            );
+            return;
+        }
+        if (chosenNode == null || !activeChoices.contains(chosenNode)) {
+            System.out.println("Invalid map node selection.");
+            return;
+        }
         this.currentNode.setNextNode(chosenNode);
 
         this.currentNode = chosenNode;
@@ -75,6 +88,30 @@ public class MapManager {
             case BOSS:
                 // TODO: IMPLEMENT
 
+                break;
+            default:
+                break;
+        }
+        System.out.println("Edges Added\nLoad Encounter...");
+        currentEncounter = new Encounter(currentNode, character);
+        populateChoices();
+    }
+
+    public void selectNode(MapNode chosenNode){
+        this.currentNode.setNextNode(chosenNode);
+        this.currentNode = chosenNode;
+
+        Client client = Client.getInstance();
+
+        switch (chosenNode.type) {
+            case SHOP:
+                openShop(client);
+                break;
+            case COMBAT:
+                // TODO: IMPLEMENT
+                break;
+            case BOSS:
+                // TODO: IMPLEMENT
                 break;
             default:
                 break;
@@ -177,6 +214,10 @@ public class MapManager {
         return saveData;
     }
 
+    public Encounter getCurrentEncounter() {
+        return currentEncounter;
+    }
+
     //    Fills activeChoices for the current node. The start (Tavern) node leads to the tutorial shop at step 1
     //    of the tavern tile; after that, addEdges() follows the normal loop.
     private void populateChoices(){
@@ -193,7 +234,6 @@ public class MapManager {
         return tile == 0 ? 4 : 3;
     }
 
-    //    Generates new edge nodes and adds them to activeChoices based on the current node
     public void addEdges() {
         boolean evenNode = (currentNode.getNodesSinceBoss() % 2) == 0;
         boolean bossTime = (currentNode.getNodesSinceBoss() >= bossThreshold(currentNode.getTile()));

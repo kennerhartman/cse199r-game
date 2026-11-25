@@ -191,4 +191,3 @@ public class CharacterCreationScreen extends Screen {
         private record ScreenCard(int index, Card card) {}
     }
 }
-
